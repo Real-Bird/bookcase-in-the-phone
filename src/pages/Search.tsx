@@ -1,5 +1,7 @@
+import SearchContainer from "../containers/search/SearchContainer";
+
 function Search() {
-  return <h1>Search</h1>;
+  return <SearchContainer />;
 }
 
 export default Search;
