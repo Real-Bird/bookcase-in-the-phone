@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Gugi&display=swap");
+
 html,
 body,
 div,
@@ -134,6 +136,7 @@ table {
   box-sizing: border-box;
 }
 body {
+  font-family: "Gugi", cursive;
   line-height: 1.2;
   background: linear-gradient(135deg, rgb(238, 0, 153), rgb(221, 0, 238));
 }
