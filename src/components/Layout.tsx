@@ -8,6 +8,8 @@ interface LayoutProps {
 
 const LayoutBlock = styled.div`
   width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
   height: 100%;
   display: flex;
   flex-direction: column;

@@ -1,5 +1,7 @@
+import AboutContainer from "../containers/about/AboutContainer";
+
 function About() {
-  return <h1>About</h1>;
+  return <AboutContainer />;
 }
 
 export default About;

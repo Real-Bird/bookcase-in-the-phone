@@ -9,7 +9,6 @@ const NavBlock = styled.nav`
   width: 100%;
   height: 3.75rem;
 `;
-
 const NavList = styled.ul`
   display: grid;
   height: 100%;

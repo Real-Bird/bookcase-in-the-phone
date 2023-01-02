@@ -6,6 +6,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Bookcase from "./pages/Bookcase";
 import Search from "./pages/Search";
 import BookDetail from "./pages/BookDetail";
+import SearchResult from "./pages/SearchResult";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   {
@@ -25,10 +27,22 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+        errorElement: <ErrorBoundary />,
       },
       {
         path: "search",
         element: <Search />,
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: "search/result/:isbn",
+        element: <SearchResult />,
+        errorElement: <ErrorBoundary />,
       },
     ],
     errorElement: <NotFound />,

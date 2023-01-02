@@ -10,19 +10,45 @@ const SearchBlock = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  gap: 50px;
 `;
 
 const CameraBlock = styled.div`
   width: 100%;
-  height: 200px;
+  height: 150px;
   video {
     width: 100%;
     height: 150px;
     object-fit: fill;
     transform: scaleX(-1);
   }
-  select {
-    margin: 0 25%;
+`;
+
+const Select = styled.select`
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  width: 20rem;
+  height: 3rem;
+  padding: 0 4rem 0 1rem;
+  color: #fff;
+  background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
+      no-repeat right 0.8em center / 1.4em,
+    linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.3) 3em,
+      rgba(255, 255, 255, 0.2) 3em
+    );
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  option {
+    color: inherit;
+    background-color: $option;
+  }
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -50,17 +76,18 @@ function SearchCam() {
 
   async function getCameras() {
     const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log(devices);
     setCameras(devices.filter((device) => device.kind === "videoinput"));
     setCurrentCamera(stream?.getVideoTracks()[0]);
     setIsCam(true);
   }
   async function getMedia(deviceId?: string) {
     const initialConstrains = {
-      audio: true,
-      video: { facingMode: "user" },
+      audio: false,
+      video: true,
     };
     const cameraConstraints = {
-      audio: true,
+      audio: false,
       video: { deviceId: { exact: deviceId } },
     };
     try {
@@ -85,14 +112,14 @@ function SearchCam() {
       <SearchBlock>
         <CameraBlock>
           <video ref={camera} autoPlay playsInline></video>
-          <select value={currentCamera?.label}>
-            {cameras?.map((cam) => (
-              <option key={cam.label} value={cam.deviceId}>
-                {cam.label}
-              </option>
-            ))}
-          </select>
         </CameraBlock>
+        <Select value={currentCamera?.label}>
+          {cameras?.map((cam) => (
+            <option key={cam.label} value={cam.deviceId}>
+              {cam.label}
+            </option>
+          ))}
+        </Select>
         <DescriptionBlock>
           <h2>바코드를 읽으면</h2>
           <h2>책의 정보를 표시합니다!</h2>
