@@ -72,19 +72,25 @@ function SearchCam() {
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>();
   useEffect(() => {
     getMedia();
+    return () => Stop();
   }, [isCam]);
 
   async function getCameras() {
     const devices = await navigator.mediaDevices.enumerateDevices();
-    console.log(devices);
-    setCameras(devices.filter((device) => device.kind === "videoinput"));
+    setCameras(
+      devices.filter(
+        (device) =>
+          device.kind === "videoinput" && !device.label.includes("DroidCam")
+      )
+    );
     setCurrentCamera(stream?.getVideoTracks()[0]);
     setIsCam(true);
   }
+
   async function getMedia(deviceId?: string) {
     const initialConstrains = {
       audio: false,
-      video: true,
+      video: { facingMode: "user" },
     };
     const cameraConstraints = {
       audio: false,
@@ -106,6 +112,15 @@ function SearchCam() {
       console.log(e);
     }
   }
+
+  const Stop = () => {
+    if (stream) {
+      const vidTrack = stream.getVideoTracks();
+      vidTrack.forEach((track) => {
+        stream.removeTrack(track);
+      });
+    }
+  };
 
   return (
     <Layout title="Search">

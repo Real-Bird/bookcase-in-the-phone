@@ -8,6 +8,7 @@ import Search from "./pages/Search";
 import BookDetail from "./pages/BookDetail";
 import SearchResult from "./pages/SearchResult";
 import Login from "./pages/Login";
+import Reader from "./pages/test";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,11 @@ const router = createBrowserRouter([
       {
         path: "search/result/:isbn",
         element: <SearchResult />,
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: "test",
+        element: <Reader />,
         errorElement: <ErrorBoundary />,
       },
     ],
