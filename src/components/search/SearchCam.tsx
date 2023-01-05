@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Layout from "../Layout";
 
@@ -18,8 +18,8 @@ const CameraBlock = styled.div`
   height: 150px;
   video {
     width: 100%;
-    height: 150px;
-    object-fit: fill;
+    height: 100%;
+    object-fit: cover;
     transform: scaleX(-1);
   }
 `;
@@ -67,46 +67,61 @@ const DescriptionBlock = styled.div`
 function SearchCam() {
   const camera = useRef<HTMLVideoElement>(null);
   const [isCam, setIsCam] = useState(false);
-  const [stream, setStream] = useState<MediaStream>();
-  const [currentCamera, setCurrentCamera] = useState<MediaStreamTrack>();
+  let stream: MediaStream;
+  const [currentCamera, setCurrentCamera] = useState<string>();
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>();
+  const refSelectVideo = useRef<HTMLSelectElement>(null);
   useEffect(() => {
-    getMedia();
+    (async () => {
+      await getMedia();
+    })();
     return () => Stop();
   }, [isCam]);
 
-  async function getCameras() {
+  async function getCameras(stream: MediaStream) {
     const devices = await navigator.mediaDevices.enumerateDevices();
-    setCameras(
-      devices.filter(
-        (device) =>
-          device.kind === "videoinput" && !device.label.includes("DroidCam")
-      )
-    );
-    setCurrentCamera(stream?.getVideoTracks()[0]);
+    setCameras(devices.filter((device) => device.kind === "videoinput"));
+    if (stream.getVideoTracks()[0]) {
+      setCurrentCamera(stream.getVideoTracks()[0].id);
+    }
     setIsCam(true);
   }
+
+  const getParams = (video: any) => {
+    return {
+      video: {
+        deviceId: video ? { exact: video } : undefined,
+      },
+      audio: false,
+    };
+  };
 
   async function getMedia(deviceId?: string) {
     const initialConstrains = {
       audio: false,
       video: { facingMode: "user" },
+      // video: true,
     };
     const cameraConstraints = {
       audio: false,
       video: { deviceId: { exact: deviceId } },
     };
     try {
-      const currentStream = await navigator.mediaDevices.getUserMedia(
-        deviceId ? cameraConstraints : initialConstrains
+      // stream = await navigator.mediaDevices.getUserMedia(
+      //   deviceId ? cameraConstraints : initialConstrains
+      // );
+      stream = await navigator.mediaDevices.getUserMedia(
+        getParams(refSelectVideo.current?.value)
       );
-      setStream(currentStream);
+      console.log(stream.getTracks());
       const { current } = camera;
       if (current && stream) {
         current.srcObject = stream;
       }
       if (!deviceId) {
-        await getCameras();
+        await getCameras(stream);
+      } else {
+        setCurrentCamera(deviceId);
       }
     } catch (e) {
       console.log(e);
@@ -122,15 +137,19 @@ function SearchCam() {
     }
   };
 
+  async function handleCameraChange(e: ChangeEvent<HTMLSelectElement>) {
+    setCurrentCamera(e.target.value);
+    getMedia(e.target.value);
+  }
   return (
     <Layout title="Search">
       <SearchBlock>
         <CameraBlock>
           <video ref={camera} autoPlay playsInline></video>
         </CameraBlock>
-        <Select value={currentCamera?.label}>
+        <Select ref={refSelectVideo} onChange={handleCameraChange}>
           {cameras?.map((cam) => (
-            <option key={cam.label} value={cam.deviceId}>
+            <option key={cam.deviceId} value={cam.deviceId}>
               {cam.label}
             </option>
           ))}

@@ -3,7 +3,7 @@ import {
   BrowserMultiFormatReader,
   DecodeHintType,
 } from "@zxing/library";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 export default function useScanner() {
   const hints = new Map();
