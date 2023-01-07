@@ -5,6 +5,13 @@ import {
 } from "@zxing/library";
 import { Dispatch, SetStateAction } from "react";
 
+type GetConstraints = (deviceId?: string) => {
+  video: {
+    deviceId: { exact: string } | undefined;
+  };
+  audio: false;
+};
+
 export default function useScanner() {
   const hints = new Map();
   const formats = [
@@ -34,7 +41,7 @@ export default function useScanner() {
     localStream: MediaStream,
     camera: HTMLVideoElement,
     scan: BrowserMultiFormatReader,
-    dispatch: Dispatch<SetStateAction<any>>
+    dispatch: Dispatch<SetStateAction<string>>
   ) {
     if (localStream && camera) {
       try {
@@ -50,9 +57,36 @@ export default function useScanner() {
       }
     }
   }
+  async function getCameras(
+    scan: BrowserMultiFormatReader,
+    dispatchCameras: Dispatch<SetStateAction<MediaDeviceInfo[] | undefined>>
+  ) {
+    const devices = await scan.listVideoInputDevices();
+    dispatchCameras(devices);
+  }
+
+  const getConstraints: GetConstraints = (deviceId) => {
+    return {
+      video: {
+        deviceId: deviceId ? { exact: deviceId } : undefined,
+      },
+      audio: false,
+    };
+  };
+
+  async function getMedia(deviceId?: string, constraints?: GetConstraints) {
+    const initialConstrains = { video: true, audio: false };
+    return navigator.mediaDevices.getUserMedia(
+      constraints ? constraints(deviceId) : initialConstrains
+    );
+  }
+
   return {
     scan,
     stopStream,
     scanning,
+    getCameras,
+    getConstraints,
+    getMedia,
   };
 }
