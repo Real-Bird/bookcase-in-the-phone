@@ -1,53 +1,16 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { DetailBlock } from "../bookDetail/BookDetailView";
-import Layout from "../Layout";
 
-const ButtonBlock = styled.div`
+export const DetailBlock = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  padding: 0 20px;
-  justify-items: center;
-  margin-bottom: 10px;
-  button {
-    background: rgba(223, 249, 251, 0.9);
-    width: 50%;
-    border-radius: 100px;
-    box-shadow: rgba(223, 249, 251, 0.2) 0 -25px 18px -14px inset,
-      rgba(223, 249, 251, 0.15) 0 1px 2px, rgba(223, 249, 251, 0.15) 0 2px 4px,
-      rgba(223, 249, 251, 0.15) 0 4px 8px, rgba(223, 249, 251, 0.15) 0 8px 16px,
-      rgba(223, 249, 251, 0.15) 0 16px 32px;
-    color: green;
-    cursor: pointer;
-    display: inline-block;
-    font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto,
-      sans-serif;
-    padding: 7px 20px;
-    text-align: center;
-    text-decoration: none;
-    transition: all 250ms;
-    border: 0;
-    font-size: 16px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-  }
-  button:hover {
-    box-shadow: rgba(223, 249, 251, 0.35) 0 -25px 18px -14px inset,
-      rgba(223, 249, 251, 0.25) 0 1px 2px, rgba(223, 249, 251, 0.25) 0 2px 4px,
-      rgba(223, 249, 251, 0.25) 0 4px 8px, rgba(223, 249, 251, 0.25) 0 8px 16px,
-      rgba(223, 249, 251, 0.25) 0 16px 32px;
-    transform: scale(1.05) rotate(-1deg);
-  }
-`;
-
-const ResultBlock = styled(DetailBlock)`
-  height: 83vh;
-  padding: 1rem 1.75rem;
-  max-width: 1024px;
-  margin: 0 auto;
+  height: 88vh;
+  background: rgba(223, 249, 251, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 3rem;
+  padding: 1rem 10px;
 `;
 
 const DetailTop = styled.div`
@@ -110,26 +73,18 @@ const DetailBottom = styled.div`
   }
 `;
 
-function ResultDetail() {
-  const navigator = useNavigate();
-  const onBack = () => navigator("/search");
+export function DetailViewer() {
   return (
-    <Layout title="Result">
-      <ButtonBlock>
-        <button onClick={onBack} className="retry">
-          재검색
-        </button>
-        <button className="save">저장하기</button>
-      </ButtonBlock>
-      <ResultBlock>
+    <>
+      <DetailBlock>
         <DetailTop>
           <CoverImage src="https://picsum.photos/200/300" />
           <BookInfoBox>
-            <input className="info" value="제목" />
-            <input className="info" value="지은이" />
-            <input className="info" value="옮긴이" />
-            <input className="info" value="출판사" />
-            <input className="info" value="ISBN" />
+            <div className="info">제목</div>
+            <div className="info">지은이</div>
+            <div className="info">옮긴이</div>
+            <div className="info">출판사</div>
+            <div className="info">ISBN</div>
           </BookInfoBox>
         </DetailTop>
         <DetailBottom>
@@ -159,19 +114,27 @@ function ResultDetail() {
           </div>
           <div className="review">
             <label htmlFor="review">감상평</label>
-            <textarea
-              id="review"
-              value={`Nam augue mauris, egestas id lorem quis, viverra bibendum odio.
+            {true ? (
+              <div id="review">
+                Nam augue mauris, egestas id lorem quis, viverra bibendum odio.
+                Sed sed eleifend mi, at porttitor sapien. Maecenas eleifend
+                libero in erat varius, at dignissim est posuere. Sed massa nisi,
+                molestie sit amet libero et, pulvinar lobortis felis. Maecenas
+                tempus felis nec nisi faucibus facilisis sed vitae odio.
+              </div>
+            ) : (
+              <textarea
+                id="review"
+                value={`Nam augue mauris, egestas id lorem quis, viverra bibendum odio.
                 Sed sed eleifend mi, at porttitor sapien. Maecenas eleifend
                 libero in erat varius, at dignissim est posuere. Sed massa nisi,
                 molestie sit amet libero et, pulvinar lobortis felis. Maecenas
                 tempus felis nec nisi faucibus facilisis sed vitae odio.`}
-            ></textarea>
+              ></textarea>
+            )}
           </div>
         </DetailBottom>
-      </ResultBlock>
-    </Layout>
+      </DetailBlock>
+    </>
   );
 }
-
-export default ResultDetail;

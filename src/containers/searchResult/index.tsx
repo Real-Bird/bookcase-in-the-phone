@@ -1,4 +1,4 @@
-import ResultDetail from "../../components/search/ResultDetail";
+import { ResultDetail } from "@components/searchResult";
 
 function ResultContainer() {
   return <ResultDetail />;

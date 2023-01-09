@@ -1,7 +1,10 @@
-import SearchContainer from "../containers/search/SearchContainer";
+import { Layout } from "@components/common";
+import SearchContainer from "@containers/search";
 
-function Search() {
-  return <SearchContainer />;
+export function Search() {
+  return (
+    <Layout title="Search">
+      <SearchContainer />
+    </Layout>
+  );
 }
-
-export default Search;

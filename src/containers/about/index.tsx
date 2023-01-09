@@ -1,6 +1,5 @@
+import { Logout } from "@components/auth";
 import styled from "styled-components";
-import Logout from "../../components/auth/Logout";
-import Layout from "../../components/Layout";
 
 const AboutBlock = styled.div`
   width: 100%;
@@ -17,12 +16,10 @@ const AboutBlock = styled.div`
 
 function AboutContainer() {
   return (
-    <Layout title="ABOUT">
-      <AboutBlock>
-        <Logout />
-        <footer>&copy; Bookcase in the Phone 2023 by Real-Bird</footer>
-      </AboutBlock>
-    </Layout>
+    <AboutBlock>
+      <Logout />
+      <footer>&copy; Bookcase in the Phone 2023 by Real-Bird</footer>
+    </AboutBlock>
   );
 }
 

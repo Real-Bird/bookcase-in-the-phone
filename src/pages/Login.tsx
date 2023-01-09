@@ -1,7 +1,10 @@
-import LoginContainer from "../containers/auth/LoginContainer";
+import { Layout } from "@components/common";
+import LoginContainer from "@containers/auth";
 
-function Login() {
-  return <LoginContainer />;
+export function Login() {
+  return (
+    <Layout title="Login">
+      <LoginContainer />
+    </Layout>
+  );
 }
-
-export default Login;

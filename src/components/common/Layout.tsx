@@ -19,14 +19,22 @@ const LayoutBlock = styled.div`
 
 const Title = styled.h1`
   font-size: 3rem;
+  max-width: 1024px;
+  height: 4rem;
   font-weight: bolder;
+  position: fixed;
+  background-color: rgba(223, 249, 251, 0.7);
+  width: 100%;
+  text-align: center;
+  top: 0;
 `;
 
 const ChildrenBlock = styled.div`
   width: 100%;
-  margin: 0 auto;
+  max-width: 1024px;
+  margin-top: 4rem;
 `;
-function Layout({ title, children }: LayoutProps) {
+export function Layout({ title, children }: LayoutProps) {
   return (
     <LayoutBlock>
       <Title>{title}</Title>
@@ -34,5 +42,3 @@ function Layout({ title, children }: LayoutProps) {
     </LayoutBlock>
   );
 }
-
-export default Layout;

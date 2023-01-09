@@ -5,9 +5,9 @@ const NavBlock = styled.nav`
   position: fixed;
   background: #6ab04c;
   bottom: 0;
-  left: 0;
   width: 100%;
   height: 3.75rem;
+  max-width: 1024px;
 `;
 const NavList = styled.ul`
   display: grid;
@@ -34,7 +34,7 @@ const NavIcon = styled.svg`
   width: 1.75rem;
 `;
 
-function Navigation() {
+export function Navigation() {
   const { pathname } = useLocation();
   return (
     <NavBlock>
@@ -110,5 +110,3 @@ function Navigation() {
     </NavBlock>
   );
 }
-
-export default Navigation;

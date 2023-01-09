@@ -1,6 +1,5 @@
+import { GoogleLogin } from "@components/auth";
 import styled from "styled-components";
-import GoogleLogin from "../../components/auth/Google";
-import Layout from "../../components/Layout";
 
 const LoginBlock = styled.div`
   width: 100%;
@@ -17,11 +16,9 @@ const LoginBlock = styled.div`
 
 function LoginContainer() {
   return (
-    <Layout title="Login">
-      <LoginBlock>
-        <GoogleLogin />
-      </LoginBlock>
-    </Layout>
+    <LoginBlock>
+      <GoogleLogin />
+    </LoginBlock>
   );
 }
 

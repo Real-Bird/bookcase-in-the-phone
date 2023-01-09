@@ -1,13 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-import Root from "./Root";
-import ErrorBoundary from "./components/ErrorBoundary";
-import Bookcase from "./pages/Bookcase";
-import Search from "./pages/Search";
-import BookDetail from "./pages/BookDetail";
-import SearchResult from "./pages/SearchResult";
-import Login from "./pages/Login";
+import { ErrorBoundary } from "@components/common";
+
+import {
+  About,
+  Bookcase,
+  BookDetail,
+  Login,
+  NotFound,
+  Search,
+  SearchResult,
+} from "@/pages";
+import Root from "@/Root";
 
 const router = createBrowserRouter([
   {

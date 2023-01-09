@@ -1,13 +1,13 @@
-import { ChangeEvent, RefObject } from "react";
+import { ChangeEvent, ReactNode, RefObject } from "react";
 import styled from "styled-components";
 
 interface SelectCamerasProps {
-  selectCamera: RefObject<HTMLSelectElement>;
-  cameraList?: MediaDeviceInfo[];
+  selectRef: RefObject<HTMLSelectElement>;
+  children: ReactNode;
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const Select = styled.select`
+const SelectBlock = styled.select`
   appearance: none;
   border: 0;
   outline: 0;
@@ -37,20 +37,10 @@ const Select = styled.select`
   }
 `;
 
-function SelectCameras({
-  selectCamera,
-  cameraList,
-  onChange,
-}: SelectCamerasProps) {
+export function Select({ selectRef, children, onChange }: SelectCamerasProps) {
   return (
-    <Select ref={selectCamera} onChange={onChange}>
-      {cameraList?.map((cam) => (
-        <option key={cam.deviceId} value={cam.deviceId}>
-          {cam.label}
-        </option>
-      ))}
-    </Select>
+    <SelectBlock ref={selectRef} onChange={onChange}>
+      {children}
+    </SelectBlock>
   );
 }
-
-export default SelectCameras;

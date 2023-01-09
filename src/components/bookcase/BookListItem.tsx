@@ -25,7 +25,7 @@ const PostDetailBox = styled.div`
   flex-direction: column;
   align-items: center;
 
-  & > h3 {
+  h3 {
     width: 100%;
     font-size: 1.5rem;
     font-weight: 600;
@@ -36,19 +36,19 @@ const PostDetailBox = styled.div`
     text-align: center;
   }
 
-  & > .detail_block {
+  .detail_block {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    & > .detail_item {
+    .detail_item {
       display: flex;
-      & > h4 {
+      h4 {
         font-weight: bold;
       }
     }
   }
 `;
 
-function BookListItem() {
+export function BookListItem({ idx }: { idx: number }) {
   return (
     <Post
       to={"/books/title"}
@@ -56,6 +56,7 @@ function BookListItem() {
         "애자일 소프트웨어 아키텍트의 길 - 소프트웨어의 지속적인 설계를 통한 진화"
       }
     >
+      <strong>{idx}</strong>
       <PostImage src="https://picsum.photos/200/300" />
       <PostDetailBox>
         <h3>
@@ -80,5 +81,3 @@ function BookListItem() {
     </Post>
   );
 }
-
-export default BookListItem;

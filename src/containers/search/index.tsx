@@ -1,9 +1,7 @@
+import { Camera, Select } from "@components/search";
+import useScanner from "@libs/useScanner";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import Layout from "../../components/Layout";
-import SearchCam from "../../components/search/SearchCam";
-import SelectCameras from "../../components/search/SelectCameras";
-import useScanner from "../../libs/useScanner";
 
 const SearchBlock = styled.div`
   width: 100%;
@@ -59,21 +57,21 @@ function SearchContainer() {
     );
   };
   return (
-    <Layout title="Search">
-      <SearchBlock>
-        <SearchCam camera={camera} />
-        <SelectCameras
-          selectCamera={selectCamera}
-          cameraList={cameras}
-          onChange={handleChange}
-        />
-        <DescriptionBlock>
-          <h2>바코드를 읽으면</h2>
-          <h2>책의 정보를 표시합니다!</h2>
-          <h3>\(@^0^@)/</h3>
-        </DescriptionBlock>
-      </SearchBlock>
-    </Layout>
+    <SearchBlock>
+      <Camera camera={camera} />
+      <Select selectRef={selectCamera} onChange={handleChange}>
+        {cameras?.map((cam) => (
+          <option key={cam.deviceId} value={cam.deviceId}>
+            {cam.label}
+          </option>
+        ))}
+      </Select>
+      <DescriptionBlock>
+        <h2>바코드를 읽으면</h2>
+        <h2>책의 정보를 표시합니다!</h2>
+        <h3>\(@^0^@)/</h3>
+      </DescriptionBlock>
+    </SearchBlock>
   );
 }
 

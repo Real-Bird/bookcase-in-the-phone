@@ -1,7 +1,10 @@
-import ResultContainer from "../containers/search/ResultContainer";
+import { Layout } from "@components/common";
+import ResultContainer from "@containers/searchResult";
 
-function SearchResult() {
-  return <ResultContainer />;
+export function SearchResult() {
+  return (
+    <Layout title="Result">
+      <ResultContainer />
+    </Layout>
+  );
 }
-
-export default SearchResult;

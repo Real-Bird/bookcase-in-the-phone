@@ -1,12 +1,10 @@
-import Layout from "../components/Layout";
-import BookcaseContainer from "../containers/bookcase/BookcaseContainer";
+import { Layout } from "@components/common";
+import BookcaseContainer from "@containers/bookcase";
 
-function Bookcase() {
+export function Bookcase() {
   return (
     <Layout title="BOOKCASE">
       <BookcaseContainer />
     </Layout>
   );
 }
-
-export default Bookcase;

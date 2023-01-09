@@ -21,12 +21,10 @@ const LogoutButton = styled.button`
   }
 `;
 
-function Logout() {
+export function Logout() {
   return (
     <LogoutButton>
       <span>Logout</span>
     </LogoutButton>
   );
 }
-
-export default Logout;

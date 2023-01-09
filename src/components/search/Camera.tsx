@@ -16,12 +16,10 @@ const CameraBlock = styled.div`
   }
 `;
 
-function SearchCam({ camera }: SearchCamProps) {
+export function Camera({ camera }: SearchCamProps) {
   return (
     <CameraBlock>
       <video ref={camera} autoPlay playsInline></video>
     </CameraBlock>
   );
 }
-
-export default SearchCam;

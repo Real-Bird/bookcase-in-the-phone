@@ -1,7 +1,10 @@
-import AboutContainer from "../containers/about/AboutContainer";
+import { Layout } from "@components/common";
+import AboutContainer from "@containers/about";
 
-function About() {
-  return <AboutContainer />;
+export function About() {
+  return (
+    <Layout title="ABOUT">
+      <AboutContainer />
+    </Layout>
+  );
 }
-
-export default About;
