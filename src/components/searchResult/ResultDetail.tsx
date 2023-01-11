@@ -1,5 +1,6 @@
+import { useIsbnDispatch, useIsbnState } from "@/libs/searchContextApi";
 import { DetailBlock } from "@components/bookDetail/Viewer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const ButtonBlock = styled.div`
@@ -110,8 +111,13 @@ const DetailBottom = styled.div`
 `;
 
 export function ResultDetail() {
-  const navigator = useNavigate();
-  const onBack = () => navigator("/search");
+  const navigate = useNavigate();
+  const isbnState = useIsbnState();
+  const isbnDispatch = useIsbnDispatch();
+  const onBack = () => {
+    isbnDispatch({ type: "INITIALIZE_DATA" });
+    navigate("/search");
+  };
   return (
     <>
       <ButtonBlock>
@@ -122,13 +128,13 @@ export function ResultDetail() {
       </ButtonBlock>
       <ResultBlock>
         <DetailTop>
-          <CoverImage src="https://picsum.photos/200/300" />
+          <CoverImage src={isbnState.TITLE_URL} />
           <BookInfoBox>
-            <input className="info" value="제목" />
-            <input className="info" value="지은이" />
-            <input className="info" value="옮긴이" />
-            <input className="info" value="출판사" />
-            <input className="info" value="ISBN" />
+            <input className="info" value={isbnState.TITLE} />
+            <input className="info" value={isbnState.AUTHOR} />
+            <input className="info" value={isbnState.PUBLISHER} />
+            <input className="info" value={isbnState.PUBLISH_PREDATE} />
+            <input className="info" value={isbnState.EA_ISBN} />
           </BookInfoBox>
         </DetailTop>
         <DetailBottom>

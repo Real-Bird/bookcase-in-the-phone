@@ -43,7 +43,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />,
       },
       {
-        path: "search/result/:isbn",
+        path: "result/:isbn",
         element: <SearchResult />,
         errorElement: <ErrorBoundary />,
       },
