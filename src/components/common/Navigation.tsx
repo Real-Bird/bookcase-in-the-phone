@@ -1,3 +1,4 @@
+import { useIsbnDispatch } from "@/libs/searchContextApi";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -36,11 +37,13 @@ const NavIcon = styled.svg`
 
 export function Navigation() {
   const { pathname } = useLocation();
+  const isbnDispatch = useIsbnDispatch();
+  const onClick = () => isbnDispatch({ type: "INITIALIZE_DATA" });
   return (
     <NavBlock>
       <NavList>
         <NavItem isCurrentPath={pathname === "/"}>
-          <Link to={"/"}>
+          <Link to={"/"} onClick={onClick}>
             <NavIconBox>
               <NavIcon
                 xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +63,7 @@ export function Navigation() {
           </Link>
         </NavItem>
         <NavItem isCurrentPath={pathname === "/search"}>
-          <Link to={"search"}>
+          <Link to={"search"} onClick={onClick}>
             <NavIconBox>
               <NavIcon
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +89,7 @@ export function Navigation() {
           </Link>
         </NavItem>
         <NavItem isCurrentPath={pathname === "/about"}>
-          <Link to={"about"}>
+          <Link to={"about"} onClick={onClick}>
             <NavIconBox>
               <NavIcon
                 xmlns="http://www.w3.org/2000/svg"

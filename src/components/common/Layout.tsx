@@ -23,7 +23,6 @@ const Title = styled.h1`
   height: 4rem;
   font-weight: bolder;
   position: fixed;
-  background-color: rgba(223, 249, 251, 0.7);
   width: 100%;
   text-align: center;
   top: 0;

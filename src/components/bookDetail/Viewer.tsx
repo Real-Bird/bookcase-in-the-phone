@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DetailBlock = styled.div`
+const DetailBlock = styled.div`
   width: 100%;
   height: 88vh;
   background: rgba(223, 249, 251, 0.7);
