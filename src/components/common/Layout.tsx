@@ -26,6 +26,7 @@ const Title = styled.h1`
   width: 100%;
   text-align: center;
   top: 0;
+  background: #6ab04c; ;
 `;
 
 const ChildrenBlock = styled.div`
