@@ -1,6 +1,8 @@
 import { Input } from "@/components/common";
 import { BookInfoItem } from "@/components/searchResult/BookInfoItem";
-import styled from "styled-components";
+import useWindowSize from "@/libs/useWindowSize";
+import { useEffect, useRef, useState } from "react";
+import styled, { keyframes } from "styled-components";
 
 const DetailContainer = styled.div`
   width: 100%;
@@ -10,13 +12,32 @@ const DetailContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 20px;
+  overflow: hidden;
 `;
 
-const DetailTitle = styled.h1`
-  width: 85%;
+const StreamText = keyframes`
+  0% {
+    transform:translateX(0%);
+  }
+  100% {
+    transform:translateX(-240%);
+  }
+`;
+
+const DetailTitle = styled.h1<{ isOverflow: boolean }>`
+  width: 100%;
   font-size: 2rem;
   font-weight: bold;
   padding: 1rem 1.5rem;
+  text-align: center;
+  white-space: pre;
+  text-overflow: clip;
+  animation-name: ${(props) => (props.isOverflow ? StreamText : "")};
+  animation-duration: 7s;
+  animation-timing-function: linear;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: normal;
 `;
 
 const DetailTop = styled.div`
@@ -39,7 +60,7 @@ const BookInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: 5px;
 `;
 
 const DetailBottom = styled.div`
@@ -82,6 +103,10 @@ const DetailBottomItem = styled.div`
     border: none;
     resize: none;
     border-radius: 10px;
+    padding: 0.2rem 0.5rem;
+  }
+  span {
+    text-align: end;
   }
 `;
 
@@ -94,7 +119,10 @@ interface ResultDetailProps {
   ea_isbn: string;
   translator: string | undefined;
   review: string;
-  onChange: () => void;
+  startDateValue: string;
+  endDateValue: string;
+  onDateChange: (e: any) => void;
+  onReviewChange: (e: any) => void;
 }
 
 export function ResultDetail({
@@ -106,11 +134,29 @@ export function ResultDetail({
   titleUrl,
   translator,
   review,
-  onChange,
+  onDateChange,
+  onReviewChange,
+  startDateValue,
+  endDateValue,
 }: ResultDetailProps) {
+  const REVIEW_MIN = 5;
+  const REVIEW_MAX = 150;
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [isOverflow, setIsOverflow] = useState(false);
+  const isChangeWindow = useWindowSize(titleRef);
+  useEffect(() => {
+    setIsOverflow(isChangeWindow);
+  }, [isChangeWindow]);
   return (
     <DetailContainer>
-      <DetailTitle>{title}</DetailTitle>
+      <DetailTitle
+        ref={titleRef}
+        isOverflow={isOverflow}
+        onMouseEnter={() => setIsOverflow(false)}
+        onMouseLeave={() => setIsOverflow(true)}
+      >
+        {title}
+      </DetailTitle>
       <DetailTop>
         {titleUrl ? <CoverImage src={titleUrl} /> : <CoverImage as={"div"} />}
         <BookInfoBox>
@@ -127,23 +173,30 @@ export function ResultDetail({
             type="date"
             label="독서 시작"
             name="reading-start"
-            onChange={() => {}}
+            onChange={onDateChange}
+            value={startDateValue}
           />
           <Input
             type="date"
             label="독서 끝"
             name="reading-end"
-            onChange={() => {}}
+            onChange={onDateChange}
+            value={endDateValue}
           />
         </DetailBottomItem>
         <DetailBottomItem className="review">
           <label htmlFor="review">감상평</label>
           <textarea
             id="review"
-            onChange={onChange}
+            onChange={onReviewChange}
             value={review}
             rows={5}
+            minLength={REVIEW_MIN}
+            maxLength={REVIEW_MAX}
           ></textarea>
+          <span>
+            {review.slice(0, 150).length ?? 0} / {REVIEW_MAX} 자
+          </span>
         </DetailBottomItem>
       </DetailBottom>
     </DetailContainer>

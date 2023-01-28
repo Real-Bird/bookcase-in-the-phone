@@ -15,7 +15,7 @@ const InputContainer = styled.div`
 interface InputProps {
   type: string;
   label: string;
-  onChange?: () => void;
+  onChange?: (e: any) => void;
   value?: string;
   name?: string;
   placeholder?: string;
@@ -29,6 +29,11 @@ export function Input({
   value,
   placeholder,
 }: InputProps) {
+  const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
   return (
     <InputContainer>
       <label htmlFor={name}>{label}</label>
@@ -38,6 +43,7 @@ export function Input({
         onChange={onChange}
         value={value}
         placeholder={placeholder}
+        max={localeFormatter.format(new Date())}
       />
     </InputContainer>
   );
