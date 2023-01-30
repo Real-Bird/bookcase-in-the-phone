@@ -1,11 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-interface LayoutProps {
-  title: string;
-  children: React.ReactNode;
-}
-
 const LayoutBlock = styled.div`
   width: 100%;
   max-width: 1024px;
@@ -34,10 +29,16 @@ const ChildrenBlock = styled.div`
   max-width: 1024px;
   margin-top: 4rem;
 `;
+
+interface LayoutProps {
+  title?: string;
+  children: React.ReactNode;
+}
+
 export function Layout({ title, children }: LayoutProps) {
   return (
     <LayoutBlock>
-      <Title>{title}</Title>
+      {title && <Title>{title}</Title>}
       <ChildrenBlock>{children}</ChildrenBlock>
     </LayoutBlock>
   );

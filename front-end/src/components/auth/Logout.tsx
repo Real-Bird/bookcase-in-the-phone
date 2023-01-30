@@ -21,9 +21,13 @@ const LogoutButton = styled.button`
   }
 `;
 
-export function Logout() {
+interface LogoutProps {
+  onClick: () => void;
+}
+
+export function Logout({ onClick }: LogoutProps) {
   return (
-    <LogoutButton>
+    <LogoutButton onClick={onClick}>
       <span>Logout</span>
     </LogoutButton>
   );

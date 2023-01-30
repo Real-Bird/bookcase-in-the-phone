@@ -5,5 +5,3 @@ export * from "./Login";
 export * from "./NotFound";
 export * from "./Search";
 export * from "./SearchResult";
-
-export * from "./APITest";

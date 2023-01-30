@@ -1,11 +1,16 @@
+import { config } from "dotenv";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import callPassport from "./src/libs/passport";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+
+config();
+
+import authRouter from "./src/routes/auth";
 
 declare global {
   namespace Express {
@@ -18,7 +23,7 @@ declare global {
 
 declare module "express-session" {
   interface SessionData {
-    foo: string;
+    userId: string;
   }
 }
 
@@ -33,8 +38,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:8000"],
+    origin: ["http://localhost:3000"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
     optionsSuccessStatus: 200,
   })
 );
@@ -52,18 +58,20 @@ app.use(
       mongoUrl: process.env.MONGO_URI,
       dbName: "BiP",
       collectionName: "session",
-      // touchAfter: 24 * 3600,
     }),
   })
 );
 
-callPassport(app);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get("/auth", (req, res, next) => {
-  console.log(req.session.foo);
-  // if (req.session) return res.json({ isLoggedIn: true });
-  // res.json({ isLoggedIn: false });
-});
+app.use("/auth", authRouter);
+
+// app.get("/auth", (req, res, next) => {
+//   console.log(req.session.foo);
+//   // if (req.session) return res.json({ isLoggedIn: true });
+//   // res.json({ isLoggedIn: false });
+// });
 
 app.get("/", (req, res, next) => {
   res.send("h1");

@@ -3,7 +3,6 @@ import { ErrorBoundary } from "@components/common";
 
 import {
   About,
-  APITest,
   Bookcase,
   BookDetail,
   Login,
@@ -61,11 +60,6 @@ const router = createBrowserRouter(
         {
           path: "result/:isbn",
           element: <SearchResult />,
-          errorElement: <ErrorBoundary />,
-        },
-        {
-          path: "test",
-          element: <APITest />,
           errorElement: <ErrorBoundary />,
         },
       ],

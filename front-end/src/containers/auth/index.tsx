@@ -15,11 +15,7 @@ const LoginBlock = styled.div`
 `;
 
 function LoginContainer() {
-  return (
-    <LoginBlock>
-      <GoogleLogin />
-    </LoginBlock>
-  );
+  return <LoginBlock>{/* <GoogleLogin /> */}</LoginBlock>;
 }
 
 export default LoginContainer;

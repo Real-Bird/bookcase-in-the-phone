@@ -93,22 +93,7 @@ export const FetchIsbnDataProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    PUBLISHER: "",
-    UPDATE_DATE: "",
-    AUTHOR: "",
-    TITLE_URL: "",
-    PRE_PRICE: "",
-    FORM: "",
-    PAGE: "",
-    EA_ISBN: "",
-    INPUT_DATE: "",
-    SUBJECT: "",
-    TITLE: "",
-    PUBLISH_PREDATE: "",
-    TRANSLATOR: "",
-    isLoading: true,
-  });
+  const [state, dispatch] = useReducer(reducer, INITIALIZE_ISBN_DATA);
   return (
     <IsbnStateContext.Provider value={state}>
       <IsbnActionContext.Provider value={dispatch}>
@@ -129,9 +114,3 @@ export function useIsbnDispatch() {
   if (!dispatch) throw new Error("Cannot find Isbn");
   return dispatch;
 }
-
-// const { Consumer: ModalConsumer } = ModalOpen;
-
-// export { ModalProvider, ModalConsumer };
-
-// export default ModalOpen;
