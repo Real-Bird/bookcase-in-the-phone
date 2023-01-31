@@ -5,6 +5,7 @@ interface SelectCamerasProps {
   selectRef: RefObject<HTMLSelectElement>;
   children: ReactNode;
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
+  defaultValue?: string;
 }
 
 const SelectBlock = styled.select`
@@ -37,9 +38,19 @@ const SelectBlock = styled.select`
   }
 `;
 
-export function Select({ selectRef, children, onChange }: SelectCamerasProps) {
+export function Select({
+  selectRef,
+  children,
+  onChange,
+  defaultValue,
+}: SelectCamerasProps) {
   return (
-    <SelectBlock ref={selectRef} onChange={onChange}>
+    <SelectBlock
+      ref={selectRef}
+      onChange={onChange}
+      key={defaultValue}
+      defaultValue={defaultValue}
+    >
       {children}
     </SelectBlock>
   );

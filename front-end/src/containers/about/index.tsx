@@ -1,9 +1,8 @@
-import { useUserDispatch, useUserState } from "@/libs/userContextApi";
+import { logout } from "@api/auth";
+import { useUserDispatch, useUserState } from "@libs/userContextApi";
 import { GoogleLogin, Logout } from "@components/auth";
-import axios from "axios";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const AboutBlock = styled.div`
   width: 100%;
@@ -19,40 +18,17 @@ const AboutBlock = styled.div`
 `;
 
 function AboutContainer() {
-  const { userInfo, isLoggedIn } = useUserState();
   const FetchUserDispatch = useUserDispatch();
   const navigate = useNavigate();
-  const getUser = async (url: string) => {
-    try {
-      const { data } = await axios.get(url, { withCredentials: true });
-      FetchUserDispatch({ type: "SET_USER", userInfo: data.user });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const googleAuthLogin = () => {
-    window.open(
-      `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
-      "_self"
-    );
-  };
   const googleAuthLogout = () => {
-    window.open(
-      `${import.meta.env.VITE_REACT_APP_API_URL}/auth/logout`,
-      "_self"
-    );
     FetchUserDispatch({ type: "INITIALIZE_USER" });
+    localStorage.removeItem("BiPToken");
+    logout();
+    navigate("/");
   };
-  useEffect(() => {
-    getUser(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login/success`);
-  }, []);
   return (
     <AboutBlock>
-      {isLoggedIn ? (
-        <Logout onClick={googleAuthLogout} />
-      ) : (
-        <GoogleLogin onClick={googleAuthLogin} />
-      )}
+      <Logout onClick={googleAuthLogout} />
       <footer>&copy; Bookcase in the Phone 2023 by Real-Bird</footer>
     </AboutBlock>
   );

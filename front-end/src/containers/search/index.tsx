@@ -1,5 +1,5 @@
-import { Button } from "@/components/common";
-import { useIsbnDispatch, useIsbnState } from "@/libs/searchContextApi";
+import { Button } from "@components/common";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -46,6 +46,9 @@ const DescriptionBlock = styled.div`
   }
   h3 {
     font-size: 1.75rem;
+  }
+  img {
+    margin-top: 1rem;
   }
 `;
 
@@ -94,10 +97,11 @@ function SearchContainer() {
       </OutletBlock>
       <HrLine />
       <DescriptionBlock>
-        <h2>바코드를 읽으면</h2>
+        <h2>바코드 / ISBN으로 검색한</h2>
         <h2>책의 정보를 표시합니다!</h2>
         <h3>\(@^0^@)/</h3>
         <div>{barcode}</div>
+        <img src={"/public/barcode.png"} width={300} />
       </DescriptionBlock>
     </SearchBlock>
   );

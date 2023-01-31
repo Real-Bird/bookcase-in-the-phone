@@ -1,5 +1,5 @@
-import { BarcodeSearchProps, getInfo } from "@/containers/search";
-import { useIsbnDispatch, useIsbnState } from "@/libs/searchContextApi";
+import { BarcodeSearchProps, getInfo } from "@containers/search";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { Camera, Select } from "@components/search";
 import useScanner from "@libs/useScanner";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -12,12 +12,18 @@ export default function CameraSearch() {
   const { scan, scanning, stopStream, getCameras, getConstraints, getMedia } =
     useScanner();
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>();
+  const [currentCamera, setCurrentCamera] = useState("");
   const FetchIsbnState = useIsbnState();
   const FetchIsbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
   useEffect(() => {
-    (async () => await getMedia().then((stream) => setLocalStream(stream)))();
+    (async () =>
+      await getMedia().then(async (stream) => {
+        const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
+        setCurrentCamera(deviceId);
+        setLocalStream(stream);
+      }))();
     getCameras(scan, setCameras);
     return () => {
       stopStream(localStream!);
@@ -35,13 +41,19 @@ export default function CameraSearch() {
       stopStream(localStream!);
     };
   }, [localStream, FetchIsbnState]);
-
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     await getMedia(e.target.value, getConstraints).then((stream) =>
       setLocalStream(stream)
     );
   };
-
+  const getCurrentCamId = async (label: string) => {
+    const deviceId = await navigator.mediaDevices
+      .enumerateDevices()
+      .then((device) => {
+        return device.filter((d) => d.label === label)[0].deviceId;
+      });
+    return deviceId;
+  };
   useEffect(() => {
     if (!!barcode) {
       getInfo(barcode).then((data) =>
@@ -52,7 +64,11 @@ export default function CameraSearch() {
   return (
     <>
       <Camera camera={camera} />
-      <Select selectRef={selectCamera} onChange={handleChange}>
+      <Select
+        selectRef={selectCamera}
+        onChange={handleChange}
+        defaultValue={currentCamera}
+      >
         {cameras?.map((cam) => (
           <option key={cam.deviceId} value={cam.deviceId}>
             {cam.label}

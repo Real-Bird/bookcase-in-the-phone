@@ -1,6 +1,6 @@
-import { Input } from "@/components/common";
-import { BookInfoItem } from "@/components/searchResult/BookInfoItem";
-import useWindowSize from "@/libs/useWindowSize";
+import { Input } from "@components/common";
+import { BookInfoItem } from "@components/searchResult/BookInfoItem";
+import useWindowSize from "@libs/useWindowSize";
 import { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 

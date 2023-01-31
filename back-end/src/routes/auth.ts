@@ -1,28 +1,13 @@
 import { Router } from "express";
 import callPassport from "../libs/passport";
+import * as authCtrl from "../controller/auth";
 
 const router = Router();
 const passport = callPassport();
 
-router.get("/login/success", (req, res) => {
-  if (req.user) {
-    res.status(200).json({
-      error: false,
-      message: "Successfully Logged In",
-      user: req.user,
-    });
-  } else {
-    res.status(403).json({ error: true, message: "Not Authorized" });
-  }
-});
+router.get("/login/success", authCtrl.login);
 
-router.get("/login/checked", (req, res) => {
-  if (req.user)
-    return res
-      .status(200)
-      .json({ ok: true, data: req.user, message: "Already Logged In" });
-  res.status(401).json({ ok: false, data: null, message: "Not logged in" });
-});
+router.get("/logout", authCtrl.logout);
 
 router.get(
   "/google",
@@ -36,12 +21,5 @@ router.get(
     failureRedirect: process.env.FAILURE_CLIENT_URL,
   })
 );
-
-router.get("/logout", (req, res) => {
-  req.logout(() => {
-    console.log(req.user);
-    res.redirect(process.env.SUCCESS_CLIENT_URL);
-  });
-});
 
 export default router;

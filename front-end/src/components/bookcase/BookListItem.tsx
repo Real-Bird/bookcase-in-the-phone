@@ -1,5 +1,7 @@
+import useWindowSize from "@libs/useWindowSize";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const Post = styled(Link)`
   width: 96%;
@@ -18,22 +20,37 @@ const PostImage = styled.img`
   background: tan;
 `;
 
-const PostDetailBox = styled.div`
+const StreamText = keyframes`
+  0% {
+    transform:translateX(20%);
+  }
+  100% {
+    transform:translateX(-350%);
+  }
+`;
+
+const PostDetailBox = styled.div<{ isOverflow: boolean }>`
   width: 75%;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
 
   h3 {
-    width: 100%;
+    width: 70%;
     font-size: 1.5rem;
     font-weight: 600;
-    overflow-x: clip;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-overflow: clip;
+    white-space: pre;
     margin-bottom: 5px;
     text-align: center;
+    animation-name: ${(props) => (props.isOverflow ? StreamText : "")};
+    animation-duration: 7s;
+    animation-timing-function: linear;
+    animation-delay: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
   }
 
   .detail_block {
@@ -49,6 +66,12 @@ const PostDetailBox = styled.div`
 `;
 
 export function BookListItem({ idx }: { idx: number }) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [isOverflow, setIsOverflow] = useState(false);
+  const isChangeWindow = useWindowSize(titleRef);
+  useEffect(() => {
+    setIsOverflow(isChangeWindow);
+  }, [isChangeWindow]);
   return (
     <Post
       to={"/books/title"}
@@ -58,8 +81,8 @@ export function BookListItem({ idx }: { idx: number }) {
     >
       <strong>{idx}</strong>
       <PostImage src="https://picsum.photos/200/300" />
-      <PostDetailBox>
-        <h3>
+      <PostDetailBox isOverflow={isOverflow}>
+        <h3 ref={titleRef}>
           애자일 소프트웨어 아키텍트의 길 - 소프트웨어의 지속적인 설계를 통한
           진화
         </h3>

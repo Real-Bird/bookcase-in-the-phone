@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
 import { ErrorBoundary } from "@components/common";
 
 import {
@@ -9,10 +9,11 @@ import {
   NotFound,
   Search,
   SearchResult,
-} from "@/pages";
-import Root from "@/Root";
-import IsbnSearch from "@/containers/search/IsbnSearch";
-import CameraSearch from "@/containers/search/CameraSearch";
+} from "./pages";
+import Root from "./Root";
+import IsbnSearch from "@containers/search/IsbnSearch";
+import CameraSearch from "@containers/search/CameraSearch";
+import { hasUserToken } from "@api/auth";
 
 const router = createBrowserRouter(
   [
@@ -22,7 +23,11 @@ const router = createBrowserRouter(
       children: [
         {
           path: "",
-          element: <Bookcase />,
+          element: (
+            <RequireAuth>
+              <Bookcase />
+            </RequireAuth>
+          ),
           errorElement: <ErrorBoundary />,
         },
         {
@@ -32,17 +37,29 @@ const router = createBrowserRouter(
         },
         {
           path: "about",
-          element: <About />,
+          element: (
+            <RequireAuth>
+              <About />
+            </RequireAuth>
+          ),
           errorElement: <ErrorBoundary />,
         },
         {
           path: "login",
-          element: <Login />,
+          element: (
+            <AlreadyAuth>
+              <Login />
+            </AlreadyAuth>
+          ),
           errorElement: <ErrorBoundary />,
         },
         {
           path: "search",
-          element: <Search />,
+          element: (
+            <RequireAuth>
+              <Search />
+            </RequireAuth>
+          ),
           errorElement: <ErrorBoundary />,
           children: [
             {
@@ -70,3 +87,25 @@ const router = createBrowserRouter(
 );
 
 export default router;
+
+function RequireAuth({ children }: { children: JSX.Element }) {
+  const auth = hasUserToken("BiPToken");
+  const location = useLocation();
+
+  if (!auth) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+}
+
+function AlreadyAuth({ children }: { children: JSX.Element }) {
+  const auth = hasUserToken("BiPToken");
+  const location = useLocation();
+
+  if (auth) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return children;
+}

@@ -1,4 +1,8 @@
+import { googleLogin } from "@api/auth";
+import { useUserDispatch } from "@libs/userContextApi";
 import { GoogleLogin } from "@components/auth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const LoginBlock = styled.div`
@@ -15,7 +19,35 @@ const LoginBlock = styled.div`
 `;
 
 function LoginContainer() {
-  return <LoginBlock>{/* <GoogleLogin /> */}</LoginBlock>;
+  const FetchUserDispatch = useUserDispatch();
+  const navigate = useNavigate();
+  const getUser = async () => {
+    try {
+      const {
+        data: { user },
+      } = await googleLogin();
+      localStorage.setItem("BiPToken", user.id);
+      FetchUserDispatch({ type: "SET_USER", userInfo: user });
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const googleAuthLogin = async () => {
+    window.open(
+      `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
+      "_self",
+      "noopener"
+    );
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
+  return (
+    <LoginBlock>
+      <GoogleLogin onClick={googleAuthLogin} />
+    </LoginBlock>
+  );
 }
 
 export default LoginContainer;

@@ -1,4 +1,4 @@
-import { useIsbnDispatch } from "@/libs/searchContextApi";
+import { useIsbnDispatch } from "@libs/searchContextApi";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -9,6 +9,7 @@ const NavBlock = styled.nav`
   width: 100%;
   height: 3.75rem;
   max-width: 1024px;
+  z-index: 10;
 `;
 const NavList = styled.ul`
   display: grid;

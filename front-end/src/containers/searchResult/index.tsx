@@ -1,5 +1,5 @@
-import { Button } from "@/components/common/Button";
-import { useIsbnDispatch, useIsbnState } from "@/libs/searchContextApi";
+import { Button } from "@components/common";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

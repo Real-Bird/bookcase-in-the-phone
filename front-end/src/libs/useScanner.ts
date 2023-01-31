@@ -64,10 +64,10 @@ export default function useScanner() {
     dispatchCameras: Dispatch<SetStateAction<MediaDeviceInfo[] | undefined>>
   ) {
     const devices = await scan.listVideoInputDevices();
-    // dispatchCameras(devices);
-    dispatchCameras(
-      devices.filter((device) => device.label.includes("DroidCam"))
-    );
+    dispatchCameras(devices);
+    // dispatchCameras(
+    //   devices.filter((device) => device.label.includes("DroidCam"))
+    // );
   }
 
   const getConstraints: GetConstraints = (deviceId) => {
@@ -80,20 +80,20 @@ export default function useScanner() {
   };
 
   async function getMedia(deviceId?: string, constraints?: GetConstraints) {
-    // const initialConstrains = { video: true, audio: false };
-    // return navigator.mediaDevices.getUserMedia(
-    //   constraints ? constraints(deviceId) : initialConstrains
-    // );
-    const initialConstrains = {
-      video: {
-        deviceId: {
-          exact:
-            "6a9b759d4a860d028cc76a267ccee3b34074c79b81b93fd5eaf7f550870b2c50",
-        },
-      },
-      audio: false,
-    };
-    return navigator.mediaDevices.getUserMedia(initialConstrains);
+    const initialConstrains = { video: true, audio: false };
+    return navigator.mediaDevices.getUserMedia(
+      constraints ? constraints(deviceId) : initialConstrains
+    );
+    // const initialConstrains = {
+    //   video: {
+    //     deviceId: {
+    //       exact:
+    //         "6a9b759d4a860d028cc76a267ccee3b34074c79b81b93fd5eaf7f550870b2c50",
+    //     },
+    //   },
+    //   audio: false,
+    // };
+    // return navigator.mediaDevices.getUserMedia(initialConstrains);
   }
 
   return {

@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: "http://localhost:3000",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     optionsSuccessStatus: 200,
@@ -66,12 +66,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRouter);
-
-// app.get("/auth", (req, res, next) => {
-//   console.log(req.session.foo);
-//   // if (req.session) return res.json({ isLoggedIn: true });
-//   // res.json({ isLoggedIn: false });
-// });
 
 app.get("/", (req, res, next) => {
   res.send("h1");

@@ -1,6 +1,6 @@
-import { Button, FloatingInput } from "@/components/common";
-import { BarcodeSearchProps, getInfo } from "@/containers/search";
-import { useIsbnDispatch } from "@/libs/searchContextApi";
+import { Button, FloatingInput } from "@components/common";
+import { BarcodeSearchProps, getInfo } from "@containers/search";
+import { useIsbnDispatch } from "@libs/searchContextApi";
 import { FormEvent } from "react";
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
@@ -24,6 +24,7 @@ export default function IsbnSearch() {
       FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] })
     );
   };
+
   return (
     <FormBlock onSubmit={onSubmit}>
       <FloatingInput
