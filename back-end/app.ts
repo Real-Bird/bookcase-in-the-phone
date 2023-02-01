@@ -11,6 +11,7 @@ import passport from "passport";
 config();
 
 import authRouter from "./src/routes/auth";
+import bookcaseRouter from "./src/routes/bookcase";
 
 declare global {
   namespace Express {
@@ -66,6 +67,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRouter);
+app.use("/bookcase", bookcaseRouter);
 
 app.get("/", (req, res, next) => {
   res.send("h1");

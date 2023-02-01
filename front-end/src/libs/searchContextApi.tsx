@@ -6,7 +6,7 @@ import {
   useReducer,
 } from "react";
 
-type FetchIsbnDataState = {
+export type FetchIsbnDataState = {
   PUBLISHER: string;
   UPDATE_DATE: string;
   AUTHOR: string;

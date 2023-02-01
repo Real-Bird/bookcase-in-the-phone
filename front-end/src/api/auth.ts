@@ -14,6 +14,15 @@ export async function logout() {
   return;
 }
 
+export async function checkedUser() {
+  const token = getUserToken("BiPToken");
+  if (!token) return false;
+  const { data } = await axios.get(`${SERVER_URL}/auth/check?token=${token}`, {
+    withCredentials: true,
+  });
+  return data;
+}
+
 export function hasUserToken(key: string) {
   if (!localStorage.getItem(key)) return false;
   return true;

@@ -22,4 +22,6 @@ router.get(
   })
 );
 
+router.get("/check", authCtrl.check);
+
 export default router;

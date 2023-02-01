@@ -1,7 +1,7 @@
 import { Input } from "@components/common";
 import { BookInfoItem } from "@components/searchResult/BookInfoItem";
 import useWindowSize from "@libs/useWindowSize";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
 const DetailContainer = styled.div`
@@ -19,6 +19,9 @@ const StreamText = keyframes`
   0% {
     transform:translateX(0%);
   }
+  30% {
+    transform:translateX(0%);
+  }
   100% {
     transform:translateX(-240%);
   }
@@ -33,11 +36,14 @@ const DetailTitle = styled.h1<{ isOverflow: boolean }>`
   white-space: pre;
   text-overflow: clip;
   animation-name: ${(props) => (props.isOverflow ? StreamText : "")};
-  animation-duration: 7s;
+  animation-duration: 9s;
   animation-timing-function: linear;
   animation-delay: 2s;
   animation-iteration-count: infinite;
   animation-direction: normal;
+  &:hover {
+    animation-play-state: paused;
+  }
 `;
 
 const DetailTop = styled.div`
@@ -60,7 +66,6 @@ const BookInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 5px;
 `;
 
 const DetailBottom = styled.div`
@@ -121,8 +126,8 @@ interface ResultDetailProps {
   review: string;
   startDateValue: string;
   endDateValue: string;
-  onDateChange: (e: any) => void;
-  onReviewChange: (e: any) => void;
+  onDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onReviewChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export function ResultDetail({
@@ -149,12 +154,7 @@ export function ResultDetail({
   }, [isChangeWindow]);
   return (
     <DetailContainer>
-      <DetailTitle
-        ref={titleRef}
-        isOverflow={isOverflow}
-        onMouseEnter={() => setIsOverflow(false)}
-        onMouseLeave={() => setIsOverflow(true)}
-      >
+      <DetailTitle ref={titleRef} isOverflow={isOverflow}>
         {title}
       </DetailTitle>
       <DetailTop>

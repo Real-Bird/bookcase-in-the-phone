@@ -30,6 +30,10 @@ const OutletBlock = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
+
+  .barcode {
+    height: 2rem;
+  }
 `;
 
 const HrLine = styled.hr`
@@ -94,14 +98,14 @@ function SearchContainer() {
             setBarcode,
           }}
         />
+        <div className="barcode">{barcode}</div>
       </OutletBlock>
       <HrLine />
       <DescriptionBlock>
         <h2>바코드 / ISBN으로 검색한</h2>
         <h2>책의 정보를 표시합니다!</h2>
         <h3>\(@^0^@)/</h3>
-        <div>{barcode}</div>
-        <img src={"/public/barcode.png"} width={300} />
+        <img src={"/barcode.png"} width={300} />
       </DescriptionBlock>
     </SearchBlock>
   );

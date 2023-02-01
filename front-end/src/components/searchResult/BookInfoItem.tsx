@@ -10,6 +10,7 @@ const Label = styled.div`
   top: 0;
   transform: translate(0.25rem, -0.55rem);
   background: linear-gradient(#e1afea 50%, #dff2f9 50%);
+  padding: 0 5px;
 `;
 
 const InfoItem = styled.div`
@@ -19,9 +20,6 @@ const InfoItem = styled.div`
   background: rgba(223, 249, 251, 0.9);
   box-shadow: rgba(0, 0, 0, 0.4) 5px 5px;
   color: green;
-  span {
-    padding-top: 100px;
-  }
 `;
 
 interface BookInfoItemProps {

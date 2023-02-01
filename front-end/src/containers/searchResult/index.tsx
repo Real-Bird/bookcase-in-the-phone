@@ -4,6 +4,8 @@ import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { setSubject } from "@libs/utils";
+import { savedBookInfo, SavedBookInfoArgs } from "@api/bookcase";
 
 const ResultBlock = styled.div`
   width: 100%;
@@ -26,19 +28,18 @@ const ButtonBlock = styled.div`
   margin-bottom: 10px;
 `;
 
-type SetDataType = typeof SET_DATA;
-
-const SET_DATA = {
+const SET_DATA: SavedBookInfoArgs = {
   title: "",
   author: "",
   translator: "",
   publisher: "",
   publisher_predate: "",
   ea_isbn: "",
-  titleUrl: "",
+  title_url: "",
   review: "",
-  startDateValue: "",
-  endDateValue: "",
+  start_date: "",
+  end_date: "",
+  subject: "",
 };
 
 function ResultContainer() {
@@ -52,6 +53,7 @@ function ResultContainer() {
     PUBLISHER,
     PUBLISH_PREDATE,
     EA_ISBN,
+    SUBJECT,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
   const onBack = () => {
@@ -61,15 +63,13 @@ function ResultContainer() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [review, setReview] = useState("");
-  const [settingData, setSettingData] = useState<SetDataType>(SET_DATA);
-  const saveData = useCallback(() => {
-    console.log(settingData);
+  const [settingData, setSettingData] = useState<SavedBookInfoArgs>(SET_DATA);
+  const onSaveData = useCallback(async () => {
+    const callbackData = await savedBookInfo(settingData);
+    if (callbackData.error) return console.error(callbackData.message);
     isbnDispatch({ type: "INITIALIZE_DATA" });
-    setStartDate("");
-    setEndDate("");
-    setReview("");
+    navigate(-1);
   }, [settingData]);
-
   const onDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
@@ -102,18 +102,19 @@ function ResultContainer() {
       publisher: PUBLISHER,
       publisher_predate: PUBLISH_PREDATE,
       title: TITLE,
-      titleUrl: TITLE_URL,
+      title_url: TITLE_URL,
       translator: TRANSLATOR,
+      subject: setSubject(SUBJECT),
       review,
-      startDateValue: startDate,
-      endDateValue: endDate,
+      start_date: startDate,
+      end_date: endDate,
     });
   }, [review, startDate, endDate]);
   return (
     <ResultBlock>
       <ButtonBlock>
         <Button label="재검색" onClick={onBack} className="retry" />
-        <Button label="저장하기" onClick={saveData} className="save" />
+        <Button label="저장하기" onClick={onSaveData} className="save" />
       </ButtonBlock>
       <ResultDetail
         author={AUTHOR}

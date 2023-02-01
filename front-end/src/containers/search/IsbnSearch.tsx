@@ -14,7 +14,7 @@ const FormBlock = styled.form`
   align-items: center;
   gap: 10px;
 `;
-// 9788935213689
+
 export default function IsbnSearch() {
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
   const FetchIsbnDispatch = useIsbnDispatch();

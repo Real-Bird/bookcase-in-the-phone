@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { config } from "dotenv";
-import Users from "../db/users";
+import Users from "../db/user";
 
 config();
 

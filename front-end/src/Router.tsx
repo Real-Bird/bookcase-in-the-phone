@@ -102,7 +102,6 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 function AlreadyAuth({ children }: { children: JSX.Element }) {
   const auth = hasUserToken("BiPToken");
   const location = useLocation();
-
   if (auth) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
