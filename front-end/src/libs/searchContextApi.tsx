@@ -61,7 +61,8 @@ function reducer(
     case "SET_DATA":
       const writerReg = / ?(지은이|지음) ?[:]? ?|( 옮김)*/g;
       const replaceWriter = action.bookData.AUTHOR.replace(writerReg, "");
-      const [author, translator] = replaceWriter.split(";");
+      const [author, rest] = replaceWriter.split(";");
+      const translator = rest.includes("옮") ? rest : "-";
       const replaceDate = action.bookData.PUBLISH_PREDATE.replace(
         /(\d{4})(\d{2})(\d{2})/g,
         "$1-$2-$3"

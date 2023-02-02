@@ -32,7 +32,13 @@ export async function savedBookInfo(bookInfo: SavedBookInfoArgs) {
 
 export type BookListType = Pick<
   SavedBookInfoArgs,
-  "title" | "author" | "translator" | "publisher" | "subject" | "title_url"
+  | "title"
+  | "author"
+  | "translator"
+  | "publisher"
+  | "subject"
+  | "title_url"
+  | "ea_isbn"
 >;
 
 export interface BookListResponse {
@@ -49,4 +55,25 @@ export async function getBookList() {
     `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/list?token=${token}`
   );
   return { error, bookList };
+}
+
+export interface BookInfoResponse {
+  error: boolean;
+  bookInfo: SavedBookInfoArgs;
+  message: "string;";
+}
+
+export async function getBookInfoByIsbn(isbn: string) {
+  const token = getUserToken("BiPToken");
+  const {
+    data: { error, bookInfo },
+  } = await axios.get<BookInfoResponse>(
+    `${
+      import.meta.env.VITE_REACT_APP_API_URL
+    }/bookcase/info?token=${token}&isbn=${isbn}`
+  );
+  if (error) {
+    return { error, bookInfo: null };
+  }
+  return { error, bookInfo };
 }

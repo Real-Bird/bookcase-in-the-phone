@@ -78,7 +78,8 @@ interface BookListItemProps {
 }
 
 export function BookListItem({ idx, bookData }: BookListItemProps) {
-  const { title, author, publisher, subject, translator, title_url } = bookData;
+  const { title, author, publisher, subject, translator, title_url, ea_isbn } =
+    bookData;
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [isOverflow, setIsOverflow] = useState(false);
   const isChangeWindow = useWindowSize(titleRef);
@@ -86,7 +87,7 @@ export function BookListItem({ idx, bookData }: BookListItemProps) {
     setIsOverflow(isChangeWindow);
   }, [isChangeWindow]);
   return (
-    <Post to={"/books/title"} title={title}>
+    <Post to={`/books/${ea_isbn}`} title={title}>
       {title_url ? (
         <PostImage src={title_url} />
       ) : (

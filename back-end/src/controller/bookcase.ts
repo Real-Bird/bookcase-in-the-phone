@@ -16,6 +16,7 @@ export const bookList = async (req: Request, res: Response) => {
       translator: 1,
       publisher: 1,
       subject: 1,
+      ea_isbn: 1,
     }
   );
   res
@@ -57,5 +58,24 @@ export const savedBookInfo = async (req: Request, res: Response) => {
   }).catch((e) => {
     return res.status(400).json({ error: true, message: `Error : ${e}` });
   });
-  res.status(201).json({ error: false, message: "Successful Upload" });
+  return res.status(201).json({ error: false, message: "Successful Upload" });
+};
+
+export const getBookInfoByIsbn = async (req: Request, res: Response) => {
+  const { token, isbn } = req.query;
+  if (!token || !isbn) {
+    return res.status(401).json({ error: true, message: `Something Wrong` });
+  }
+  const bookInfo = await Book.findOne({
+    userId: token,
+    ea_isbn: isbn,
+  });
+  if (!bookInfo) {
+    return res
+      .status(404)
+      .json({ error: true, message: "Not found this ISBN" });
+  }
+  return res
+    .status(201)
+    .json({ error: false, bookInfo, message: "Successful Sends" });
 };

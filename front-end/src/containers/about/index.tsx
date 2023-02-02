@@ -1,6 +1,6 @@
 import { logout } from "@api/auth";
-import { useUserDispatch, useUserState } from "@libs/userContextApi";
-import { GoogleLogin, Logout } from "@components/auth";
+import { useUserDispatch } from "@libs/userContextApi";
+import { Logout } from "@components/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -15,15 +15,20 @@ const AboutBlock = styled.div`
   gap: 15px;
   margin-bottom: 3rem;
   padding: 1rem 10px;
+  position: relative;
+  footer {
+    position: absolute;
+    bottom: 2rem;
+  }
 `;
 
 function AboutContainer() {
   const FetchUserDispatch = useUserDispatch();
   const navigate = useNavigate();
-  const googleAuthLogout = () => {
+  const googleAuthLogout = async () => {
     FetchUserDispatch({ type: "INITIALIZE_USER" });
     localStorage.removeItem("BiPToken");
-    logout();
+    await logout();
     navigate("/");
   };
   return (

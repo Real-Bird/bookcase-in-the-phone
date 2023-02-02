@@ -2,7 +2,7 @@ import { Button, FloatingInput } from "@components/common";
 import { BarcodeSearchProps, getInfo } from "@containers/search";
 import { useIsbnDispatch } from "@libs/searchContextApi";
 import { FormEvent } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 
 const FormBlock = styled.form`
@@ -18,11 +18,11 @@ const FormBlock = styled.form`
 export default function IsbnSearch() {
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
   const FetchIsbnDispatch = useIsbnDispatch();
-  const onSubmit = (e: FormEvent) => {
+  const navigate = useNavigate();
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    getInfo(barcode).then((data) =>
-      FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] })
-    );
+    const data = await getInfo(barcode, navigate);
+    FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] });
   };
 
   return (

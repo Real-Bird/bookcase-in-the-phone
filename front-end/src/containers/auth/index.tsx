@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 const LoginBlock = styled.div`
   width: 100%;
-  height: 88vh;
+  height: 87vh;
   background: rgba(223, 249, 251, 0.7);
   display: flex;
   flex-direction: column;
@@ -33,11 +33,10 @@ function LoginContainer() {
       console.log(err);
     }
   };
-  const googleAuthLogin = async () => {
+  const googleAuthLogin = () => {
     window.open(
       `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
-      "_self",
-      "noopener"
+      "_self"
     );
   };
   useEffect(() => {

@@ -13,6 +13,6 @@ export default function useWindowSize(ref: RefObject<Element>) {
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [width]);
+  }, [width, ref.current]);
   return changeSize;
 }

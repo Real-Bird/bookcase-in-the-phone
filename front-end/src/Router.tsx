@@ -31,7 +31,7 @@ const router = createBrowserRouter(
           errorElement: <ErrorBoundary />,
         },
         {
-          path: "books/:title",
+          path: "books/:isbn",
           element: <BookDetail />,
           errorElement: <ErrorBoundary />,
         },
@@ -81,6 +81,10 @@ const router = createBrowserRouter(
         },
       ],
       errorElement: <NotFound />,
+    },
+    {
+      path: "/404",
+      element: <NotFound />,
     },
   ],
   { basename: "/" }

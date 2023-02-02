@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const RootBlock = styled.div`
   width: 100%;
-  max-width: 1024px;
+  max-width: 570px;
   margin: 0 auto;
   height: 100%;
   display: flex;

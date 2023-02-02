@@ -1,7 +1,14 @@
+import { getBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  NavigateFunction,
+  Outlet,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
 
 const SearchBlock = styled.div`
@@ -61,8 +68,12 @@ export interface BarcodeSearchProps {
   setBarcode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export async function getInfo(barcode: string) {
+export async function getInfo(barcode: string, navigate: NavigateFunction) {
   if (barcode.length < 13) return;
+  const { error } = await getBookInfoByIsbn(barcode);
+  if (!error) {
+    return navigate(`/books/${barcode}`);
+  }
   const URL = `https://www.nl.go.kr/seoji/SearchApi.do?cert_key=${
     import.meta.env.VITE_BOOK_SEARCH_API_KEY
   }&result_style=json&page_no=1&page_size=1&isbn=${barcode}`;
@@ -78,7 +89,7 @@ function SearchContainer() {
 
   useEffect(() => {
     if (!FetchIsbnState.isLoading) {
-      navigate(`/result/${FetchIsbnState.EA_ISBN}`);
+      return navigate(`/result/${FetchIsbnState.EA_ISBN}`);
     }
   }, [FetchIsbnState]);
   return (

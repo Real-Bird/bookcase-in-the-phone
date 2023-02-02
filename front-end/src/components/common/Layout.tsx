@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const LayoutBlock = styled.div`
   width: 100%;
-  max-width: 1024px;
+  max-width: 570px;
   margin: 0 auto;
   height: 100%;
   display: flex;
@@ -14,7 +14,7 @@ const LayoutBlock = styled.div`
 
 const Title = styled.h1`
   font-size: 3rem;
-  max-width: 1024px;
+  max-width: 570px;
   height: 4rem;
   font-weight: bolder;
   position: fixed;

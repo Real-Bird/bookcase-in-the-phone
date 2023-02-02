@@ -56,9 +56,10 @@ export default function CameraSearch() {
   };
   useEffect(() => {
     if (!!barcode) {
-      getInfo(barcode).then((data) =>
-        FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] })
-      );
+      (async () => {
+        const data = await getInfo(barcode, navigate);
+        return FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] });
+      })();
     }
   }, [barcode]);
   return (

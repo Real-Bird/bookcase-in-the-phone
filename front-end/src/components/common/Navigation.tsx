@@ -8,7 +8,7 @@ const NavBlock = styled.nav`
   bottom: 0;
   width: 100%;
   height: 3.75rem;
-  max-width: 1024px;
+  max-width: 570px;
   z-index: 10;
 `;
 const NavList = styled.ul`

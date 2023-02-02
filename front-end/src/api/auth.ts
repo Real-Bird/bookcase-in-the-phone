@@ -10,7 +10,10 @@ export async function googleLogin() {
 }
 
 export async function logout() {
-  await axios.get(`${SERVER_URL}/auth/logout`, { withCredentials: true });
+  const res = await axios.get(`${SERVER_URL}/auth/logout`, {
+    withCredentials: true,
+  });
+  console.log(res);
   return;
 }
 

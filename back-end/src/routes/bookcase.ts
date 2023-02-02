@@ -7,4 +7,6 @@ router.get("/list", bookcaseCtrl.bookList);
 
 router.post("/info", bookcaseCtrl.savedBookInfo);
 
+router.get("/info", bookcaseCtrl.getBookInfoByIsbn);
+
 export default router;

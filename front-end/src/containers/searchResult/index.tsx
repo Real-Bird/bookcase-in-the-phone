@@ -117,6 +117,7 @@ function ResultContainer() {
         <Button label="저장하기" onClick={onSaveData} className="save" />
       </ButtonBlock>
       <ResultDetail
+        isEdit
         author={AUTHOR}
         ea_isbn={EA_ISBN}
         publisher={PUBLISHER}

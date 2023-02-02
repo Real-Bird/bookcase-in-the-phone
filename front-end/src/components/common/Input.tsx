@@ -36,7 +36,9 @@ export function Input({
   });
   return (
     <InputContainer>
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name} className="label">
+        {label}
+      </label>
       <input
         type={type}
         id={name}

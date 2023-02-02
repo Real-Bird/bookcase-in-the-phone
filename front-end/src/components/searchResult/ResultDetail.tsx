@@ -1,4 +1,4 @@
-import { Input } from "@components/common";
+import { Input, ReadingDate } from "@components/common";
 import { BookInfoItem } from "@components/searchResult/BookInfoItem";
 import useWindowSize from "@libs/useWindowSize";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -96,11 +96,11 @@ const DetailBottomItem = styled.div`
   flex-direction: column;
   gap: 10px;
   box-shadow: rgba(0, 0, 0, 0.4) 5px 5px;
-  label {
+  .label {
     font-size: 1.125rem;
     border-bottom: 1px solid black;
   }
-  textarea {
+  .review-area {
     background: rgba(223, 249, 251, 0.7);
     color: green;
     font-family: "Gugi", cursive;
@@ -109,6 +109,9 @@ const DetailBottomItem = styled.div`
     resize: none;
     border-radius: 10px;
     padding: 0.2rem 0.5rem;
+  }
+  .none-edit {
+    min-height: 5rem;
   }
   span {
     text-align: end;
@@ -126,8 +129,9 @@ interface ResultDetailProps {
   review: string;
   startDateValue: string;
   endDateValue: string;
-  onDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onReviewChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  onDateChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onReviewChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  isEdit?: boolean;
 }
 
 export function ResultDetail({
@@ -143,6 +147,7 @@ export function ResultDetail({
   onReviewChange,
   startDateValue,
   endDateValue,
+  isEdit,
 }: ResultDetailProps) {
   const REVIEW_MIN = 5;
   const REVIEW_MAX = 150;
@@ -151,7 +156,7 @@ export function ResultDetail({
   const isChangeWindow = useWindowSize(titleRef);
   useEffect(() => {
     setIsOverflow(isChangeWindow);
-  }, [isChangeWindow]);
+  }, [isChangeWindow, title]);
   return (
     <DetailContainer>
       <DetailTitle ref={titleRef} isOverflow={isOverflow}>
@@ -169,34 +174,55 @@ export function ResultDetail({
       </DetailTop>
       <DetailBottom>
         <DetailBottomItem className="read-date">
-          <Input
-            type="date"
-            label="독서 시작"
-            name="reading-start"
-            onChange={onDateChange}
-            value={startDateValue}
-          />
-          <Input
-            type="date"
-            label="독서 끝"
-            name="reading-end"
-            onChange={onDateChange}
-            value={endDateValue}
-          />
+          {isEdit ? (
+            <>
+              <Input
+                type="date"
+                label="독서 시작"
+                name="reading-start"
+                onChange={onDateChange}
+                value={startDateValue}
+              />
+              <Input
+                type="date"
+                label="독서 끝"
+                name="reading-end"
+                onChange={onDateChange}
+                value={endDateValue}
+              />
+            </>
+          ) : (
+            <>
+              <ReadingDate label="독서 시작" date={startDateValue} />
+              <ReadingDate label="독서 끝" date={endDateValue} />
+            </>
+          )}
         </DetailBottomItem>
         <DetailBottomItem className="review">
-          <label htmlFor="review">감상평</label>
-          <textarea
-            id="review"
-            onChange={onReviewChange}
-            value={review}
-            rows={5}
-            minLength={REVIEW_MIN}
-            maxLength={REVIEW_MAX}
-          ></textarea>
-          <span>
-            {review.slice(0, 150).length ?? 0} / {REVIEW_MAX} 자
-          </span>
+          {isEdit ? (
+            <>
+              <label htmlFor="review" className="label">
+                감상평
+              </label>
+              <textarea
+                className="review-area"
+                id="review"
+                onChange={onReviewChange}
+                value={review}
+                rows={5}
+                minLength={REVIEW_MIN}
+                maxLength={REVIEW_MAX}
+              ></textarea>
+              <span>
+                {review.slice(0, 150).length ?? 0} / {REVIEW_MAX} 자
+              </span>
+            </>
+          ) : (
+            <>
+              <div className="label">감상평</div>
+              <div className="review-area none-edit">{review}</div>
+            </>
+          )}
         </DetailBottomItem>
       </DetailBottom>
     </DetailContainer>
