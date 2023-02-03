@@ -1,12 +1,9 @@
-import {
-  BookInfoResponse,
-  getBookInfoByIsbn,
-  SavedBookInfoArgs,
-} from "@api/bookcase";
+import { getBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
-import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const DetailBlock = styled.div`
@@ -30,30 +27,22 @@ const ButtonBlock = styled.div`
   margin-bottom: 10px;
 `;
 
-const INITIAL_DATA: SavedBookInfoArgs = {
-  author: "",
-  ea_isbn: "",
-  end_date: "",
-  publisher: "",
-  publisher_predate: "",
-  review: "",
-  start_date: "",
-  subject: "",
-  title: "",
-  title_url: "",
-  translator: "",
-};
-
 function BookDetailContainer() {
-  const [toggleEdit, setToggleEdit] = useState(false);
   const { isbn } = useParams();
+  const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
-  const [bookInfo, setBookInfo] = useState<SavedBookInfoArgs>(INITIAL_DATA);
+  const bookInfo = useIsbnState();
   useEffect(() => {
     if (isbn) {
       getBookInfoByIsbn(isbn)
-        .then(({ bookInfo }) => {
-          if (bookInfo) setBookInfo(bookInfo);
+        .then(({ bookInfo: fetchBookInfo }) => {
+          if (fetchBookInfo)
+            isbnDispatch({
+              type: "SET_DATA",
+              bookInfo: {
+                ...fetchBookInfo,
+              },
+            });
         })
         .catch((e) => navigate("/404"));
     }
@@ -62,24 +51,15 @@ function BookDetailContainer() {
     <DetailBlock>
       <ButtonBlock>
         <Button
-          label={toggleEdit ? "취소" : "수정"}
-          onClick={() => setToggleEdit((prev) => !prev)}
-          className="modified"
+          label="뒤로가기"
+          onClick={() => {
+            navigate(-1);
+          }}
+          color="#ff4d4d"
         />
-        {toggleEdit ? (
-          <Button label="저장하기" onClick={() => {}} className="save" />
-        ) : (
-          <Button
-            label="뒤로가기"
-            onClick={() => {
-              navigate(-1);
-            }}
-            className="save"
-          />
-        )}
+        <Button label="수정" onClick={() => navigate("edit")} />
       </ButtonBlock>
       <ResultDetail
-        isEdit={toggleEdit}
         author={bookInfo.author}
         ea_isbn={bookInfo.ea_isbn}
         publisher={bookInfo.publisher}
@@ -87,9 +67,9 @@ function BookDetailContainer() {
         title={bookInfo.title}
         titleUrl={bookInfo.title_url}
         translator={bookInfo.translator}
-        startDateValue={bookInfo.start_date}
-        endDateValue={bookInfo.end_date}
-        review={bookInfo.review}
+        startDateValue={bookInfo.start_date ? bookInfo.start_date : ""}
+        endDateValue={bookInfo.end_date ? bookInfo.end_date : ""}
+        review={bookInfo.review ? bookInfo.review : ""}
       />
     </DetailBlock>
   );

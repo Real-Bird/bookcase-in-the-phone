@@ -50,9 +50,8 @@ const PostDetailBox = styled.div<{ isOverflow: boolean }>`
     margin-bottom: 5px;
     text-align: start;
     animation-name: ${(props) => (props.isOverflow ? StreamText : "")};
-    animation-duration: 7s;
+    animation-duration: 10s;
     animation-timing-function: linear;
-    animation-delay: 2s;
     animation-iteration-count: infinite;
     animation-direction: normal;
     &:hover {
@@ -65,8 +64,17 @@ const PostDetailBox = styled.div<{ isOverflow: boolean }>`
     grid-template-columns: 1fr 1fr;
     .detail_item {
       display: flex;
+      justify-content: flex-start;
+      width: 10rem;
       h4 {
         font-weight: bold;
+        width: 4rem;
+      }
+      div {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 6rem;
       }
     }
   }
@@ -97,20 +105,20 @@ export function BookListItem({ idx, bookData }: BookListItemProps) {
         <h3 ref={titleRef}>{title}</h3>
         <div className="detail_block">
           <div className="detail_item">
-            <h4>지은이</h4>|<span>{author}</span>
+            <h4>지은이</h4>
+            <div>| {author}</div>
           </div>
           <div className="detail_item">
-            {translator ? (
-              <>
-                <h4>옮긴이</h4>|<span>{translator}</span>
-              </>
-            ) : null}
+            <h4>옮긴이</h4>
+            <div>| {translator}</div>
           </div>
           <div className="detail_item">
-            <h4>출판사</h4>|<span>{publisher}</span>
+            <h4>출판사</h4>
+            <div>| {publisher}</div>
           </div>
           <div className="detail_item">
-            <h4>카테고리</h4>|<span>{subject}</span>
+            <h4>카테고리</h4>
+            <div>| {subject}</div>
           </div>
         </div>
       </PostDetailBox>

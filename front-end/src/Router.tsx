@@ -5,6 +5,7 @@ import {
   About,
   Bookcase,
   BookDetail,
+  BookDetailEdit,
   Login,
   NotFound,
   Search,
@@ -33,6 +34,11 @@ const router = createBrowserRouter(
         {
           path: "books/:isbn",
           element: <BookDetail />,
+          errorElement: <ErrorBoundary />,
+        },
+        {
+          path: "books/:isbn/edit",
+          element: <BookDetailEdit />,
           errorElement: <ErrorBoundary />,
         },
         {

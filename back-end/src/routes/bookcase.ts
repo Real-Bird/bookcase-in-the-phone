@@ -9,4 +9,8 @@ router.post("/info", bookcaseCtrl.savedBookInfo);
 
 router.get("/info", bookcaseCtrl.getBookInfoByIsbn);
 
+router.patch("/info", bookcaseCtrl.updateBookInfoByIsbn);
+
+router.get("/check", bookcaseCtrl.checkBookByIsbn);
+
 export default router;

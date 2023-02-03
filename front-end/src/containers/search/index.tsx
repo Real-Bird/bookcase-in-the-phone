@@ -68,30 +68,8 @@ export interface BarcodeSearchProps {
   setBarcode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export async function getInfo(barcode: string, navigate: NavigateFunction) {
-  if (barcode.length < 13) return;
-  const { error } = await getBookInfoByIsbn(barcode);
-  if (!error) {
-    return navigate(`/books/${barcode}`);
-  }
-  const URL = `https://www.nl.go.kr/seoji/SearchApi.do?cert_key=${
-    import.meta.env.VITE_BOOK_SEARCH_API_KEY
-  }&result_style=json&page_no=1&page_size=1&isbn=${barcode}`;
-  const data = await (await fetch(URL, { method: "GET" })).json();
-  if (!data || data.docs.length === 0) return;
-  return data;
-}
-
 function SearchContainer() {
   const [barcode, setBarcode] = useState("");
-  const FetchIsbnState = useIsbnState();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!FetchIsbnState.isLoading) {
-      return navigate(`/result/${FetchIsbnState.EA_ISBN}`);
-    }
-  }, [FetchIsbnState]);
   return (
     <SearchBlock>
       <SearchNav>

@@ -1,5 +1,6 @@
+import { getBookInfoByIsbn, getInfo, hasBookByIsbn } from "@api/bookcase";
 import { Button, FloatingInput } from "@components/common";
-import { BarcodeSearchProps, getInfo } from "@containers/search";
+import { BarcodeSearchProps } from "@containers/search";
 import { useIsbnDispatch } from "@libs/searchContextApi";
 import { FormEvent } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -17,12 +18,20 @@ const FormBlock = styled.form`
 
 export default function IsbnSearch() {
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
-  const FetchIsbnDispatch = useIsbnDispatch();
+  const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const data = await getInfo(barcode, navigate);
-    FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] });
+    const bookData = await getInfo(barcode);
+    if (!bookData) return;
+    const { bookInfo } = bookData;
+    isbnDispatch({
+      type: "LOAD_DATA",
+      bookInfo,
+    });
+    const hasBook = await hasBookByIsbn(bookInfo.ea_isbn);
+    if (hasBook) return navigate(`/books/${barcode}`);
+    return navigate(`/result/${barcode}`);
   };
 
   return (

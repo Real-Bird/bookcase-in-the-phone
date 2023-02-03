@@ -1,9 +1,10 @@
-import { BarcodeSearchProps, getInfo } from "@containers/search";
+import { BarcodeSearchProps } from "@containers/search";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { Camera, Select } from "@components/search";
 import useScanner from "@libs/useScanner";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { getBookInfoByIsbn, getInfo, hasBookByIsbn } from "@api/bookcase";
 
 export default function CameraSearch() {
   const [localStream, setLocalStream] = useState<MediaStream>();
@@ -14,7 +15,7 @@ export default function CameraSearch() {
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>();
   const [currentCamera, setCurrentCamera] = useState("");
   const FetchIsbnState = useIsbnState();
-  const FetchIsbnDispatch = useIsbnDispatch();
+  const isbnPatch = useIsbnDispatch();
   const navigate = useNavigate();
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
   useEffect(() => {
@@ -34,12 +35,7 @@ export default function CameraSearch() {
     if (localStream && camera.current) {
       scanning(localStream, camera.current, scan, setBarcode);
     }
-    if (!FetchIsbnState.isLoading) {
-      navigate(`/result/${FetchIsbnState.EA_ISBN}`);
-    }
-    return () => {
-      stopStream(localStream!);
-    };
+    return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     await getMedia(e.target.value, getConstraints).then((stream) =>
@@ -57,8 +53,16 @@ export default function CameraSearch() {
   useEffect(() => {
     if (!!barcode) {
       (async () => {
-        const data = await getInfo(barcode, navigate);
-        return FetchIsbnDispatch({ type: "SET_DATA", bookData: data.docs[0] });
+        const bookData = await getInfo(barcode);
+        if (!bookData) return;
+        const { bookInfo } = bookData;
+        isbnPatch({
+          type: "LOAD_DATA",
+          bookInfo,
+        });
+        const hasBook = await hasBookByIsbn(bookInfo.ea_isbn);
+        if (hasBook) return navigate(`/books/${barcode}`);
+        return navigate(`/result/${barcode}`);
       })();
     }
   }, [barcode]);

@@ -28,21 +28,27 @@ const ButtonContainer = styled.button`
   }
 `;
 
-const Label = styled.div`
-  color: green;
+const Label = styled.div<{ color?: string }>`
+  color: ${(props) => props.color};
   font-size: 16px;
 `;
 
 interface ButtonProps {
   label: string;
   onClick?: () => void;
+  color?: string;
   [key: string]: any;
 }
 
-export function Button({ label, onClick, ...rest }: ButtonProps) {
+export function Button({
+  label,
+  onClick,
+  color = "green",
+  ...rest
+}: ButtonProps) {
   return (
     <ButtonContainer {...rest} onClick={onClick}>
-      <Label>{label}</Label>
+      <Label color={color}>{label}</Label>
     </ButtonContainer>
   );
 }

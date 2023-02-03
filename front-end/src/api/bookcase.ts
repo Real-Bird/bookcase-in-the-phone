@@ -1,23 +1,41 @@
 import { getUserToken } from "@api/auth";
+import { FetchIsbnDataState } from "@libs/searchContextApi";
 import axios from "axios";
 
 const SERVER_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
-export interface SavedBookInfoArgs {
-  title: string;
-  author: string;
-  translator: string;
-  publisher: string;
-  publisher_predate: string;
-  ea_isbn: string;
-  title_url: string;
-  review: string;
-  start_date: string;
-  end_date: string;
-  subject: string;
+interface OpenSeojiData {
+  docs: {
+    PUBLISHER: string;
+    AUTHOR: string;
+    TITLE_URL: string;
+    EA_ISBN: string;
+    SUBJECT: string;
+    TITLE: string;
+    PUBLISH_PREDATE: string;
+  }[];
 }
 
-export async function savedBookInfo(bookInfo: SavedBookInfoArgs) {
+export async function getInfo(barcode: string) {
+  if (barcode.length < 13) return;
+  const URL = `https://www.nl.go.kr/seoji/SearchApi.do?cert_key=${
+    import.meta.env.VITE_BOOK_SEARCH_API_KEY
+  }&result_style=json&page_no=1&page_size=1&isbn=${barcode}`;
+  const { data } = await axios.get<OpenSeojiData>(URL);
+  if (!data || data.docs.length === 0) return;
+  const bookData = {
+    author: data.docs[0].AUTHOR,
+    ea_isbn: data.docs[0].EA_ISBN,
+    publisher: data.docs[0].PUBLISHER,
+    publisher_predate: data.docs[0].PUBLISH_PREDATE,
+    subject: data.docs[0].SUBJECT,
+    title: data.docs[0].TITLE,
+    title_url: data.docs[0].TITLE_URL,
+  };
+  return { bookInfo: bookData };
+}
+
+export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
   const token = getUserToken("BiPToken");
   if (!token) return console.log("not token");
   const { data } = await axios.post(
@@ -31,7 +49,7 @@ export async function savedBookInfo(bookInfo: SavedBookInfoArgs) {
 }
 
 export type BookListType = Pick<
-  SavedBookInfoArgs,
+  FetchIsbnDataState,
   | "title"
   | "author"
   | "translator"
@@ -59,7 +77,7 @@ export async function getBookList() {
 
 export interface BookInfoResponse {
   error: boolean;
-  bookInfo: SavedBookInfoArgs;
+  bookInfo: FetchIsbnDataState;
   message: "string;";
 }
 
@@ -70,10 +88,47 @@ export async function getBookInfoByIsbn(isbn: string) {
   } = await axios.get<BookInfoResponse>(
     `${
       import.meta.env.VITE_REACT_APP_API_URL
-    }/bookcase/info?token=${token}&isbn=${isbn}`
+    }/bookcase/info?token=${token}&isbn=${isbn}`,
+    { withCredentials: true }
   );
   if (error) {
     return { error, bookInfo: null };
   }
   return { error, bookInfo };
+}
+
+type UpdateInfoBody = {
+  review?: string;
+  start_date?: string;
+  end_date?: string;
+};
+
+export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
+  const token = getUserToken("BiPToken");
+  const {
+    data: { error },
+  } = await axios.patch<BookInfoResponse>(
+    `${
+      import.meta.env.VITE_REACT_APP_API_URL
+    }/bookcase/info?token=${token}&isbn=${isbn}`,
+    { body },
+    { withCredentials: true }
+  );
+  if (error) {
+    return { error, bookInfo: null };
+  }
+  return { error };
+}
+
+export async function hasBookByIsbn(isbn: string) {
+  const token = getUserToken("BiPToken");
+  const {
+    data: { hasBook },
+  } = await axios.get<{ hasBook: boolean }>(
+    `${
+      import.meta.env.VITE_REACT_APP_API_URL
+    }/bookcase/check?token=${token}&isbn=${isbn}`,
+    { withCredentials: true }
+  );
+  return hasBook;
 }

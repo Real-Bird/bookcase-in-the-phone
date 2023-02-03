@@ -6,6 +6,7 @@ interface SelectCamerasProps {
   children: ReactNode;
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   defaultValue?: string;
+  className?: string;
 }
 
 const SelectBlock = styled.select`
@@ -43,6 +44,7 @@ export function Select({
   children,
   onChange,
   defaultValue,
+  className,
 }: SelectCamerasProps) {
   return (
     <SelectBlock
@@ -50,6 +52,7 @@ export function Select({
       onChange={onChange}
       key={defaultValue}
       defaultValue={defaultValue}
+      className={className}
     >
       {children}
     </SelectBlock>

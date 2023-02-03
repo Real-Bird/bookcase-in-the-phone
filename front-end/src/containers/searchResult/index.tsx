@@ -1,11 +1,14 @@
 import { Button } from "@components/common";
-import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
+import {
+  FetchIsbnDataState,
+  useIsbnDispatch,
+  useIsbnState,
+} from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { setSubject } from "@libs/utils";
-import { savedBookInfo, SavedBookInfoArgs } from "@api/bookcase";
+import { getBookInfoByIsbn, savedBookInfo } from "@api/bookcase";
 
 const ResultBlock = styled.div`
   width: 100%;
@@ -28,7 +31,7 @@ const ButtonBlock = styled.div`
   margin-bottom: 10px;
 `;
 
-const SET_DATA: SavedBookInfoArgs = {
+const SET_DATA: FetchIsbnDataState = {
   title: "",
   author: "",
   translator: "",
@@ -46,14 +49,14 @@ function ResultContainer() {
   const navigate = useNavigate();
   const isbnState = useIsbnState();
   const {
-    TITLE,
-    AUTHOR,
-    TRANSLATOR,
-    TITLE_URL,
-    PUBLISHER,
-    PUBLISH_PREDATE,
-    EA_ISBN,
-    SUBJECT,
+    title,
+    author,
+    translator,
+    title_url,
+    publisher,
+    publisher_predate,
+    ea_isbn,
+    review,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
   const onBack = () => {
@@ -62,14 +65,12 @@ function ResultContainer() {
   };
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [review, setReview] = useState("");
-  const [settingData, setSettingData] = useState<SavedBookInfoArgs>(SET_DATA);
   const onSaveData = useCallback(async () => {
-    const callbackData = await savedBookInfo(settingData);
+    const callbackData = await savedBookInfo(isbnState);
     if (callbackData.error) return console.error(callbackData.message);
     isbnDispatch({ type: "INITIALIZE_DATA" });
     navigate(-1);
-  }, [settingData]);
+  }, [isbnState]);
   const onDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
@@ -78,12 +79,24 @@ function ResultContainer() {
       month: "2-digit",
       day: "2-digit",
     });
-    if (id === "reading-start")
-      return setStartDate(localeFormatter.format(date));
-    setEndDate(localeFormatter.format(date));
+    if (id === "reading-start") {
+      setStartDate(value);
+      return isbnDispatch({
+        type: "SET_DATA",
+        bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
+      });
+    }
+    setEndDate(value);
+    return isbnDispatch({
+      type: "SET_DATA",
+      bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
+    });
   };
   const onReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setReview(e.target.value);
+    isbnDispatch({
+      type: "SET_DATA",
+      bookInfo: { ...isbnState, review: e.target.value },
+    });
   };
 
   useEffect(() => {
@@ -95,21 +108,8 @@ function ResultContainer() {
     }
   }, [startDate, endDate]);
   useEffect(() => {
-    if (!isbnState.TITLE) onBack();
-    setSettingData({
-      author: AUTHOR,
-      ea_isbn: EA_ISBN,
-      publisher: PUBLISHER,
-      publisher_predate: PUBLISH_PREDATE,
-      title: TITLE,
-      title_url: TITLE_URL,
-      translator: TRANSLATOR,
-      subject: setSubject(SUBJECT),
-      review,
-      start_date: startDate,
-      end_date: endDate,
-    });
-  }, [review, startDate, endDate]);
+    if (!isbnState.title) onBack();
+  }, []);
   return (
     <ResultBlock>
       <ButtonBlock>
@@ -118,18 +118,18 @@ function ResultContainer() {
       </ButtonBlock>
       <ResultDetail
         isEdit
-        author={AUTHOR}
-        ea_isbn={EA_ISBN}
-        publisher={PUBLISHER}
-        publisher_predate={PUBLISH_PREDATE}
-        title={TITLE}
-        titleUrl={TITLE_URL}
-        translator={TRANSLATOR}
+        author={author}
+        ea_isbn={ea_isbn}
+        publisher={publisher}
+        publisher_predate={publisher_predate}
+        title={title}
+        titleUrl={title_url}
+        translator={translator}
         onDateChange={onDateChange}
         startDateValue={startDate}
         endDateValue={endDate}
         onReviewChange={onReviewChange}
-        review={review}
+        review={review ? review : ""}
       />
     </ResultBlock>
   );

@@ -18,7 +18,7 @@ export const bookList = async (req: Request, res: Response) => {
       subject: 1,
       ea_isbn: 1,
     }
-  );
+  ).sort("");
   res
     .status(200)
     .json({ error: false, bookList, message: "Successful Response" });
@@ -78,4 +78,54 @@ export const getBookInfoByIsbn = async (req: Request, res: Response) => {
   return res
     .status(201)
     .json({ error: false, bookInfo, message: "Successful Sends" });
+};
+
+export const updateBookInfoByIsbn = async (req: Request, res: Response) => {
+  const { token, isbn } = req.query;
+  if (!token || !isbn) {
+    return res.status(401).json({ error: true, message: `Something Wrong` });
+  }
+  const {
+    body: { review, start_date, end_date },
+  } = req.body;
+  const bookInfo = await Book.findOne({
+    userId: token,
+    ea_isbn: isbn,
+  });
+  if (!bookInfo) {
+    return res
+      .status(404)
+      .json({ error: true, message: "Not found this ISBN" });
+  }
+  await bookInfo.updateOne(
+    {
+      $set: {
+        review,
+        start_date,
+        end_date,
+        updatedAt: Date.now(),
+      },
+    },
+    { new: true }
+  );
+  return res.status(201).json({ error: false, message: "Successful Updates" });
+};
+
+export const checkBookByIsbn = async (req: Request, res: Response) => {
+  const { token, isbn } = req.query;
+  if (!token || !isbn) {
+    return res.status(401).json({ error: true, message: `Something Wrong` });
+  }
+  const bookInfo = await Book.findOne({
+    userId: token,
+    ea_isbn: isbn,
+  });
+  if (!bookInfo) {
+    return res
+      .status(200)
+      .json({ hasBook: false, message: "No has this book" });
+  }
+  return res
+    .status(200)
+    .json({ hasBook: true, bookInfo, message: "Has this book" });
 };
