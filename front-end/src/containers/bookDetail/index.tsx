@@ -1,4 +1,4 @@
-import { getBookInfoByIsbn } from "@api/bookcase";
+import { deleteBookInfoByIsbn, getBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
@@ -31,45 +31,53 @@ function BookDetailContainer() {
   const { isbn } = useParams();
   const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
-  const bookInfo = useIsbnState();
+  const bookInfoState = useIsbnState();
+  const onDeleteBook = async () => {
+    if (confirm("정말 삭제할까요?")) {
+      try {
+        await deleteBookInfoByIsbn(bookInfoState.ea_isbn);
+        alert("성공적으로 삭제되었습니다!");
+        isbnDispatch({ type: "INITIALIZE_DATA" });
+        return navigate("/");
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
   useEffect(() => {
     if (isbn) {
-      getBookInfoByIsbn(isbn)
-        .then(({ bookInfo: fetchBookInfo }) => {
-          if (fetchBookInfo)
-            isbnDispatch({
-              type: "SET_DATA",
-              bookInfo: {
-                ...fetchBookInfo,
-              },
-            });
-        })
-        .catch((e) => navigate("/404"));
+      (async () => {
+        try {
+          const { error, bookInfo } = await getBookInfoByIsbn(isbn);
+          return isbnDispatch({
+            type: "SET_DATA",
+            bookInfo,
+          });
+        } catch (e) {
+          return navigate("/404");
+        }
+      })();
     }
   }, [isbn]);
   return (
     <DetailBlock>
       <ButtonBlock>
-        <Button
-          label="뒤로가기"
-          onClick={() => {
-            navigate(-1);
-          }}
-          color="#ff4d4d"
-        />
+        <Button label="삭제" onClick={onDeleteBook} color="#ff4d4d" />
         <Button label="수정" onClick={() => navigate("edit")} />
       </ButtonBlock>
       <ResultDetail
-        author={bookInfo.author}
-        ea_isbn={bookInfo.ea_isbn}
-        publisher={bookInfo.publisher}
-        publisher_predate={bookInfo.publisher_predate}
-        title={bookInfo.title}
-        titleUrl={bookInfo.title_url}
-        translator={bookInfo.translator}
-        startDateValue={bookInfo.start_date ? bookInfo.start_date : ""}
-        endDateValue={bookInfo.end_date ? bookInfo.end_date : ""}
-        review={bookInfo.review ? bookInfo.review : ""}
+        author={bookInfoState.author}
+        ea_isbn={bookInfoState.ea_isbn}
+        publisher={bookInfoState.publisher}
+        publisher_predate={bookInfoState.publisher_predate}
+        title={bookInfoState.title}
+        titleUrl={bookInfoState.title_url}
+        translator={bookInfoState.translator}
+        startDateValue={
+          bookInfoState.start_date ? bookInfoState.start_date : ""
+        }
+        endDateValue={bookInfoState.end_date ? bookInfoState.end_date : ""}
+        review={bookInfoState.review ? bookInfoState.review : ""}
       />
     </DetailBlock>
   );

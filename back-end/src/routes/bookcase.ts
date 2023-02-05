@@ -11,6 +11,8 @@ router.get("/info", bookcaseCtrl.getBookInfoByIsbn);
 
 router.patch("/info", bookcaseCtrl.updateBookInfoByIsbn);
 
+router.delete("/info", bookcaseCtrl.deleteBookByIsbn);
+
 router.get("/check", bookcaseCtrl.checkBookByIsbn);
 
 export default router;

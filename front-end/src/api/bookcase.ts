@@ -83,18 +83,19 @@ export interface BookInfoResponse {
 
 export async function getBookInfoByIsbn(isbn: string) {
   const token = getUserToken("BiPToken");
-  const {
-    data: { error, bookInfo },
-  } = await axios.get<BookInfoResponse>(
-    `${
-      import.meta.env.VITE_REACT_APP_API_URL
-    }/bookcase/info?token=${token}&isbn=${isbn}`,
-    { withCredentials: true }
-  );
-  if (error) {
-    return { error, bookInfo: null };
+  try {
+    const {
+      data: { error, bookInfo },
+    } = await axios.get<BookInfoResponse>(
+      `${
+        import.meta.env.VITE_REACT_APP_API_URL
+      }/bookcase/info?token=${token}&isbn=${isbn}`,
+      { withCredentials: true }
+    );
+    return { error, bookInfo };
+  } catch (e) {
+    throw e;
   }
-  return { error, bookInfo };
 }
 
 type UpdateInfoBody = {
@@ -118,6 +119,22 @@ export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
     return { error, bookInfo: null };
   }
   return { error };
+}
+
+export async function deleteBookInfoByIsbn(isbn: string) {
+  const token = getUserToken("BiPToken");
+  const {
+    data: { error, message },
+  } = await axios.delete(
+    `${
+      import.meta.env.VITE_REACT_APP_API_URL
+    }/bookcase/info?token=${token}&isbn=${isbn}`,
+    { withCredentials: true }
+  );
+  if (error) {
+    return { error, message };
+  }
+  return { error, message };
 }
 
 export async function hasBookByIsbn(isbn: string) {

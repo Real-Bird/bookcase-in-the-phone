@@ -83,9 +83,7 @@ function reducer(
     case "SET_DATA":
       return {
         ...state,
-        review: action.bookInfo.review,
-        start_date: action.bookInfo.start_date,
-        end_date: action.bookInfo.end_date,
+        ...action.bookInfo,
         hasData: true,
       };
     default:

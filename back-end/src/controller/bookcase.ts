@@ -129,3 +129,15 @@ export const checkBookByIsbn = async (req: Request, res: Response) => {
     .status(200)
     .json({ hasBook: true, bookInfo, message: "Has this book" });
 };
+
+export const deleteBookByIsbn = async (req: Request, res: Response) => {
+  const { token, isbn } = req.query;
+  const bookInfo = await Book.findOneAndDelete({
+    userId: token,
+    ea_isbn: isbn,
+  });
+  if (!bookInfo) {
+    return res.status(400).json({ error: true, message: "Bad Request" });
+  }
+  return res.status(204).json({ error: false, message: "Successful Delete" });
+};
