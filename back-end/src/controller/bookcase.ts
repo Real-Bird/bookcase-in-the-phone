@@ -18,7 +18,7 @@ export const bookList = async (req: Request, res: Response) => {
       subject: 1,
       ea_isbn: 1,
     }
-  ).sort("");
+  ).sort({ updatedAt: "desc" });
   res
     .status(200)
     .json({ error: false, bookList, message: "Successful Response" });
@@ -64,7 +64,7 @@ export const savedBookInfo = async (req: Request, res: Response) => {
 export const getBookInfoByIsbn = async (req: Request, res: Response) => {
   const { token, isbn } = req.query;
   if (!token || !isbn) {
-    return res.status(401).json({ error: true, message: `Something Wrong` });
+    return res.status(401).json({ error: true, message: `Not Authorization` });
   }
   const bookInfo = await Book.findOne({
     userId: token,
@@ -83,7 +83,7 @@ export const getBookInfoByIsbn = async (req: Request, res: Response) => {
 export const updateBookInfoByIsbn = async (req: Request, res: Response) => {
   const { token, isbn } = req.query;
   if (!token || !isbn) {
-    return res.status(401).json({ error: true, message: `Something Wrong` });
+    return res.status(401).json({ error: true, message: `Not Authorization` });
   }
   const {
     body: { review, start_date, end_date },
@@ -114,7 +114,7 @@ export const updateBookInfoByIsbn = async (req: Request, res: Response) => {
 export const checkBookByIsbn = async (req: Request, res: Response) => {
   const { token, isbn } = req.query;
   if (!token || !isbn) {
-    return res.status(401).json({ error: true, message: `Something Wrong` });
+    return res.status(401).json({ error: true, message: `Not Authorization` });
   }
   const bookInfo = await Book.findOne({
     userId: token,

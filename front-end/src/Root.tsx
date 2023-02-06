@@ -2,6 +2,7 @@ import { FetchIsbnDataProvider } from "@libs/searchContextApi";
 import { Navigation } from "@components/common";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
+import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
 
 const RootBlock = styled.div`
   width: 100%;
@@ -16,12 +17,14 @@ const RootBlock = styled.div`
 
 function Root() {
   return (
-    <FetchIsbnDataProvider>
-      <RootBlock>
-        <Navigation />
-        <Outlet />
-      </RootBlock>
-    </FetchIsbnDataProvider>
+    <FetchBookcaseDataProvider>
+      <FetchIsbnDataProvider>
+        <RootBlock>
+          <Navigation />
+          <Outlet />
+        </RootBlock>
+      </FetchIsbnDataProvider>
+    </FetchBookcaseDataProvider>
   );
 }
 

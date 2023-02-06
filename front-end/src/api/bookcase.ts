@@ -1,4 +1,5 @@
 import { getUserToken } from "@api/auth";
+import { FetchBookcaseState } from "@libs/bookcaseContextApi";
 import { FetchIsbnDataState } from "@libs/searchContextApi";
 import axios from "axios";
 
@@ -17,7 +18,7 @@ interface OpenSeojiData {
 }
 
 export async function getInfo(barcode: string) {
-  if (barcode.length < 13) return;
+  if (barcode.length < 10) return;
   const URL = `https://www.nl.go.kr/seoji/SearchApi.do?cert_key=${
     import.meta.env.VITE_BOOK_SEARCH_API_KEY
   }&result_style=json&page_no=1&page_size=1&isbn=${barcode}`;
@@ -48,20 +49,9 @@ export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
   return data;
 }
 
-export type BookListType = Pick<
-  FetchIsbnDataState,
-  | "title"
-  | "author"
-  | "translator"
-  | "publisher"
-  | "subject"
-  | "title_url"
-  | "ea_isbn"
->;
-
 export interface BookListResponse {
   error: boolean;
-  bookList: BookListType[];
+  bookList: FetchBookcaseState;
   message: "string;";
 }
 

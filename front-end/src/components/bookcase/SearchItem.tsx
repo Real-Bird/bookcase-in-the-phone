@@ -12,6 +12,7 @@ const SearchItemBlock = styled.label`
     border: none;
     appearance: none;
     outline: none;
+    border-radius: 0.25rem;
     background: linear-gradient(
       to right,
       rgba(255, 255, 255, 0.3) 3rem,
@@ -31,8 +32,8 @@ const SearchItemBlock = styled.label`
 
 interface SearchItemProps {
   search: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onKeyUp: () => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKeyUp?: () => void;
 }
 
 export function SearchItem({ onChange, onKeyUp, search }: SearchItemProps) {

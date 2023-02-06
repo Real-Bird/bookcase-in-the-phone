@@ -1,85 +1,68 @@
-import { BookListType } from "@api/bookcase";
 import { BookSubInfo } from "@components/bookcase";
-import useWindowSize from "@libs/useWindowSize";
-import { useEffect, useRef, useState } from "react";
+import { BookcaseSubInfo } from "@libs/bookcaseContextApi";
 import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
+import noImage from "/no_image_available.png";
 
-const Post = styled(Link)`
-  width: 98%;
+const Post = styled(Link)<{ isGrid: boolean }>`
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5px;
+  flex-direction: ${(props) => (props.isGrid ? "column" : "row")};
+  padding: 5px 0;
   gap: 10px;
+  text-align: ${(props) => (props.isGrid ? "center" : "start")};
+  &:nth-child(2n + 1) {
+    background-color: rgba(223, 249, 251, 0.4);
+  }
+  h3 {
+    font-size: ${(props) => (props.isGrid ? "1.125rem" : "1.5rem")};
+  }
+  img {
+    width: ${(props) => (props.isGrid ? "7rem" : "5rem")};
+  }
+  .detail_block {
+    display: ${(props) => (props.isGrid ? "none" : "grid")};
+  }
 `;
 
 const PostImage = styled.img`
   aspect-ratio: 9/12;
-  width: 5rem;
   border-radius: 5px;
-  background: tan;
+  background: rgba(255, 255, 255, 0.4);
 `;
 
-const StreamText = keyframes`
-  0% {
-    transform:translateX(0%);
-  }
-  30%{
-    transform:translateX(0%);
-  }
-  100% {
-    transform:translateX(-350%);
-  }
-`;
-
-const PostDetailBox = styled.div<{ isOverflow: boolean }>`
+const PostDetailBox = styled.div`
   width: 75%;
   overflow: hidden;
-  h3 {
-    width: 100%;
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-overflow: clip;
-    white-space: pre;
-    margin-bottom: 10px;
-    text-align: start;
-    animation: ${(props) => (props.isOverflow ? StreamText : "")} 10s linear
-      infinite normal forwards;
-    &:hover {
-      animation-play-state: paused;
-    }
-  }
-
   .detail_block {
-    display: grid;
     grid-template-columns: 1fr 1fr;
   }
 `;
 
+const Title = styled.h3`
+  width: 100%;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  margin-bottom: 10px;
+`;
+
 interface BookListItemProps {
-  bookInfo: BookListType;
-  idx: number;
+  bookInfo: BookcaseSubInfo;
+  isGrid: boolean;
 }
 
-export function BookListItem({ idx, bookInfo }: BookListItemProps) {
+export function BookListItem({ bookInfo, isGrid }: BookListItemProps) {
   const { title, author, publisher, subject, translator, title_url, ea_isbn } =
     bookInfo;
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const [isOverflow, setIsOverflow] = useState(false);
-  const isChangeWindow = useWindowSize(titleRef);
-  useEffect(() => {
-    setIsOverflow(isChangeWindow);
-  }, [isChangeWindow]);
   return (
-    <Post to={`/books/${ea_isbn}`} title={title}>
-      {title_url ? (
-        <PostImage src={title_url} />
-      ) : (
-        <PostImage src="https://picsum.photos/200/300" />
-      )}
-      <PostDetailBox isOverflow={isOverflow}>
-        <h3 ref={titleRef}>{title}</h3>
+    <Post to={`/books/${ea_isbn}`} title={title} isGrid={isGrid}>
+      {title_url ? <PostImage src={title_url} /> : <PostImage src={noImage} />}
+      <PostDetailBox>
+        <Title>{title}</Title>
         <div className="detail_block">
           <BookSubInfo kind="지은이" value={author} />
           <BookSubInfo kind="옮긴이" value={translator} />

@@ -3,6 +3,7 @@ import { BookInfoItem } from "@components/searchResult/BookInfoItem";
 import useWindowSize from "@libs/useWindowSize";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import noImage from "/no_image_available.png";
 
 const DetailContainer = styled.div`
   width: 100%;
@@ -58,7 +59,7 @@ const CoverImage = styled.img`
   width: 12rem;
   aspect-ratio: 2/6;
   border-radius: 5px;
-  background: tan;
+  background: rgba(255, 255, 255, 0.4);
 `;
 
 const BookInfoBox = styled.div`
@@ -163,7 +164,11 @@ export function ResultDetail({
         {title}
       </DetailTitle>
       <DetailTop>
-        {titleUrl ? <CoverImage src={titleUrl} /> : <CoverImage as={"div"} />}
+        {titleUrl ? (
+          <CoverImage src={titleUrl} />
+        ) : (
+          <CoverImage src={noImage} />
+        )}
         <BookInfoBox>
           <BookInfoItem kind="지은이" value={author} />
           <BookInfoItem kind="옮긴이" value={translator ? translator : "-"} />

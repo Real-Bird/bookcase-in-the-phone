@@ -67,6 +67,7 @@ function reducer(
         /(\d{4})(\d{2})(\d{2})/g,
         "$1-$2-$3"
       );
+      const title = action.bookInfo.title.replace(/\(([\s\S]*)\) ?/g, "");
       const subject = setSubject(action.bookInfo.subject);
       return {
         ...state,
@@ -76,7 +77,7 @@ function reducer(
         title_url: action.bookInfo.title_url,
         ea_isbn: action.bookInfo.ea_isbn,
         subject,
-        title: action.bookInfo.title,
+        title,
         publisher_predate: replaceDate,
         hasData: true,
       };

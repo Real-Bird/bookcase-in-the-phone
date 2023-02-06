@@ -3,7 +3,7 @@ import {
   BrowserMultiFormatReader,
   DecodeHintType,
 } from "@zxing/library";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 type GetConstraints = (deviceId?: string) => {
   video: {
@@ -65,9 +65,6 @@ export default function useScanner() {
   ) {
     const devices = await scan.listVideoInputDevices();
     dispatchCameras(devices);
-    // dispatchCameras(
-    //   devices.filter((device) => device.label.includes("DroidCam"))
-    // );
   }
 
   const getConstraints: GetConstraints = (deviceId) => {
@@ -84,16 +81,6 @@ export default function useScanner() {
     return navigator.mediaDevices.getUserMedia(
       constraints ? constraints(deviceId) : initialConstrains
     );
-    // const initialConstrains = {
-    //   video: {
-    //     deviceId: {
-    //       exact:
-    //         "6a9b759d4a860d028cc76a267ccee3b34074c79b81b93fd5eaf7f550870b2c50",
-    //     },
-    //   },
-    //   audio: false,
-    // };
-    // return navigator.mediaDevices.getUserMedia(initialConstrains);
   }
 
   return {

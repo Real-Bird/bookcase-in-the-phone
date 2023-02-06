@@ -19,14 +19,14 @@ const SelectBlock = styled.select`
   padding: 0 4rem 0 1rem;
   color: #fff;
   background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
-      no-repeat right 0.8em center / 1.4em,
+      no-repeat right 0.8rem center / 1.4rem,
     linear-gradient(
       to left,
-      rgba(255, 255, 255, 0.3) 3em,
-      rgba(255, 255, 255, 0.2) 3em
+      rgba(255, 255, 255, 0.3) 3rem,
+      rgba(255, 255, 255, 0.2) 3rem
     );
-  border-radius: 0.25em;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
   option {
     color: inherit;

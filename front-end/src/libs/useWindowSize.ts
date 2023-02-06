@@ -1,10 +1,7 @@
 import { RefObject, useEffect, useState } from "react";
 
-type isWantedSize = boolean;
-type SizeProps = number;
-
 export default function useWindowSize(ref: RefObject<Element>) {
-  const [changeSize, setChangeSize] = useState<isWantedSize>(false);
+  const [changeSize, setChangeSize] = useState(false);
   const [width, setWidth] = useState(0);
   const handleResize = () => setWidth(window.innerWidth);
   useEffect(() => {
