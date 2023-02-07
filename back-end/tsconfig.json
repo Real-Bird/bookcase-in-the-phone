@@ -5,7 +5,7 @@
     "lib": ["ES6"],
     "strict": true,
     "strictNullChecks": false,
-    "module": "CommonJS",
+    "module": "ESNext",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,

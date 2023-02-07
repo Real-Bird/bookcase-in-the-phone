@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const SERVER_URL = import.meta.env.VITE_REACT_APP_API_URL;
+// const SERVER_URL = `http://localhost:8000`;
 
 export async function googleLogin() {
-  const data = await axios.get(`${SERVER_URL}/auth/login/success`, {
+  const data = await axios.get(`${SERVER_URL}/auth/google/callback`, {
     withCredentials: true,
   });
   return data;
