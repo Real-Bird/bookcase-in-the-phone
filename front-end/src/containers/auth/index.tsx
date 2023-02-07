@@ -21,7 +21,7 @@ const LoginBlock = styled.div`
 function LoginContainer() {
   const FetchUserDispatch = useUserDispatch();
   const navigate = useNavigate();
-  const googleAuthLogin = async () => {
+  const getUser = async () => {
     try {
       const {
         data: { user },
@@ -33,6 +33,15 @@ function LoginContainer() {
       console.log(err);
     }
   };
+  const googleAuthLogin = () => {
+    window.open(
+      `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
+      "_self"
+    );
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
     <LoginBlock>
       <GoogleLogin onClick={googleAuthLogin} />

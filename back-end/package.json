@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "cross-env NODE_ENV=production pm2 start build/index.js --watch -i 1 && pm2 log",
-    "dev": "nodemon --exec node --experimental-modules --es-module-specifier-resolution=node --loader ts-node/esm index.ts"
+    "dev": "nodemon --exec node build/index"
   },
   "author": "Real-Bird",
   "license": "ISC",
