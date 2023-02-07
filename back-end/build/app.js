@@ -17,7 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: [
+        "http://localhost:3000",
+        "https://port-0-bookcase-in-the-phone-api-luj2cldugpzhe.sel3.cloudtype.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     optionsSuccessStatus: 200,
