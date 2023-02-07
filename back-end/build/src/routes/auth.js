@@ -9,7 +9,10 @@ router.get("/google", authCtrl.reqGoogle);
 router.get(
   "/google/callback",
   (req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
+    );
     next();
   },
   authCtrl.callbackGoogle
