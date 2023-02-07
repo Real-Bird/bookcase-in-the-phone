@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=8000 pm2 start index.ts -i 1",
+    "start": "cross-env NODE_ENV=production PORT=8000 pm2 start build/index.js -i 1",
     "build": "tsc",
     "dev": "nodemon --exec node --experimental-modules --es-module-specifier-resolution=node --loader ts-node/esm index.ts"
   },
