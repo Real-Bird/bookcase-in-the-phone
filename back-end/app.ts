@@ -24,12 +24,12 @@ declare global {
 
 declare module "express-session" {
   interface SessionData {
-    userId: string;
+    passport: { user: string };
   }
 }
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -45,23 +45,34 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
-app.use(
-  session({
-    name: "myBiPSession",
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      dbName: "BiP",
-      collectionName: "session",
-    }),
-  })
-);
+
+const sessionOption = {
+  name: "myBiPSession",
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  proxy: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    dbName: "BiP_test",
+    collectionName: "session",
+  }),
+};
+
+if (process.env.NODE_ENV === "production") {
+  sessionOption.proxy = true;
+  sessionOption.cookie.secure = true;
+  sessionOption.store = MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    dbName: "BiP",
+    collectionName: "session",
+  });
+}
+app.use(session(sessionOption));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -69,8 +80,8 @@ app.use(passport.session());
 app.use("/auth", authRouter);
 app.use("/bookcase", bookcaseRouter);
 
-app.get("/", (req, res, next) => {
-  res.send("h1");
+app.get("/", (req, res) => {
+  res.send("hi");
 });
 
 export default app;

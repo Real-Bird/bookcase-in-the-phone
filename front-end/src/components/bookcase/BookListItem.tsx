@@ -4,26 +4,26 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import noImage from "/no_image_available.png";
 
-const Post = styled(Link)<{ isGrid: boolean }>`
+const Post = styled(Link)<{ $isgrid: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: ${(props) => (props.isGrid ? "column" : "row")};
+  flex-direction: ${(props) => (props.$isgrid ? "column" : "row")};
   padding: 5px 0;
   gap: 10px;
-  text-align: ${(props) => (props.isGrid ? "center" : "start")};
+  text-align: ${(props) => (props.$isgrid ? "center" : "start")};
   &:nth-child(2n + 1) {
     background-color: rgba(223, 249, 251, 0.4);
   }
   h3 {
-    font-size: ${(props) => (props.isGrid ? "1.125rem" : "1.5rem")};
+    font-size: ${(props) => (props.$isgrid ? "1.125rem" : "1.5rem")};
   }
   img {
-    width: ${(props) => (props.isGrid ? "7rem" : "5rem")};
+    width: ${(props) => (props.$isgrid ? "7rem" : "5rem")};
   }
   .detail_block {
-    display: ${(props) => (props.isGrid ? "none" : "grid")};
+    display: ${(props) => (props.$isgrid ? "none" : "grid")};
   }
 `;
 
@@ -59,7 +59,7 @@ export function BookListItem({ bookInfo, isGrid }: BookListItemProps) {
   const { title, author, publisher, subject, translator, title_url, ea_isbn } =
     bookInfo;
   return (
-    <Post to={`/books/${ea_isbn}`} title={title} isGrid={isGrid}>
+    <Post to={`/books/${ea_isbn}`} title={title} $isgrid={isGrid}>
       {title_url ? <PostImage src={title_url} /> : <PostImage src={noImage} />}
       <PostDetailBox>
         <Title>{title}</Title>

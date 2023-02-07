@@ -63,7 +63,7 @@ export function Navigation() {
             </NavIconBox>
           </Link>
         </NavItem>
-        <NavItem isCurrentPath={pathname === "/search"}>
+        <NavItem isCurrentPath={pathname.includes("/search")}>
           <Link to={"search"} onClick={onClick}>
             <NavIconBox>
               <NavIcon

@@ -25,9 +25,10 @@ export const logout = (req: Request, res: Response) => {
 export const check = async (req: Request, res: Response) => {
   const { token } = req.query;
   const user = await Users.findOne({ id: token });
-  if (!user)
-    res.status(401).json({ error: true, message: "Do not exist user" });
-  res.status(200).json({
+  if (!user) {
+    return res.status(401).json({ error: true, message: "Do not exist user" });
+  }
+  return res.status(200).json({
     error: false,
     message: "Successfully checked",
     user,

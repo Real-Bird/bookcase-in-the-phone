@@ -41,12 +41,12 @@ const SearchBarBlock = styled.div`
   }
 `;
 
-const BookListBlock = styled.div<{ isGrid: boolean }>`
+const BookListBlock = styled.div<{ $isgrid: boolean }>`
   width: 100%;
-  display: ${(props) => (props.isGrid ? "grid" : "flex")};
+  display: ${(props) => (props.$isgrid ? "grid" : "flex")};
   grid-template-columns: 33% 33% 33%;
   flex-direction: column;
-  gap: ${(props) => (props.isGrid ? "0.5%" : "5px")};
+  gap: ${(props) => (props.$isgrid ? "0.5%" : "5px")};
 `;
 
 function BookcaseContainer() {
@@ -99,7 +99,7 @@ function BookcaseContainer() {
           <span>총 {bookcaseState.length}권</span>
         </div>
       </SearchBarBlock>
-      <BookListBlock isGrid={isGrid}>
+      <BookListBlock $isgrid={isGrid}>
         {bookList
           ?.filter((e) => {
             const regex = createFuzzyMatcher(search);
