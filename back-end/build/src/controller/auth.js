@@ -1,6 +1,6 @@
 "use strict";
 
-const Users = require("../db/user");
+const Users = require("../db/user").user;
 const passport = require("../libs/passport").callPassport();
 
 const login = (req, res) => {
