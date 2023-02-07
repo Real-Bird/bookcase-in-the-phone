@@ -1,9 +1,11 @@
-import { Router } from "express";
-import * as authCtrl from "../controller/auth";
-const router = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authCtrl = require("../controller/auth");
+const router = (0, express_1.Router)();
 router.get("/login/success", authCtrl.login);
 router.get("/logout", authCtrl.logout);
 router.get("/google", authCtrl.reqGoogle);
 router.get("/google/callback", authCtrl.callbackGoogle);
 router.get("/check", authCtrl.check);
-export default router;
+exports.default = router;

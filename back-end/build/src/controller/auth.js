@@ -1,7 +1,10 @@
-import Users from "../db/user";
-import callPassport from "../libs/passport";
-const passport = callPassport();
-export const login = (req, res) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.callbackGoogle = exports.reqGoogle = exports.check = exports.logout = exports.login = void 0;
+const user_1 = require("../db/user");
+const passport_1 = require("../libs/passport");
+const passport = (0, passport_1.default)();
+const login = (req, res) => {
     if (req.user) {
         res.status(200).json({
             error: false,
@@ -13,14 +16,16 @@ export const login = (req, res) => {
         res.status(403).json({ error: true, message: "Not Authorized" });
     }
 };
-export const logout = (req, res) => {
+exports.login = login;
+const logout = (req, res) => {
     return req.logout(() => {
         res.status(204).end();
     });
 };
-export const check = async (req, res) => {
+exports.logout = logout;
+const check = async (req, res) => {
     const { token } = req.query;
-    const user = await Users.findOne({ id: token });
+    const user = await user_1.default.findOne({ id: token });
     if (!user) {
         return res.status(401).json({ error: true, message: "Do not exist user" });
     }
@@ -30,10 +35,11 @@ export const check = async (req, res) => {
         user,
     });
 };
-export const reqGoogle = passport.authenticate("google", {
+exports.check = check;
+exports.reqGoogle = passport.authenticate("google", {
     scope: ["profile", "email"],
 });
-export const callbackGoogle = passport.authenticate("google", {
+exports.callbackGoogle = passport.authenticate("google", {
     successRedirect: process.env.REDIRECT_CLIENT_URL,
     failureRedirect: process.env.REDIRECT_CLIENT_URL,
 });

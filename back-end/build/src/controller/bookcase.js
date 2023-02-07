@@ -1,10 +1,13 @@
-import Book from "../db/book";
-export const bookList = async (req, res) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteBookByIsbn = exports.checkBookByIsbn = exports.updateBookInfoByIsbn = exports.getBookInfoByIsbn = exports.savedBookInfo = exports.bookList = void 0;
+const book_1 = require("../db/book");
+const bookList = async (req, res) => {
     const { token } = req.query;
     if (!token) {
         return res.status(403).json({ error: true, message: "Not Authorized" });
     }
-    const bookList = await Book.find({ userId: token }, {
+    const bookList = await book_1.default.find({ userId: token }, {
         _id: 1,
         title: 1,
         title_url: 1,
@@ -18,13 +21,14 @@ export const bookList = async (req, res) => {
         .status(200)
         .json({ error: false, bookList, message: "Successful Response" });
 };
-export const savedBookInfo = async (req, res) => {
+exports.bookList = bookList;
+const savedBookInfo = async (req, res) => {
     const { token } = req.query;
     const { publisher, author, translator, title_url, ea_isbn, subject, title, publisher_predate, start_date, end_date, review, } = req.body;
     if (!token) {
         return res.status(403).json({ error: true, message: "Not Authorized" });
     }
-    await Book.create({
+    await book_1.default.create({
         userId: token,
         publisher,
         author,
@@ -42,12 +46,13 @@ export const savedBookInfo = async (req, res) => {
     });
     return res.status(201).json({ error: false, message: "Successful Upload" });
 };
-export const getBookInfoByIsbn = async (req, res) => {
+exports.savedBookInfo = savedBookInfo;
+const getBookInfoByIsbn = async (req, res) => {
     const { token, isbn } = req.query;
     if (!token || !isbn) {
         return res.status(401).json({ error: true, message: `Not Authorization` });
     }
-    const bookInfo = await Book.findOne({
+    const bookInfo = await book_1.default.findOne({
         userId: token,
         ea_isbn: isbn,
     });
@@ -60,13 +65,14 @@ export const getBookInfoByIsbn = async (req, res) => {
         .status(201)
         .json({ error: false, bookInfo, message: "Successful Sends" });
 };
-export const updateBookInfoByIsbn = async (req, res) => {
+exports.getBookInfoByIsbn = getBookInfoByIsbn;
+const updateBookInfoByIsbn = async (req, res) => {
     const { token, isbn } = req.query;
     if (!token || !isbn) {
         return res.status(401).json({ error: true, message: `Not Authorization` });
     }
     const { body: { review, start_date, end_date }, } = req.body;
-    const bookInfo = await Book.findOne({
+    const bookInfo = await book_1.default.findOne({
         userId: token,
         ea_isbn: isbn,
     });
@@ -85,12 +91,13 @@ export const updateBookInfoByIsbn = async (req, res) => {
     }, { new: true });
     return res.status(201).json({ error: false, message: "Successful Updates" });
 };
-export const checkBookByIsbn = async (req, res) => {
+exports.updateBookInfoByIsbn = updateBookInfoByIsbn;
+const checkBookByIsbn = async (req, res) => {
     const { token, isbn } = req.query;
     if (!token || !isbn) {
         return res.status(401).json({ error: true, message: `Not Authorization` });
     }
-    const bookInfo = await Book.findOne({
+    const bookInfo = await book_1.default.findOne({
         userId: token,
         ea_isbn: isbn,
     });
@@ -103,9 +110,10 @@ export const checkBookByIsbn = async (req, res) => {
         .status(200)
         .json({ hasBook: true, bookInfo, message: "Has this book" });
 };
-export const deleteBookByIsbn = async (req, res) => {
+exports.checkBookByIsbn = checkBookByIsbn;
+const deleteBookByIsbn = async (req, res) => {
     const { token, isbn } = req.query;
-    const bookInfo = await Book.findOneAndDelete({
+    const bookInfo = await book_1.default.findOneAndDelete({
         userId: token,
         ea_isbn: isbn,
     });
@@ -114,3 +122,4 @@ export const deleteBookByIsbn = async (req, res) => {
     }
     return res.status(204).json({ error: false, message: "Successful Delete" });
 };
+exports.deleteBookByIsbn = deleteBookByIsbn;

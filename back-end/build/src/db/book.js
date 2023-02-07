@@ -1,5 +1,7 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const { Schema } = mongoose_1.default;
 const bookSchema = new Schema({
     ea_isbn: {
         type: String,
@@ -54,4 +56,4 @@ const bookSchema = new Schema({
         default: Date.now,
     },
 });
-export default mongoose.model("book", bookSchema);
+exports.default = mongoose_1.default.model("book", bookSchema);
