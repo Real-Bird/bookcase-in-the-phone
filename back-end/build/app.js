@@ -21,7 +21,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://port-0-bookcase-in-the-phone-api-luj2cldugpzhe.sel3.cloudtype.app",
+      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app/",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
