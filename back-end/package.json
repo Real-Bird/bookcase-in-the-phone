@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "back-end for BiP",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "cross-env NODE_ENV=production PORT=80 pm2 start build/ecosystem.config.js",
     "build": "tsc",
