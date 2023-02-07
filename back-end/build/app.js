@@ -19,10 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookie_parser(process.env.COOKIE_SECRET));
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app/",
-    ],
+    origin:
+      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     optionsSuccessStatus: 200,
