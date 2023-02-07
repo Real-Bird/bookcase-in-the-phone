@@ -22,6 +22,7 @@ app.use(
     origin:
       "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app",
     credentials: true,
+    allowedHeaders: ["Access-Control-Allow-Origin"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     optionsSuccessStatus: 200,
   })
