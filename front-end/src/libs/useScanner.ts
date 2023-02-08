@@ -78,7 +78,7 @@ export default function useScanner() {
 
   async function getMedia(deviceId?: string, constraints?: GetConstraints) {
     const initialConstrains = {
-      video: { facingMode: "environment" },
+      video: true,
       audio: false,
     };
     return navigator.mediaDevices.getUserMedia(
