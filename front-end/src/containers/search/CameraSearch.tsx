@@ -39,7 +39,6 @@ export default function CameraSearch() {
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     const stream = await getMedia(e.target.value, getConstraints);
-    if (localStream) stopStream(localStream);
     setLocalStream(stream);
   };
   const getCurrentCamId = async (label: string) => {
