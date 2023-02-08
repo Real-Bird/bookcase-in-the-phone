@@ -44,6 +44,9 @@ export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
     bookInfo,
     {
       withCredentials: true,
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
     }
   );
   return data;
@@ -103,7 +106,12 @@ export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
       import.meta.env.VITE_REACT_APP_API_URL
     }/bookcase/info?token=${token}&isbn=${isbn}`,
     { body },
-    { withCredentials: true }
+    {
+      withCredentials: true,
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    }
   );
   if (error) {
     return { error, bookInfo: null };
@@ -119,7 +127,12 @@ export async function deleteBookInfoByIsbn(isbn: string) {
     `${
       import.meta.env.VITE_REACT_APP_API_URL
     }/bookcase/info?token=${token}&isbn=${isbn}`,
-    { withCredentials: true }
+    {
+      withCredentials: true,
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    }
   );
   if (error) {
     return { error, message };

@@ -58,15 +58,21 @@ app.use(express_session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/auth", authRouter);
-app.use("/bookcase", bookcaseRouter);
-
-app.use("*", (req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-});
+app.use(
+  "/bookcase",
+  (req, res, next) => {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+    next();
+  },
+  bookcaseRouter
+);
 
 app.get("/", (req, res) => {
   res.redirect(
