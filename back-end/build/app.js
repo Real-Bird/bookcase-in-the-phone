@@ -23,7 +23,7 @@ const corsOptions = {
   credentials: true,
   // allowedHeaders: "Content-Type, Authorization",
   // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  optionsSuccessStatus: 200,
+  // optionsSuccessStatus: 200,
 };
 
 if (process.env.NODE_ENV !== "production") {
