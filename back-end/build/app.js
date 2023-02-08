@@ -56,6 +56,7 @@ app.use(express_session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/auth", authRouter);
+app.use("/bookcase", bookcaseRouter);
 
 app.get("/", (req, res) => {
   res.redirect(

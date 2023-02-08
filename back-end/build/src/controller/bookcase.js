@@ -122,10 +122,12 @@ const checkBookByIsbn = async (req, res) => {
       ea_isbn: isbn,
     });
     return res
+      .setHeader("Content-Type", "application/json")
       .status(200)
       .json({ hasBook: true, bookInfo, message: "Has this book" });
   } catch (e) {
     return res
+      .setHeader("Content-Type", "application/json")
       .status(200)
       .json({ hasBook: false, message: "No has this book" });
   }
