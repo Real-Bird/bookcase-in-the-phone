@@ -116,18 +116,19 @@ const checkBookByIsbn = async (req, res) => {
   if (!token || !isbn) {
     return res.status(401).json({ error: true, message: `Not Authorization` });
   }
-  const bookInfo = await Book.findOne({
-    userId: token,
-    ea_isbn: isbn,
-  });
-  if (!bookInfo) {
+  try {
+    const bookInfo = await Book.findOne({
+      userId: token,
+      ea_isbn: isbn,
+    });
+    return res
+      .status(200)
+      .json({ hasBook: true, bookInfo, message: "Has this book" });
+  } catch (e) {
     return res
       .status(200)
       .json({ hasBook: false, message: "No has this book" });
   }
-  return res
-    .status(200)
-    .json({ hasBook: true, bookInfo, message: "Has this book" });
 };
 exports.checkBookByIsbn = checkBookByIsbn;
 const deleteBookByIsbn = async (req, res) => {
