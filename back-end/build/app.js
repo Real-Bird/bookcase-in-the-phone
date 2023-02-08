@@ -21,9 +21,9 @@ app.use(cookie_parser(process.env.COOKIE_SECRET));
 const corsOptions = {
   origin: "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app",
   credentials: true,
-  allowedHeaders: "Content-Type, Authorization",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  optionsSuccessStatus: 200,
+  // allowedHeaders: "Content-Type, Authorization",
+  // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  // optionsSuccessStatus: 200,
 };
 
 if (process.env.NODE_ENV !== "production") {
