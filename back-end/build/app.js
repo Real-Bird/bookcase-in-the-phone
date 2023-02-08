@@ -24,7 +24,7 @@ app.use(
       "http://localhost:3000",
     ],
     credentials: true,
-    allowedHeaders: ["Access-Control-Allow-Origin"],
+    allowedHeaders: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     optionsSuccessStatus: 200,
   })
@@ -59,8 +59,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/auth", authRouter);
 app.use("/bookcase", bookcaseRouter);
+
+app.use("*", (req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
+  );
+});
+
 app.get("/", (req, res) => {
-  res.send("hi");
+  res.redirect(
+    "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
+  );
 });
 
 exports.app = app;
