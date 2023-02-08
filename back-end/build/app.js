@@ -65,6 +65,7 @@ app.use("*", (req, res, next) => {
     "Access-Control-Allow-Origin",
     "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
   );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
 
 app.get("/", (req, res) => {
