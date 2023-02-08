@@ -19,12 +19,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookie_parser(process.env.COOKIE_SECRET));
 app.use(
   cors({
-    origin: [
+    origin:
       "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app",
-      "http://localhost:3000",
-    ],
     credentials: true,
-    allowedHeaders: "*",
+    allowedHeaders: "Content-Type, Authorization",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     optionsSuccessStatus: 200,
   })
@@ -58,21 +56,6 @@ app.use(express_session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/auth", authRouter);
-app.use(
-  "/bookcase",
-  (req, res, next) => {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
-    next();
-  },
-  bookcaseRouter
-);
 
 app.get("/", (req, res) => {
   res.redirect(
