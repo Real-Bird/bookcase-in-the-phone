@@ -17,16 +17,21 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookie_parser(process.env.COOKIE_SECRET));
-app.use(
-  cors({
-    origin:
-      "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app",
-    credentials: true,
-    allowedHeaders: "Content-Type, Authorization",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    optionsSuccessStatus: 200,
-  })
-);
+
+const corsOptions = {
+  origin: "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app",
+  credentials: true,
+  allowedHeaders: "Content-Type, Authorization",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  optionsSuccessStatus: 200,
+};
+
+if (process.env.NODE_ENV !== "production") {
+  corsOptions.origin = "http://localhost:3000";
+}
+
+app.use(cors(corsOptions));
+
 const sessionOption = {
   name: "myBiPSession",
   resave: false,
