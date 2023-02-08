@@ -45,7 +45,6 @@ export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
     {
       withCredentials: true,
       headers: {
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Content-Type": "application/json",
       },
     }
@@ -110,7 +109,6 @@ export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
     {
       withCredentials: true,
       headers: {
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Content-Type": "application/json",
       },
     }
@@ -132,7 +130,6 @@ export async function deleteBookInfoByIsbn(isbn: string) {
     {
       withCredentials: true,
       headers: {
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Content-Type": "application/json",
       },
     }
