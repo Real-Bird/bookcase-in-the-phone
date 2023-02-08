@@ -63,7 +63,13 @@ export async function getBookList() {
   const {
     data: { error, bookList },
   } = await axios.get<BookListResponse>(
-    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/list?token=${token}`
+    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/list?token=${token}`,
+    {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
   );
   return { error, bookList };
 }
@@ -83,7 +89,12 @@ export async function getBookInfoByIsbn(isbn: string) {
       `${
         import.meta.env.VITE_REACT_APP_API_URL
       }/bookcase/info?token=${token}&isbn=${isbn}`,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     return { error, bookInfo };
   } catch (e) {
@@ -148,7 +159,12 @@ export async function hasBookByIsbn(isbn: string) {
     `${
       import.meta.env.VITE_REACT_APP_API_URL
     }/bookcase/check?token=${token}&isbn=${isbn}`,
-    { withCredentials: true }
+    {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
   );
   return hasBook;
 }
