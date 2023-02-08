@@ -14,7 +14,6 @@ const bookSchema = new Schema({
   },
   publisher: {
     type: String,
-    required: true,
   },
   author: {
     type: String,
@@ -28,7 +27,6 @@ const bookSchema = new Schema({
   },
   subject: {
     type: String,
-    required: true,
   },
   title: {
     type: String,
@@ -36,7 +34,6 @@ const bookSchema = new Schema({
   },
   publisher_predate: {
     type: String,
-    required: true,
   },
   start_date: {
     type: String,
