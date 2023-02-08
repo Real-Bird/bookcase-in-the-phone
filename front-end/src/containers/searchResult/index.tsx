@@ -1,14 +1,10 @@
 import { Button } from "@components/common";
-import {
-  FetchIsbnDataState,
-  useIsbnDispatch,
-  useIsbnState,
-} from "@libs/searchContextApi";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getBookInfoByIsbn, savedBookInfo } from "@api/bookcase";
+import { savedBookInfo } from "@api/bookcase";
 
 const ResultBlock = styled.div`
   width: 100%;
@@ -18,7 +14,7 @@ const ResultBlock = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 1.5rem 1rem;
+  padding: 0.75rem;
 `;
 
 const ButtonBlock = styled.div`
@@ -30,20 +26,6 @@ const ButtonBlock = styled.div`
   justify-items: center;
   margin-bottom: 10px;
 `;
-
-const SET_DATA: FetchIsbnDataState = {
-  title: "",
-  author: "",
-  translator: "",
-  publisher: "",
-  publisher_predate: "",
-  ea_isbn: "",
-  title_url: "",
-  review: "",
-  start_date: "",
-  end_date: "",
-  subject: "",
-};
 
 function ResultContainer() {
   const navigate = useNavigate();

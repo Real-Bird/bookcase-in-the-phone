@@ -8,13 +8,13 @@ import styled from "styled-components";
 
 const DetailBlock = styled.div`
   width: 100%;
-  height: 88vh;
+  height: 87vh;
   background: rgba(223, 249, 251, 0.7);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 1.5rem 1rem;
+  padding: 0.75rem;
 `;
 
 const ButtonBlock = styled.div`

@@ -51,6 +51,8 @@ const bookSchema = new Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+    index: true,
   },
 });
+
 exports.book = mongoose.model("book", bookSchema);

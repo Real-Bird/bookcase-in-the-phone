@@ -15,7 +15,6 @@ const Label = styled.div`
 
 const InfoItem = styled.div`
   padding: 0.5rem 5px;
-  font-size: 1.25rem;
   border: 1px solid black;
   background: rgba(223, 249, 251, 0.9);
   box-shadow: rgba(0, 0, 0, 0.4) 5px 5px;

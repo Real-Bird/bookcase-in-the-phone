@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const ButtonContainer = styled.button`
   background: rgba(223, 249, 251, 0.9);
-  width: 12rem;
+  width: 100%;
   height: 3rem;
   border-radius: 100px;
   box-shadow: rgba(223, 249, 251, 0.2) 0 -25px 18px -14px inset,

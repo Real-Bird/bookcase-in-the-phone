@@ -6,7 +6,6 @@ const DateBlock = styled.div`
   width: 100%;
   text-align: center;
   .label {
-    font-size: 1.125rem;
     border-bottom: 1px solid black;
     width: 100%;
     max-width: 6rem;

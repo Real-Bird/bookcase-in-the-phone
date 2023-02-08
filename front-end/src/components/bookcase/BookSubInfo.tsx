@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
 interface BookSubInfoProps {
-  kind: "지은이" | "옮긴이" | "출판사" | "카테고리";
+  kind: "지은이" | "옮긴이" | "출판사" | "분류";
   value?: string;
 }
 
 const BookSubInfoBlock = styled.div`
   display: flex;
   justify-content: flex-start;
-  width: 10rem;
+  width: 100%;
   h4 {
     font-weight: bold;
     width: 4rem;

@@ -59,13 +59,25 @@ const DescriptionBlock = styled.div`
     }
   }
   h2 {
-    font-size: 2.25rem;
+    font-size: 130%;
   }
   h3 {
-    font-size: 1.75rem;
+    font-size: 115%;
   }
   img {
     margin-top: 1rem;
+    width: 12rem;
+  }
+  @media screen and (min-width: 500px) {
+    h2 {
+      font-size: 2rem;
+    }
+    h3 {
+      font-size: 1.75rem;
+    }
+    img {
+      width: 20rem;
+    }
   }
 `;
 
@@ -118,7 +130,7 @@ function SearchContainer() {
         <h2>바코드 / ISBN으로 검색한</h2>
         <h2>책의 정보를 표시합니다!</h2>
         <h3>\(@^0^@)/</h3>
-        <img src={barcodeImage} width={300} />
+        <img src={barcodeImage} alt="barcode-image" />
       </DescriptionBlock>
     </SearchBlock>
   );

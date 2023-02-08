@@ -7,12 +7,13 @@ import noImage from "/no_image_available.png";
 
 const DetailContainer = styled.div`
   width: 100%;
+  height: 100%;
   max-height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   overflow: hidden;
 `;
 
@@ -32,7 +33,6 @@ const DetailTitle = styled.h1<{ isOverflow: boolean }>`
   width: 100%;
   font-size: 2rem;
   font-weight: bold;
-  padding: 1rem 1.5rem;
   text-align: center;
   white-space: pre;
   text-overflow: clip;
@@ -49,24 +49,24 @@ const DetailTitle = styled.h1<{ isOverflow: boolean }>`
 
 const DetailTop = styled.div`
   width: 100%;
-  max-height: 45%;
-  display: flex;
-  justify-content: space-evenly;
-  gap: 30px;
+  max-height: 60%;
+  display: grid;
+  grid-template-columns: 50% 50%;
 `;
 
 const CoverImage = styled.img`
-  width: 12rem;
-  aspect-ratio: 2/6;
+  width: 90%;
+  height: 16rem;
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.4);
 `;
 
 const BookInfoBox = styled.div`
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 15px;
 `;
 
 const DetailBottom = styled.div`
@@ -74,21 +74,26 @@ const DetailBottom = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 10px;
-  gap: 20px;
-  .read-date {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  .review {
-    height: 8rem;
-  }
-  #review {
-    height: 100%;
-    overflow-y: scroll;
+  gap: 10px;
+  flex: 1;
+  margin-bottom: 2rem;
+  .label {
+    border-bottom: 1px solid black;
   }
 `;
 
-const DetailBottomItem = styled.div`
+const ReadDateBox = styled.div`
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px;
+  height: fit-content;
+  gap: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 5px 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+const ReviewBox = styled.div`
   border: 1px solid black;
   border-radius: 10px;
   padding: 5px;
@@ -96,13 +101,11 @@ const DetailBottomItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
   box-shadow: rgba(0, 0, 0, 0.4) 5px 5px;
-  .label {
-    font-size: 1.125rem;
-    border-bottom: 1px solid black;
-  }
   .review-area {
     background: rgba(223, 249, 251, 0.7);
+    height: 5rem;
     color: green;
     font-family: "Gugi", cursive;
     appearance: none;
@@ -110,6 +113,8 @@ const DetailBottomItem = styled.div`
     resize: none;
     border-radius: 10px;
     padding: 0.2rem 0.5rem;
+    overflow-y: scroll;
+    flex: 1;
   }
   .none-edit {
     min-height: 5rem;
@@ -178,7 +183,7 @@ export function ResultDetail({
         </BookInfoBox>
       </DetailTop>
       <DetailBottom>
-        <DetailBottomItem className="read-date">
+        <ReadDateBox className="read-date">
           {isEdit ? (
             <>
               <Input
@@ -202,8 +207,8 @@ export function ResultDetail({
               <ReadingDate label="독서 끝" date={endDateValue} />
             </>
           )}
-        </DetailBottomItem>
-        <DetailBottomItem className="review">
+        </ReadDateBox>
+        <ReviewBox className="review">
           {isEdit ? (
             <>
               <label htmlFor="review" className="label">
@@ -228,7 +233,7 @@ export function ResultDetail({
               <div className="review-area none-edit">{review}</div>
             </>
           )}
-        </DetailBottomItem>
+        </ReviewBox>
       </DetailBottom>
     </DetailContainer>
   );

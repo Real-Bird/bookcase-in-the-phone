@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const InputContainer = styled.div`
+  width: 100%;
   display: flex;
   gap: 10px;
   input {
@@ -9,6 +10,7 @@ const InputContainer = styled.div`
     background: rgba(223, 249, 251, 0.7);
     color: green;
     font-family: "Gugi", cursive;
+    flex: 1;
   }
 `;
 

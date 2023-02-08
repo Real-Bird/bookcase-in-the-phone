@@ -38,11 +38,11 @@ const BackwardBlock = styled.div`
   padding: 10px;
   position: absolute;
   top: 0.5rem;
-  left: 1rem;
+  left: 4%;
   cursor: pointer;
   svg {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
   }
 `;
 

@@ -4,7 +4,7 @@ import { Camera, Select } from "@components/search";
 import useScanner from "@libs/useScanner";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { getBookInfoByIsbn, getInfo, hasBookByIsbn } from "@api/bookcase";
+import { getInfo, hasBookByIsbn } from "@api/bookcase";
 
 export default function CameraSearch() {
   const [localStream, setLocalStream] = useState<MediaStream>();
@@ -38,9 +38,9 @@ export default function CameraSearch() {
     return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
-    await getMedia(e.target.value, getConstraints).then((stream) =>
-      setLocalStream(stream)
-    );
+    const stream = await getMedia(e.target.value, getConstraints);
+    if (localStream) stopStream(localStream);
+    setLocalStream(stream);
   };
   const getCurrentCamId = async (label: string) => {
     const deviceId = await navigator.mediaDevices

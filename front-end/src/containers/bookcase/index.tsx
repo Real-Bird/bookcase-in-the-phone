@@ -8,10 +8,10 @@ import {
   useBookcaseState,
 } from "@libs/bookcaseContextApi";
 import { createFuzzyMatcher } from "@libs/utils";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, UIEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-const OverviewContainer = styled.div`
+const OverviewContainer = styled.main`
   width: 100%;
   height: 87vh;
   background: rgba(223, 249, 251, 0.7);
@@ -24,13 +24,21 @@ const OverviewContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const SearchBarBlock = styled.div`
+const SearchBarBlock = styled.div<{ $issticky: boolean }>`
+  position: sticky;
+  top: 0;
   display: flex;
-  width: 95%;
+  width: 100%;
   gap: 10px;
   align-items: flex-end;
+  background-color: ${(props) => (props.$issticky ? "#000" : "transparent")};
+  color: ${(props) => (props.$issticky ? "#fff" : "#000")};
+  input {
+    color: ${(props) => (props.$issticky ? "#fff" : "#000")};
+  }
+  transition: color 0.5s, background-color 0.5s;
   .select {
-    width: 10rem;
+    width: 8rem;
   }
   .sub {
     display: flex;
@@ -47,16 +55,23 @@ const BookListBlock = styled.div<{ $isgrid: boolean }>`
   grid-template-columns: 33% 33% 33%;
   flex-direction: column;
   gap: ${(props) => (props.$isgrid ? "0.5%" : "5px")};
+  margin-bottom: 2rem;
 `;
 
 function BookcaseContainer() {
   const [bookList, setBookList] = useState<FetchBookcaseState>([]);
   const bookcaseDispatch = useBookcaseDispatch();
   const bookcaseState = useBookcaseState();
-  const keys = ["제목", "지은이", "출판사", "카테고리"];
+  const keys = ["제목", "지은이", "출판사", "분류"];
   const selectRef = useRef<HTMLSelectElement>(null);
   const [search, setSearch] = useState("");
   const [searchKind, setSearchKind] = useState(keys[0]);
+  const [isSearchBarSticky, setIsSearchBarSticky] = useState(false);
+  const onScroll = (e: UIEvent<HTMLDivElement>) => {
+    const { scrollTop } = e.currentTarget;
+    if (scrollTop === 0) return setIsSearchBarSticky(false);
+    return setIsSearchBarSticky(true);
+  };
   useEffect(() => {
     (async () => {
       try {
@@ -73,8 +88,8 @@ function BookcaseContainer() {
   };
   const [isGrid, setIsGrid] = useState(false);
   return (
-    <OverviewContainer>
-      <SearchBarBlock>
+    <OverviewContainer onScroll={onScroll}>
+      <SearchBarBlock $issticky={isSearchBarSticky}>
         <Select
           defaultValue={searchKind}
           selectRef={selectRef}
@@ -110,7 +125,7 @@ function BookcaseContainer() {
                 return regex.test(e.author);
               case "출판사":
                 return regex.test(e.publisher);
-              case "카테고리":
+              case "분류":
                 return regex.test(e.subject);
               default:
                 return false;

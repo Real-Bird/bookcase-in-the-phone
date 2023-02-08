@@ -10,7 +10,7 @@ const Post = styled(Link)<{ $isgrid: boolean }>`
   justify-content: center;
   align-items: center;
   flex-direction: ${(props) => (props.$isgrid ? "column" : "row")};
-  padding: 5px 0;
+  padding: 5px;
   gap: 10px;
   text-align: ${(props) => (props.$isgrid ? "center" : "start")};
   &:nth-child(2n + 1) {
@@ -37,7 +37,7 @@ const PostDetailBox = styled.div`
   width: 75%;
   overflow: hidden;
   .detail_block {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 50% 50%;
   }
 `;
 
@@ -67,7 +67,7 @@ export function BookListItem({ bookInfo, isGrid }: BookListItemProps) {
           <BookSubInfo kind="지은이" value={author} />
           <BookSubInfo kind="옮긴이" value={translator} />
           <BookSubInfo kind="출판사" value={publisher} />
-          <BookSubInfo kind="카테고리" value={subject} />
+          <BookSubInfo kind="분류" value={subject} />
         </div>
       </PostDetailBox>
     </Post>
