@@ -21,8 +21,8 @@ app.use(cookie_parser(process.env.COOKIE_SECRET));
 const corsOptions = {
   origin: process.env.ALLOW_ORIGIN,
   credentials: true,
-  // allowedHeaders: "Content-Type, Authorization",
-  // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: "Content-Type, Authorization",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   optionsSuccessStatus: 200,
 };
 
