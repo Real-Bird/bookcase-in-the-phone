@@ -75,7 +75,7 @@ const DetailBottom = styled.div`
   flex-direction: column;
   padding: 0 10px;
   gap: 10px;
-  flex: 1;
+  flex: 0 0 40%;
   margin-bottom: 2rem;
   .label {
     border-bottom: 1px solid black;
