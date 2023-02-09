@@ -19,12 +19,20 @@ export default function CameraSearch() {
   const navigate = useNavigate();
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
   useEffect(() => {
-    (async () =>
-      await getMedia().then(async (stream) => {
-        const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
-        setCurrentCamera(deviceId);
+    (async () => {
+      try {
+        const stream = await getMedia();
         setLocalStream(stream);
-      }))();
+        try {
+          const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
+          setCurrentCamera(deviceId);
+        } catch (e) {
+          console.log(e);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    })();
     getCameras(scan, setCameras);
     return () => {
       stopStream(localStream!);
@@ -38,16 +46,14 @@ export default function CameraSearch() {
     return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
-    const stream = await getMedia(e.target.value, getConstraints);
+    const beforeStream = await getMedia();
+    stopStream(beforeStream);
+    const stream = await getMedia(() => getConstraints(e.target.value));
     setLocalStream(stream);
   };
   const getCurrentCamId = async (label: string) => {
-    const deviceId = await navigator.mediaDevices
-      .enumerateDevices()
-      .then((device) => {
-        return device.filter((d) => d.label === label)[0].deviceId;
-      });
-    return deviceId;
+    const deviceId = await navigator.mediaDevices.enumerateDevices();
+    return deviceId.filter((d) => d.label === label)[0].deviceId;
   };
   useEffect(() => {
     if (!!barcode) {

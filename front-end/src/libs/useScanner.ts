@@ -65,21 +65,21 @@ export default function useScanner() {
   const getConstraints: GetConstraints = (deviceId): MediaStreamConstraints => {
     return {
       video: {
-        deviceId: deviceId ? { exact: deviceId } : undefined,
-        facingMode: "environment",
+        deviceId,
       },
       audio: false,
     };
   };
 
-  async function getMedia(deviceId?: string, constraints?: GetConstraints) {
+  async function getMedia(constraints?: GetConstraints) {
     const initialConstrains: MediaStreamConstraints = {
-      video: { facingMode: { exact: "environment" } },
+      video: { facingMode: "environment" },
       audio: false,
     };
-    return navigator.mediaDevices.getUserMedia(
-      constraints ? constraints(deviceId) : initialConstrains
+    const media = await navigator.mediaDevices.getUserMedia(
+      constraints ? constraints() : initialConstrains
     );
+    return media;
   }
 
   return {
