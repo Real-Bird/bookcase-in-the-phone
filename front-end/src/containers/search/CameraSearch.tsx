@@ -48,12 +48,23 @@ export default function CameraSearch() {
     return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
     const deviceIdConstrains: MediaStreamConstraints = {
-      video: { deviceId: { exact: e.target.value } },
+      video: { deviceId: { exact: value } },
       audio: false,
     };
-    const stream = await getMedia(deviceIdConstrains);
-    setLocalStream(stream);
+    try {
+      const stream = await getMedia(deviceIdConstrains);
+      setLocalStream(stream);
+    } catch (e) {
+      console.error("change device Error : ", e);
+      const nextDeviceIdConstrains: MediaStreamConstraints = {
+        video: { deviceId: { exact: value }, facingMode: undefined },
+        audio: false,
+      };
+      const stream = await getMedia(nextDeviceIdConstrains);
+      setLocalStream(stream);
+    }
   };
   const getCurrentCamId = async (label: string) => {
     const deviceId = await navigator.mediaDevices.enumerateDevices();
