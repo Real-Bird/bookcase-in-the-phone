@@ -6,3 +6,4 @@ export * from "./NotFound";
 export * from "./Search";
 export * from "./SearchResult";
 export * from "./BookDetailEdit";
+export * from "./Initialization";

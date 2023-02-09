@@ -1,3 +1,4 @@
+import { Layout } from "@components/common";
 import styled, { keyframes } from "styled-components";
 
 const SvgLoadingBlock = styled.div`
@@ -50,19 +51,32 @@ const SvgMain = styled.svg`
   }
 `;
 
+const Title = styled.h1`
+  font-size: 3rem;
+  max-width: 570px;
+  height: 4rem;
+  font-weight: bolder;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  bottom: 0;
+  background: #6ab04c;
+`;
+
 export function Initialization() {
   return (
-    <SvgLoadingBlock>
-      <SvgMain
-        version="1.0"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 738.000000 738.000000"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <path
-          pathLength="500"
-          transform="translate(0.000000,738.000000) scale(0.100000,-0.100000)"
-          d="M1373 7266 c-90 -29 -171 -115 -193 -206 -7 -32 -10 -1020 -8 -3395
+    <Layout title="Bookcase">
+      <SvgLoadingBlock>
+        <SvgMain
+          version="1.0"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 738.000000 738.000000"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <path
+            pathLength="500"
+            transform="translate(0.000000,738.000000) scale(0.100000,-0.100000)"
+            d="M1373 7266 c-90 -29 -171 -115 -193 -206 -7 -32 -10 -1020 -8 -3395
 l3 -3350 23 -46 c29 -59 82 -112 141 -141 l46 -23 2305 0 2305 0 46 23 c59 29
 112 82 141 141 l23 46 0 3375 0 3375 -23 46 c-29 59 -82 112 -141 141 l-46 23
 -2290 2 c-1858 1 -2298 -1 -2332 -11z m2393 -175 c98 -45 131 -162 71 -252
@@ -90,8 +104,10 @@ l-865 0 0 760 0 760 -285 0 -285 0 0 -760 0 -760 -615 0 -615 0 0 -105 0 -105
 2155 0 2155 0 0 105 0 105 -370 2 -371 3 239 83 c131 46 244 87 251 91 19 12
 -756 2221 -779 2220 -8 -1 -35 -9 -60 -18z M3580 3665 l0 -1175 285 0 285 0 0 1175 0 1175 -285 0 -285 0 0
 -1175z"
-        />
-      </SvgMain>
-    </SvgLoadingBlock>
+          />
+        </SvgMain>
+      </SvgLoadingBlock>
+      <Title>in the Phone</Title>
+    </Layout>
   );
 }

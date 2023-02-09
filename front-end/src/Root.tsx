@@ -3,6 +3,8 @@ import { Navigation } from "@components/common";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
+import { useLayoutEffect, useState } from "react";
+import { Initialization } from "pages";
 
 const RootBlock = styled.div`
   width: 100%;
@@ -16,12 +18,24 @@ const RootBlock = styled.div`
 `;
 
 function Root() {
+  const [loading, setLoading] = useState(true);
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+  }, []);
   return (
     <FetchBookcaseDataProvider>
       <FetchIsbnDataProvider>
         <RootBlock>
-          <Navigation />
-          <Outlet />
+          {loading ? (
+            <Initialization />
+          ) : (
+            <>
+              <Navigation />
+              <Outlet />
+            </>
+          )}
         </RootBlock>
       </FetchIsbnDataProvider>
     </FetchBookcaseDataProvider>
