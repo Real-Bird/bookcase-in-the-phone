@@ -10,8 +10,7 @@ export default function CameraSearch() {
   const [localStream, setLocalStream] = useState<MediaStream>();
   const camera = useRef<HTMLVideoElement>(null);
   const selectCamera = useRef<HTMLSelectElement>(null);
-  const { scan, scanning, stopStream, getCameras, getConstraints, getMedia } =
-    useScanner();
+  const { scan, scanning, stopStream, getCameras, getMedia } = useScanner();
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>();
   const [currentCamera, setCurrentCamera] = useState("");
   const FetchIsbnState = useIsbnState();
@@ -23,14 +22,17 @@ export default function CameraSearch() {
       try {
         const stream = await getMedia();
         setLocalStream(stream);
-        try {
-          const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
-          setCurrentCamera(deviceId);
-        } catch (e) {
-          console.log(e);
-        }
+        const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
+        setCurrentCamera(deviceId);
       } catch (e) {
-        console.log(e);
+        const nextConstrains: MediaStreamConstraints = {
+          video: true,
+          audio: false,
+        };
+        const stream = await getMedia(nextConstrains);
+        setLocalStream(stream);
+        const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
+        setCurrentCamera(deviceId);
       }
     })();
     getCameras(scan, setCameras);
@@ -46,9 +48,11 @@ export default function CameraSearch() {
     return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
-    const beforeStream = await getMedia();
-    stopStream(beforeStream);
-    const stream = await getMedia(() => getConstraints(e.target.value));
+    const deviceIdConstrains: MediaStreamConstraints = {
+      video: { deviceId: { exact: e.target.value } },
+      audio: false,
+    };
+    const stream = await getMedia(deviceIdConstrains);
     setLocalStream(stream);
   };
   const getCurrentCamId = async (label: string) => {
