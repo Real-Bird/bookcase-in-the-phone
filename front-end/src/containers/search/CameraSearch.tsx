@@ -59,7 +59,7 @@ export default function CameraSearch() {
     } catch (e) {
       console.error("change device Error : ", e);
       const nextDeviceIdConstrains: MediaStreamConstraints = {
-        video: { deviceId: { exact: value }, facingMode: undefined },
+        video: { deviceId: { exact: value }, facingMode: "environment" },
         audio: false,
       };
       const stream = await getMedia(nextDeviceIdConstrains);
