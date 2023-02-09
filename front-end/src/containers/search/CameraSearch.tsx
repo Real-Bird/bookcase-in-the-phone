@@ -20,13 +20,11 @@ export default function CameraSearch() {
   useEffect(() => {
     (async () => {
       try {
-        console.log("correct init");
         const stream = await getMedia();
         setLocalStream(stream);
         const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
         setCurrentCamera(deviceId);
       } catch (e) {
-        console.log("incorrect init");
         const nextConstrains: MediaStreamConstraints = {
           video: true,
           audio: false,
@@ -45,33 +43,24 @@ export default function CameraSearch() {
   useEffect(() => {
     if (!camera.current) return;
     if (localStream && camera.current) {
+      console.log("continue", localStream);
       scanning(localStream, camera.current, scan, setBarcode);
     }
     return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const currentStream = localStream!.getVideoTracks()!;
+    currentStream.forEach((track) => {
+      localStream!.removeTrack(track);
+    });
+    console.log("change ", localStream);
     const { value } = e.target;
     const deviceIdConstrains: MediaStreamConstraints = {
       video: { deviceId: { exact: value } },
       audio: false,
     };
-    try {
-      console.log("correct change");
-      const stream = await getMedia(deviceIdConstrains);
-      setLocalStream(stream);
-    } catch (e) {
-      console.error("incorrect change");
-      const nextDeviceIdConstrains: MediaStreamConstraints = {
-        video: true,
-        audio: false,
-      };
-      console.log(value);
-      const stream = await navigator.mediaDevices.getUserMedia(
-        nextDeviceIdConstrains
-      );
-      console.warn(stream);
-      setLocalStream(stream);
-    }
+    const stream = await getMedia(deviceIdConstrains);
+    setLocalStream(stream);
   };
   const getCurrentCamId = async (label: string) => {
     const deviceId = await navigator.mediaDevices.enumerateDevices();
