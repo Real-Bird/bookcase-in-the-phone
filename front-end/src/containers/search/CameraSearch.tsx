@@ -60,9 +60,10 @@ export default function CameraSearch() {
     } catch (e) {
       console.error("change device Error : ", e);
       const nextDeviceIdConstrains: MediaStreamConstraints = {
-        video: { deviceId: { exact: value }, facingMode: "environment" },
+        video: true,
         audio: false,
       };
+      console.log(value);
       const stream = await getMedia(nextDeviceIdConstrains);
       console.warn(stream);
       setLocalStream(stream);
