@@ -43,17 +43,17 @@ export default function CameraSearch() {
   useEffect(() => {
     if (!camera.current) return;
     if (localStream && camera.current) {
-      console.log("continue", localStream);
       scanning(localStream, camera.current, scan, setBarcode);
     }
     return () => stopStream(localStream!);
   }, [localStream, FetchIsbnState]);
   const handleChange = async (e: ChangeEvent<HTMLSelectElement>) => {
-    const currentStream = localStream!.getVideoTracks()!;
-    currentStream.forEach((track) => {
-      localStream!.removeTrack(track);
-    });
-    console.log("change ", localStream);
+    await (async () => {
+      const currentStream = localStream!.getVideoTracks()!;
+      currentStream.forEach((track) => {
+        localStream!.removeTrack(track);
+      });
+    })();
     const { value } = e.target;
     const deviceIdConstrains: MediaStreamConstraints = {
       video: { deviceId: { exact: value } },
