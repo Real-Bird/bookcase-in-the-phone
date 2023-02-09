@@ -5,12 +5,7 @@ import {
 } from "@zxing/library";
 import { Dispatch, SetStateAction } from "react";
 
-type GetConstraints = (deviceId?: string) => {
-  video: {
-    deviceId: { exact: string } | undefined;
-  };
-  audio: false;
-};
+type GetConstraints = (deviceId?: string) => MediaStreamConstraints;
 
 export default function useScanner() {
   const hints = new Map();
@@ -67,18 +62,19 @@ export default function useScanner() {
     dispatchCameras(devices);
   }
 
-  const getConstraints: GetConstraints = (deviceId) => {
+  const getConstraints: GetConstraints = (deviceId): MediaStreamConstraints => {
     return {
       video: {
         deviceId: deviceId ? { exact: deviceId } : undefined,
+        facingMode: "environment",
       },
       audio: false,
     };
   };
 
   async function getMedia(deviceId?: string, constraints?: GetConstraints) {
-    const initialConstrains = {
-      video: true,
+    const initialConstrains: MediaStreamConstraints = {
+      video: { facingMode: { exact: "environment" } },
       audio: false,
     };
     return navigator.mediaDevices.getUserMedia(
