@@ -9,7 +9,7 @@ import {
 } from "@libs/bookcaseContextApi";
 import { createFuzzyMatcher } from "@libs/utils";
 import { ChangeEvent, UIEvent, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const OverviewContainer = styled.main`
   width: 100%;
