@@ -55,6 +55,7 @@ export default function CameraSearch() {
     };
     try {
       const stream = await getMedia(deviceIdConstrains);
+      console.log(stream);
       setLocalStream(stream);
     } catch (e) {
       console.error("change device Error : ", e);
@@ -63,6 +64,7 @@ export default function CameraSearch() {
         audio: false,
       };
       const stream = await getMedia(nextDeviceIdConstrains);
+      console.warn(stream);
       setLocalStream(stream);
     }
   };
