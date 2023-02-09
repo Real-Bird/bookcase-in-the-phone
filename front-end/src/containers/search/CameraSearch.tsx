@@ -20,11 +20,13 @@ export default function CameraSearch() {
   useEffect(() => {
     (async () => {
       try {
+        console.log("correct init");
         const stream = await getMedia();
         setLocalStream(stream);
         const deviceId = await getCurrentCamId(stream.getTracks()[0].label);
         setCurrentCamera(deviceId);
       } catch (e) {
+        console.log("incorrect init");
         const nextConstrains: MediaStreamConstraints = {
           video: true,
           audio: false,
@@ -54,17 +56,19 @@ export default function CameraSearch() {
       audio: false,
     };
     try {
+      console.log("correct change");
       const stream = await getMedia(deviceIdConstrains);
-      console.log(stream);
       setLocalStream(stream);
     } catch (e) {
-      console.error("change device Error : ", e);
+      console.error("incorrect change");
       const nextDeviceIdConstrains: MediaStreamConstraints = {
         video: true,
         audio: false,
       };
       console.log(value);
-      const stream = await getMedia(nextDeviceIdConstrains);
+      const stream = await navigator.mediaDevices.getUserMedia(
+        nextDeviceIdConstrains
+      );
       console.warn(stream);
       setLocalStream(stream);
     }
