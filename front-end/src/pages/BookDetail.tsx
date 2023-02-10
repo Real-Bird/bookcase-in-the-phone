@@ -1,7 +1,7 @@
 import { Layout } from "@components/common";
 import BookDetailContainer from "@containers/bookDetail";
 
-export function BookDetail() {
+export default function BookDetail() {
   return (
     <Layout title="BOOK INFO" back="-1">
       <BookDetailContainer />

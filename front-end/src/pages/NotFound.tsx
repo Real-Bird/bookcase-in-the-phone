@@ -18,7 +18,7 @@ const NotFoundBlock = styled.div`
   }
 `;
 
-export function NotFound() {
+export default function NotFound() {
   const navigate = useNavigate();
   return (
     <Layout title="Not Found">

@@ -18,6 +18,7 @@ const Title = styled.h1`
   font-size: 3rem;
   max-width: 570px;
   height: 4rem;
+  line-height: 4rem;
   font-weight: bolder;
   position: fixed;
   width: 100%;

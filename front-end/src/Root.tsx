@@ -1,10 +1,9 @@
 import { FetchIsbnDataProvider } from "@libs/searchContextApi";
-import { Navigation } from "@components/common";
+import { Navigation, InitLoading } from "@components/common";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
 import { useLayoutEffect, useState } from "react";
-import { Initialization } from "pages";
 
 const RootBlock = styled.div`
   width: 100%;
@@ -29,7 +28,7 @@ function Root() {
       <FetchIsbnDataProvider>
         <RootBlock>
           {loading ? (
-            <Initialization />
+            <InitLoading />
           ) : (
             <>
               <Navigation />

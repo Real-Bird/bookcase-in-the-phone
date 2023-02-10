@@ -1,20 +1,19 @@
 import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-import { ErrorBoundary } from "@components/common";
-
-import {
-  About,
-  Bookcase,
-  BookDetail,
-  BookDetailEdit,
-  Login,
-  NotFound,
-  Search,
-  SearchResult,
-} from "./pages";
+import { ErrorBoundary, PageLoading } from "@components/common";
+import { lazy, Suspense } from "react";
+import NotFound from "./pages/NotFound";
 import Root from "./Root";
 import IsbnSearch from "@containers/search/IsbnSearch";
 import CameraSearch from "@containers/search/CameraSearch";
 import { hasUserToken } from "@api/auth";
+
+const Bookcase = lazy(() => import("./pages/Bookcase"));
+const BookDetail = lazy(() => import("./pages/BookDetail"));
+const BookDetailEdit = lazy(() => import("./pages/BookDetailEdit"));
+const Login = lazy(() => import("./pages/Login"));
+const Search = lazy(() => import("./pages/Search"));
+const SearchResult = lazy(() => import("./pages/SearchResult"));
+const About = lazy(() => import("./pages/About"));
 
 const router = createBrowserRouter(
   [
@@ -26,26 +25,38 @@ const router = createBrowserRouter(
           path: "",
           element: (
             <RequireAuth>
-              <Bookcase />
+              <Suspense fallback={<PageLoading />}>
+                <Bookcase />
+              </Suspense>
             </RequireAuth>
           ),
           errorElement: <ErrorBoundary />,
         },
         {
           path: "books/:isbn",
-          element: <BookDetail />,
+          element: (
+            <Suspense fallback={<PageLoading />}>
+              <BookDetail />
+            </Suspense>
+          ),
           errorElement: <ErrorBoundary />,
         },
         {
           path: "books/:isbn/edit",
-          element: <BookDetailEdit />,
+          element: (
+            <Suspense fallback={<PageLoading />}>
+              <BookDetailEdit />
+            </Suspense>
+          ),
           errorElement: <ErrorBoundary />,
         },
         {
           path: "about",
           element: (
             <RequireAuth>
-              <About />
+              <Suspense fallback={<PageLoading />}>
+                <About />
+              </Suspense>
             </RequireAuth>
           ),
           errorElement: <ErrorBoundary />,
@@ -54,7 +65,9 @@ const router = createBrowserRouter(
           path: "login",
           element: (
             <AlreadyAuth>
-              <Login />
+              <Suspense fallback={<PageLoading />}>
+                <Login />
+              </Suspense>
             </AlreadyAuth>
           ),
           errorElement: <ErrorBoundary />,
@@ -63,26 +76,40 @@ const router = createBrowserRouter(
           path: "search",
           element: (
             <RequireAuth>
-              <Search />
+              <Suspense fallback={<PageLoading />}>
+                <Search />
+              </Suspense>
             </RequireAuth>
           ),
           errorElement: <ErrorBoundary />,
           children: [
             {
               path: "camera",
-              element: <CameraSearch />,
+              element: (
+                <Suspense fallback={<PageLoading />}>
+                  <CameraSearch />
+                </Suspense>
+              ),
               errorElement: <NotFound />,
             },
             {
               path: "isbn",
-              element: <IsbnSearch />,
+              element: (
+                <Suspense fallback={<PageLoading />}>
+                  <IsbnSearch />
+                </Suspense>
+              ),
               errorElement: <NotFound />,
             },
           ],
         },
         {
           path: "result/:isbn",
-          element: <SearchResult />,
+          element: (
+            <Suspense fallback={<PageLoading />}>
+              <SearchResult />
+            </Suspense>
+          ),
           errorElement: <ErrorBoundary />,
         },
       ],

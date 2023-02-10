@@ -77,11 +77,7 @@ function reducer(
   }
 }
 
-export const FetchUserDataProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+const FetchUserDataProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, INITIALIZE_USER_DATA);
   return (
     <UserStateContext.Provider value={state}>
@@ -103,3 +99,5 @@ export function useUserDispatch() {
   if (!dispatch) throw new Error("Cannot find User");
   return dispatch;
 }
+
+export default FetchUserDataProvider;

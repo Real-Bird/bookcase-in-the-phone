@@ -1,7 +1,7 @@
 import { Layout } from "@components/common";
 import SearchContainer from "@containers/search";
 
-export function Search() {
+export default function Search() {
   return (
     <Layout title="Search">
       <SearchContainer />

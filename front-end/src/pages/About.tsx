@@ -1,7 +1,7 @@
 import { Layout } from "@components/common";
 import AboutContainer from "@containers/about";
 
-export function About() {
+export default function About() {
   return (
     <Layout title="ABOUT">
       <AboutContainer />
