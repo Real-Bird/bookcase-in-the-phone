@@ -42,6 +42,7 @@ const sessionOption = {
     mongoUrl: process.env.MONGO_URI,
     dbName: "BiP_test",
     collectionName: "session",
+    ttl: 30 * 24 * 60 * 60,
   }),
 };
 if (process.env.NODE_ENV === "production") {
@@ -51,6 +52,7 @@ if (process.env.NODE_ENV === "production") {
     mongoUrl: process.env.MONGO_URI,
     dbName: "BiP",
     collectionName: "session",
+    ttl: 24 * 60 * 60,
   });
 }
 app.use(express_session(sessionOption));

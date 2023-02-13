@@ -6,6 +6,7 @@ import Root from "./Root";
 import IsbnSearch from "@containers/search/IsbnSearch";
 import CameraSearch from "@containers/search/CameraSearch";
 import { hasUserToken } from "@api/auth";
+import Test from "pages/Test";
 
 const Bookcase = lazy(() => import("./pages/Bookcase"));
 const BookDetail = lazy(() => import("./pages/BookDetail"));
@@ -30,6 +31,11 @@ const router = createBrowserRouter(
               </Suspense>
             </RequireAuth>
           ),
+          errorElement: <ErrorBoundary />,
+        },
+        {
+          path: "/test",
+          element: <Test />,
           errorElement: <ErrorBoundary />,
         },
         {

@@ -1,65 +1,78 @@
+import { BarcodeSearchProps } from "@containers/search";
+import { useIsbnState } from "@libs/searchContextApi";
 import {
   BarcodeFormat,
   BrowserMultiFormatReader,
   DecodeHintType,
 } from "@zxing/library";
-import { Dispatch, SetStateAction } from "react";
-
-type GetConstraints = (deviceId?: string) => MediaStreamConstraints;
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 export default function useScanner() {
+  const [localStream, setLocalStream] = useState<MediaStream>();
+  const [cameras, setCameras] = useState<MediaDeviceInfo[]>();
+  const [currentCamera, setCurrentCamera] = useState("");
+  const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
+  const FetchIsbnState = useIsbnState();
+  const camera = useRef<HTMLVideoElement>(null);
   const hints = new Map();
-  const formats = [
-    BarcodeFormat.UPC_A,
-    BarcodeFormat.UPC_E,
-    BarcodeFormat.UPC_EAN_EXTENSION,
-    BarcodeFormat.QR_CODE,
-    BarcodeFormat.DATA_MATRIX,
-    BarcodeFormat.CODE_128,
-    BarcodeFormat.CODABAR,
-    BarcodeFormat.EAN_13,
-    BarcodeFormat.EAN_8,
-    BarcodeFormat.CODE_39,
-    BarcodeFormat.CODE_93,
-    BarcodeFormat.ITF,
-  ];
+  const formats = [BarcodeFormat.EAN_13, BarcodeFormat.CODE_93];
   hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
 
   const scan = new BrowserMultiFormatReader(hints, 500);
 
-  function stopStream(localStream: MediaStream) {
-    if (localStream) {
-      const videoTrack = localStream.getVideoTracks();
-      videoTrack.forEach((track) => {
-        localStream.removeTrack(track);
+  useEffect(() => {
+    Promise.all([getMedia(), scan.listVideoInputDevices()])
+      .then(([stream, devices]) => {
+        const deviceId = devices.filter(
+          (d) => d.label === stream.getTracks()[0].label
+        )[0].deviceId;
+        setLocalStream(stream);
+        setCameras(devices);
+        setCurrentCamera(deviceId);
+      })
+      .catch(async (e) => {
+        const nextConstrains: MediaStreamConstraints = {
+          video: true,
+          audio: false,
+        };
+        const stream = await getMedia(nextConstrains);
+        const devices = await scan.listVideoInputDevices();
+        const deviceId = devices.filter(
+          (d) => d.label === stream.getTracks()[0].label
+        )[0].deviceId;
+        setLocalStream(stream);
+        setCameras(devices);
+        setCurrentCamera(deviceId);
       });
-    }
-  }
+    return () => {
+      stopStream();
+    };
+  }, []);
 
-  async function scanning(
-    localStream: MediaStream,
-    camera: HTMLVideoElement,
-    scan: BrowserMultiFormatReader,
-    dispatch: Dispatch<SetStateAction<string>>
-  ) {
-    if (localStream && camera) {
+  useEffect(() => {
+    if (!camera.current) return;
+    if (localStream && camera.current) {
       try {
-        await scan.decodeFromStream(localStream, camera, (data, err) => {
+        scan.decodeFromStream(localStream, camera.current, (data, err) => {
           if (data) {
-            dispatch(data.getText());
+            setBarcode(data.getText());
           }
         });
       } catch (error) {
         console.log(error);
       }
     }
-  }
-  async function getCameras(
-    scan: BrowserMultiFormatReader,
-    dispatchCameras: Dispatch<SetStateAction<MediaDeviceInfo[] | undefined>>
-  ) {
-    const devices = await scan.listVideoInputDevices();
-    dispatchCameras(devices);
+    return () => stopStream();
+  }, [localStream, FetchIsbnState]);
+
+  function stopStream() {
+    if (localStream) {
+      const videoTrack = localStream.getVideoTracks();
+      videoTrack.forEach((track) => {
+        localStream.removeTrack(track);
+      });
+    }
   }
 
   async function getMedia(constraints?: MediaStreamConstraints) {
@@ -72,12 +85,22 @@ export default function useScanner() {
     );
     return media;
   }
+  async function handleChange(e: ChangeEvent<HTMLSelectElement>) {
+    stopStream();
+    const { value } = e.target;
+    const deviceIdConstrains: MediaStreamConstraints = {
+      video: { deviceId: { exact: value } },
+      audio: false,
+    };
+    const stream = await getMedia(deviceIdConstrains);
+    setLocalStream(stream);
+  }
 
   return {
-    scan,
-    stopStream,
-    scanning,
-    getCameras,
-    getMedia,
+    barcode,
+    cameras,
+    camera,
+    currentCamera,
+    handleChange,
   };
 }

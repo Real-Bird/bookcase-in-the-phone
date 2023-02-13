@@ -2,7 +2,7 @@ import { ChangeEvent, ReactNode, RefObject } from "react";
 import styled from "styled-components";
 
 interface SelectCamerasProps {
-  selectRef: RefObject<HTMLSelectElement>;
+  selectRef?: RefObject<HTMLSelectElement>;
   children: ReactNode;
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   defaultValue?: string;
