@@ -39,7 +39,7 @@ const NavIcon = styled.svg`
 export function Navigation() {
   const { pathname } = useLocation();
   const isbnDispatch = useIsbnDispatch();
-  const onClick = () => isbnDispatch({ type: "INITIALIZE_DATA" });
+  const onClick = async () => (await isbnDispatch)({ type: "INITIALIZE_DATA" });
   return (
     <NavBlock>
       <NavList>
