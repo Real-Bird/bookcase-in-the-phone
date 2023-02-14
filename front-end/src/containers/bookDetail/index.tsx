@@ -37,7 +37,7 @@ function BookDetailContainer() {
       try {
         await deleteBookInfoByIsbn(bookInfoState.ea_isbn);
         alert("성공적으로 삭제되었습니다!");
-        isbnDispatch({ type: "INITIALIZE_DATA" });
+        (await isbnDispatch)({ type: "INITIALIZE_DATA" });
         return navigate("/");
       } catch (e) {
         console.error(e);
@@ -49,7 +49,7 @@ function BookDetailContainer() {
       (async () => {
         try {
           const { error, bookInfo } = await getBookInfoByIsbn(isbn);
-          return isbnDispatch({
+          return (await isbnDispatch)({
             type: "SET_DATA",
             bookInfo,
           });

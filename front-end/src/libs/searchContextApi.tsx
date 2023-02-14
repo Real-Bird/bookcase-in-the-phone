@@ -113,7 +113,7 @@ export function useIsbnState() {
   return state;
 }
 
-export function useIsbnDispatch() {
+export async function useIsbnDispatch() {
   const dispatch = useContext(IsbnActionContext);
   if (!dispatch) throw new Error("Cannot find Isbn");
   return dispatch;

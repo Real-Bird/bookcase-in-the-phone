@@ -25,7 +25,7 @@ export default function IsbnSearch() {
     const bookData = await getInfo(barcode);
     if (!bookData) return;
     const { bookInfo } = bookData;
-    isbnDispatch({
+    (await isbnDispatch)({
       type: "LOAD_DATA",
       bookInfo,
     });

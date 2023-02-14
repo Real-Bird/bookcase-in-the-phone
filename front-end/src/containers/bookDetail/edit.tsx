@@ -37,7 +37,7 @@ function EditBookDetailContainer() {
     await updateBookInfoByIsbn(ea_isbn, body);
     return navigate(-1);
   }, [bookInfo]);
-  const onDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
       year: "numeric",
@@ -45,14 +45,14 @@ function EditBookDetailContainer() {
       day: "2-digit",
     });
     if (id === "reading-start")
-      return bookInfoDispatch({
+      return (await bookInfoDispatch)({
         type: "SET_DATA",
         bookInfo: {
           ...bookInfo,
           start_date: value ? localeFormatter.format(new Date(value)) : "",
         },
       });
-    bookInfoDispatch({
+    (await bookInfoDispatch)({
       type: "SET_DATA",
       bookInfo: {
         ...bookInfo,
@@ -60,8 +60,8 @@ function EditBookDetailContainer() {
       },
     });
   };
-  const onReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    bookInfoDispatch({
+  const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    (await bookInfoDispatch)({
       type: "SET_DATA",
       bookInfo: { ...bookInfo, review: e.target.value },
     });

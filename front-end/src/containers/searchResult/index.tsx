@@ -41,8 +41,8 @@ function ResultContainer() {
     review,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
-  const onBack = () => {
-    isbnDispatch({ type: "INITIALIZE_DATA" });
+  const onBack = async () => {
+    (await isbnDispatch)({ type: "INITIALIZE_DATA" });
     navigate("/search");
   };
   const [startDate, setStartDate] = useState("");
@@ -50,10 +50,10 @@ function ResultContainer() {
   const onSaveData = useCallback(async () => {
     const callbackData = await savedBookInfo(isbnState);
     if (callbackData.error) return console.error(callbackData.message);
-    isbnDispatch({ type: "INITIALIZE_DATA" });
+    (await isbnDispatch)({ type: "INITIALIZE_DATA" });
     navigate(-1);
   }, [isbnState]);
-  const onDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
     const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
@@ -63,19 +63,19 @@ function ResultContainer() {
     });
     if (id === "reading-start") {
       setStartDate(value);
-      return isbnDispatch({
+      return (await isbnDispatch)({
         type: "SET_DATA",
         bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
       });
     }
     setEndDate(value);
-    return isbnDispatch({
+    return (await isbnDispatch)({
       type: "SET_DATA",
       bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
     });
   };
-  const onReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    isbnDispatch({
+  const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    (await isbnDispatch)({
       type: "SET_DATA",
       bookInfo: { ...isbnState, review: e.target.value },
     });
