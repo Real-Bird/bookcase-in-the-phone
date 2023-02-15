@@ -10,7 +10,6 @@ export default function CameraSearch() {
     useScanner();
   const isbnPatch = useIsbnDispatch();
   const navigate = useNavigate();
-  const isbnState = useIsbnState();
   useEffect(() => {
     if (!!barcode) {
       Promise.all([getInfo(barcode), hasBookByIsbn(barcode)]).then(
@@ -21,9 +20,11 @@ export default function CameraSearch() {
             type: "LOAD_DATA",
             bookInfo,
           });
-          console.log(isbnState);
-          if (hasBook) return navigate(`/books/${barcode}`);
-          return navigate(`/result/${barcode}`);
+          if (hasBook) {
+            return navigate(`/books/${barcode}`);
+          } else {
+            return navigate(`/result/${barcode}`);
+          }
         }
       );
     }

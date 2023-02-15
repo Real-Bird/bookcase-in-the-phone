@@ -1,4 +1,4 @@
-import { Button } from "@components/common";
+import { Button, PageLoading } from "@components/common";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
@@ -39,6 +39,7 @@ function ResultContainer() {
     publisher_predate,
     ea_isbn,
     review,
+    loading,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
   const onBack = async () => {
@@ -63,16 +64,18 @@ function ResultContainer() {
     });
     if (id === "reading-start") {
       setStartDate(value);
-      return (await isbnDispatch)({
+      (await isbnDispatch)({
         type: "SET_DATA",
         bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
       });
+      return;
     }
     setEndDate(value);
-    return (await isbnDispatch)({
+    (await isbnDispatch)({
       type: "SET_DATA",
       bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
     });
+    return;
   };
   const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
     (await isbnDispatch)({
@@ -89,9 +92,7 @@ function ResultContainer() {
       return;
     }
   }, [startDate, endDate]);
-  useEffect(() => {
-    if (!isbnState.title) onBack();
-  }, []);
+  if (loading) return <PageLoading />;
   return (
     <ResultBlock>
       <ButtonBlock>

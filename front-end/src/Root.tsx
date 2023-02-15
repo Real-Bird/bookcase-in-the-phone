@@ -4,6 +4,8 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
 import { useLayoutEffect, useState } from "react";
+import { checkedUser } from "@api/auth";
+import { useUserDispatch } from "@libs/userContextApi";
 
 const RootBlock = styled.div`
   width: 100%;
@@ -18,7 +20,12 @@ const RootBlock = styled.div`
 
 function Root() {
   const [loading, setLoading] = useState(true);
+  const userDispatch = useUserDispatch();
   useLayoutEffect(() => {
+    (async () => {
+      const { user } = await checkedUser();
+      userDispatch({ type: "SET_USER", userInfo: user });
+    })();
     setTimeout(() => {
       setLoading(false);
     }, 4000);

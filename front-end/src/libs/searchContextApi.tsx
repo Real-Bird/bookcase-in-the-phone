@@ -20,6 +20,7 @@ export type FetchIsbnDataState = {
   start_date?: string;
   end_date?: string;
   hasData?: boolean;
+  loading?: boolean;
 };
 
 type FetchIsbnDataAction =
@@ -42,6 +43,7 @@ const INITIALIZE_ISBN_DATA: FetchIsbnDataState = {
   title_url: "",
   translator: "",
   hasData: false,
+  loading: true,
 };
 
 const IsbnStateContext =
@@ -80,12 +82,14 @@ function reducer(
         title,
         publisher_predate: replaceDate,
         hasData: true,
+        loading: false,
       };
     case "SET_DATA":
       return {
         ...state,
         ...action.bookInfo,
         hasData: true,
+        loading: false,
       };
     default:
       throw new Error("Unhandled action");
