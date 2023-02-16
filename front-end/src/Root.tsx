@@ -24,7 +24,9 @@ function Root() {
   useLayoutEffect(() => {
     (async () => {
       const { user } = await checkedUser();
+      if (!user) return;
       userDispatch({ type: "SET_USER", userInfo: user });
+      return;
     })();
     setTimeout(() => {
       setLoading(false);
