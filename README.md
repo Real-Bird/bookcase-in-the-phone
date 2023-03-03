@@ -44,13 +44,184 @@
 
 - 저장한 책의 상세 화면과 수정 화면입니다. 서지 정보 외의 독서 날짜와 간단한 감상평을 기록할 수 있도록 구현했습니다.
 
-- [ ]  **구현 요구 사항 목록**
-    - 체크 리스트 형태로 추가
-- [ ]  **사용한 프레임워크 및 라이브러리 설명**
-    - package.json 참조하여 선택한 이유 작성
-- [ ]  **폴더 구조 설명**
-    - 폴더를 구분한 기준에 대하여 설명
-    - tree 명령어를 사용하면 간편하게 디렉토리 구조를 출력할 수 있음
+## 사용한 프레임워크 및 라이브러리
+
+### Front-End
+- `React Router` : 경로 설정이 쉽고 가장 익숙하여 선택했습니다.
+- `Zxing-js/library` : 주요 기능인 바코드 스캔을 위한 라이브러리입니다. 자바스크립트 바코드 스캔 라이브러리 검색 결과 중 가장 먼저 발견했고, 사용법을 빠르게 익혀 사용했습니다.
+- `Styled Components` : 웹 스타일링을 위해 사용했습니다.
+- `Axios` : 서버와 통신하기 위해 사용했습니다.
+
+### Back-End
+- `Express` : 간단한 서버 구축을 위해 사용했습니다.
+- `Passport` : 구글 로그인을 처리하기 위해 사용했습니다.
+- `MongoDB` : 비교적 자유롭고 손쉬운 데이터 저장을 위해 사용했습니다.
+
+## 폴더 구조
+
+### Front-End
+```
+\---front-end
+    |   .env
+    |   .eslintrc.cjs
+    |   index.html
+    |   package-lock.json
+    |   package.json
+    |   tsconfig.json
+    |   tsconfig.node.json
+    |   vite.config.ts
+    |                 
+    +---public
+    |       barcode.png
+    |       favicon.png
+    |       favicon.svg
+    |       no_image_available.png
+    |       vite.svg
+    |       
+    \---src
+        |   main.tsx
+        |   Root.tsx
+        |   Router.tsx
+        |   vite-env.d.ts
+        |   
+        +---api
+        |       auth.ts
+        |       bookcase.ts
+        |       
+        +---components
+        |   +---auth
+        |   |       Google.tsx
+        |   |       index.tsx
+        |   |       Logout.tsx
+        |   |       
+        |   +---bookcase
+        |   |       BookListItem.tsx
+        |   |       BookSubInfo.tsx
+        |   |       index.tsx
+        |   |       SearchItem.tsx
+        |   |       ToggleGridButton.tsx
+        |   |       
+        |   +---common
+        |   |       Button.tsx
+        |   |       ErrorBoundary.tsx
+        |   |       FloatingInput.tsx
+        |   |       index.tsx
+        |   |       InitLoading.tsx
+        |   |       Input.tsx
+        |   |       Layout.tsx
+        |   |       LogoSvg.tsx
+        |   |       Navigation.tsx
+        |   |       PageLoading.tsx
+        |   |       ReadingDate.tsx
+        |   |       
+        |   +---search
+        |   |       Camera.tsx
+        |   |       index.tsx
+        |   |       Select.tsx
+        |   |       
+        |   \---searchResult
+        |           BookInfoItem.tsx
+        |           index.tsx
+        |           ResultDetail.tsx
+        |           
+        +---containers
+        |   +---about
+        |   |       index.tsx
+        |   |       
+        |   +---auth
+        |   |       index.tsx
+        |   |       
+        |   +---bookcase
+        |   |       index.tsx
+        |   |       
+        |   +---bookDetail
+        |   |       edit.tsx
+        |   |       index.tsx
+        |   |       
+        |   +---search
+        |   |       CameraSearch.tsx
+        |   |       index.tsx
+        |   |       IsbnSearch.tsx
+        |   |       
+        |   \---searchResult
+        |           index.tsx
+        |           
+        +---libs
+        |       bookcaseContextApi.tsx
+        |       searchContextApi.tsx
+        |       userContextApi.tsx
+        |       useScanner.ts
+        |       useWindowSize.ts
+        |       utils.ts
+        |       
+        +---pages
+        |       About.tsx
+        |       Bookcase.tsx
+        |       BookDetail.tsx
+        |       BookDetailEdit.tsx
+        |       Login.tsx
+        |       NotFound.tsx
+        |       Search.tsx
+        |       SearchResult.tsx
+        |       
+        \---styles
+                global.css
+```
+- 각 역할에 맞춰 디렉토리를 구분했습니다. 화면에 노출되는 부분은 `pages`, 기능이 동작하는 부분은 `containers`, 단순한 컴포넌트는 `components`로 나눴습니다. 서버와 통신하는 함수는 `api`에, 클라이언트에서 동작하는 커스텀 훅이나 함수는 `libs`에, 공통적인 스타일링은 `styles`로 구분했습니다.
+
+### Back-End
+
+```
++---back-end
+|   |   .env
+|   |   app.ts
+|   |   index.ts
+|   |   package-lock.json
+|   |   package.json
+|   |   tsconfig.json
+|   |   
+|   +---build
+|   |   |   app.js
+|   |   |   index.js
+|   |   |   
+|   |   \---src
+|   |       +---controller
+|   |       |       auth.js
+|   |       |       bookcase.js
+|   |       |       
+|   |       +---db
+|   |       |       book.js
+|   |       |       index.js
+|   |       |       user.js
+|   |       |       
+|   |       +---libs
+|   |       |       passport.js
+|   |       |       
+|   |       \---routes
+|   |               auth.js
+|   |               bookcase.js
+|   |                 
+|   \---src
+|       +---controller
+|       |       auth.ts
+|       |       bookcase.ts
+|       |       
+|       +---db
+|       |       book.ts
+|       |       index.ts
+|       |       user.ts
+|       |       
+|       +---libs
+|       |       passport.ts
+|       |       
+|       \---routes
+|               auth.ts
+|               bookcase.ts
+```
+
+- 마찬가지로 역할에 따라 디렉토리를 구분했습니다.
+- `TypeScript`로 작성했으나 빌드가 원할하지 않아 `JavaScript`로 재작성하여 두 개의 폴더가 되었습니다. 서버로 돌아가는 코드는 위의 `JS` 폴더의 코드입니다.
+
 - [ ]  **과제 진행 시 주안점 작성**
     - 고민한 부분에 대하여 서술
 - [ ]  **한계점 및 개선 사항 작성**
