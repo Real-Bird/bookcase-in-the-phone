@@ -34,7 +34,7 @@ export default function CameraSearch() {
       <Camera camera={camera} />
       <Select onChange={handleChange} defaultValue={currentCamera}>
         {cameras?.map((cam) => (
-          <option key={cam.deviceId} value={cam.deviceId}>
+          <option key={cam.deviceId} value={cam.label}>
             {cam.label}
           </option>
         ))}

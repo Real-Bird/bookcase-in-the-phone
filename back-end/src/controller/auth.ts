@@ -40,6 +40,6 @@ export const reqGoogle = passport.authenticate("google", {
 });
 
 export const callbackGoogle = passport.authenticate("google", {
-  successRedirect: "/login/success",
+  successRedirect: process.env.REDIRECT_CLIENT_URL,
   failureRedirect: process.env.REDIRECT_CLIENT_URL,
 });

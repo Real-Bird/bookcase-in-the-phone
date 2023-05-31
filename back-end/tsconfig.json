@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "dist",
     "target": "ESNext",
     "lib": ["ES6"],
     "strict": true,
     "strictNullChecks": false,
-    "module": "ESNext",
+    "module": "CommonJS",
+    "preserveValueImports": false,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
