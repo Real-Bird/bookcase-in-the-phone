@@ -28,7 +28,7 @@
 
 #### 카메라 검색(/search/camera)
 
-[camera search.webm](https://user-images.githubusercontent.com/83404864/222394680-3f784e20-6a56-4b0a-a419-265f415d3441.webm)
+[camera search.webm](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/a4680079-246e-44c4-b28e-c5e631aefd7f)
 
 - 책의 바코드를 스캔하여 ISBN을 검색합니다. 검색된 서지 정보를 표시하며, 저장 혹은 재검색을 결정할 수 있습니다.
 
