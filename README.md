@@ -8,6 +8,11 @@
 - **Front-End** : [ ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=TypeScript&logoColor=white), ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white), ![Styled Components](https://img.shields.io/badge/Styled%20Components-DB7093?style=flat&logo=StyledComponents&logoColor=white), ![Zxing Library](https://img.shields.io/badge/Zxing-Library-ffffff?style=flat&logoColor=white) ]
 - **Back-End** : [ ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=Express&logoColor=white), ![Passport](https://img.shields.io/badge/Passport-34E27A?style=flat&logo=passport&logoColor=white), ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) ]
 
+
+https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/aad7bb5b-241c-4849-883f-fa8ba5165b2b
+![favicon](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/a44ad4eb-7b1a-4c67-b268-e7a0ba1bea7f)
+
+
 ## 최종 구현 화면 이미지 및 동영상
 ![최종구현1](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/f1ef676b-0d84-4cab-b3b8-7cbffda971c6)
 ![최종구현2](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/d8bac437-2c19-4d52-86fd-c89b4af8b62d)
