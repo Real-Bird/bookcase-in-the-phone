@@ -6,6 +6,8 @@ import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
 import { useLayoutEffect, useState } from "react";
 import { checkedUser } from "@api/auth";
 import { useUserDispatch } from "@libs/userContextApi";
+import useSwipeReload from "@libs/useSwipeReload";
+import SwipeLoadingSpinner from "@components/common/SwipeLoadingSpinner";
 
 const RootBlock = styled.div`
   width: 100%;
@@ -18,9 +20,23 @@ const RootBlock = styled.div`
   align-items: center;
 `;
 
+const SwipeLoading = styled.div`
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  font-weight: 700;
+  color: #000;
+  z-index: 99999;
+  transition: all 0.5s;
+`;
+
 function Root() {
   const [loading, setLoading] = useState(true);
   const userDispatch = useUserDispatch();
+  const { loading: swipeLoading } = useSwipeReload();
+
   useLayoutEffect(() => {
     (async () => {
       const { user } = await checkedUser();
@@ -32,6 +48,7 @@ function Root() {
       setLoading(false);
     }, 4000);
   }, []);
+
   return (
     <FetchBookcaseDataProvider>
       <FetchIsbnDataProvider>
@@ -40,6 +57,11 @@ function Root() {
             <InitLoading />
           ) : (
             <>
+              {swipeLoading && (
+                <SwipeLoading>
+                  <SwipeLoadingSpinner />
+                </SwipeLoading>
+              )}
               <Navigation />
               <Outlet />
             </>
