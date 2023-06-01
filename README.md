@@ -1,60 +1,65 @@
 # Bookcase in the Phone
 
-## 개요
+<details>
+<summary>목차</summary>
+
+- 0. [개요](#0-개요)
+- 1. [스택](#1-스택)
+  - 1-1. [Front-End](#1-1-front-end)
+  - 1-2. [Back-End](#1-2-back-end)
+- 2. [최종 구현 화면](#2-최종-구현-화면)
+  - 2-1. [초기 화면 / 로그인 / 로그아웃](#2-1-초기-화면--로그인--로그아웃)
+  - 2-2. [상세내용 / 수정 / 검색](#2-2-상세내용--수정--검색)
+- 3. [주안점](#3-주안점)
+  - 3-1. [바코드/ISBN 검색 기능](#3-1-바코드isbn-검색-기능)
+  - 3-2. [서버 구현과 REST API](#3-2-1-서버-api-라우터)
+  - 3-3. [PWA 적용](#3-3-pwa-적용)
+  - 3-4. [(깨알주의) 아이콘과 로딩화면, 새로고침](#3-4-깨알주의-아이콘과-로딩화면-새로고침)
+- 4. [한계점 및 개선 방안](#4-한계점-및-개선-방안)
+
+</details>
+
+## 0. 개요
 
 **Bookcase in the Phone**은 **바코드** 및 **ISBN**으로 검색한 책의 서지 정보를 저장하는 웹 책장 서비스입니다. 소유한 도서를 쉽고 간편하게 웹에 저장하려는 목적으로 만들었습니다.
 
 테마 컬러는 장미에서 영감을 얻었습니다.
 
-<<<<<<< HEAD
+## 1. 스택
 
-https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/aad7bb5b-241c-4849-883f-fa8ba5165b2b
-![favicon](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/a44ad4eb-7b1a-4c67-b268-e7a0ba1bea7f)
-
-
-## 최종 구현 화면 이미지 및 동영상
-![최종구현1](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/f1ef676b-0d84-4cab-b3b8-7cbffda971c6)
-![최종구현2](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/d8bac437-2c19-4d52-86fd-c89b4af8b62d)
-=======
-## 스택
->>>>>>> dev-1
-
-#### Front-End
+### 1-1. Front-End
 
 - `TypeScript` : 코드 상 오류를 미연에 방지하고 안전한 자바스크립트 문법을 사용할 수 있어 `TS`를 선호합니다.
 - `React` : 가장 익숙하여 선택했습니다.
 - `React Router` : 경로 설정이 쉽고 가장 익숙하여 선택했습니다.
-- `Zxing-js/library` : 주요 기능인 바코드 스캔을 위한 라이브러리입니다. 자바스크립트 바코드 스캔 라이브러리 검색 결과 중 가장 유명한 바코드 리더 라이브러리이고, 사용법을 빠르게 익혀 사용했습니다.
+- `@Zxing-js/Library` : 주요 기능인 바코드 스캔을 위한 라이브러리입니다. 자바스크립트 바코드 스캔 라이브러리 검색 결과 중 가장 유명한 라이브러리이고, 사용법을 빠르게 익혀 사용했습니다.
 - `Styled Components` : 웹 스타일링을 위해 사용했습니다.
 - `Axios` : 사용이 쉽고 직관성이 좋아 사용했습니다.
 
-#### Back-End
+### 1-2. Back-End
 
 - `Express` : 간단한 서버 구축을 위해 사용했습니다.
 - `Passport` : 구글 로그인을 처리하기 위해 사용했습니다.
 - `MongoDB` : 비교적 자유롭고 손쉬운 데이터 저장을 위해 사용했습니다.
 
-## 최종 구현 화면
+## 2. 최종 구현 화면
 
-### 초기 화면 / 로그인 / 로그아웃
+### 2-1. 초기 화면 / 로그인 / 로그아웃
 
 ![최종구현1](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/f1ef676b-0d84-4cab-b3b8-7cbffda971c6)
 
-### 상세내용 / 수정 / 검색
+### 2-2. 상세내용 / 수정 / 검색
 
 ![최종구현2](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/d8bac437-2c19-4d52-86fd-c89b4af8b62d)
 
-## 주안점
+## 3. 주안점
 
-### 1. 바코드/ISBN 검색 기능
+### 3-1. 바코드/ISBN 검색 기능
 
 어플리케이션의 메인 기능으로, 스마트폰의 카메라를 이용하여 간단하게 바코드 스캔하여 서지 정보를 검색합니다. 바코드 인식이 제대로 되지 않을 시 손수 ISBN 적어 검색할 수 있습니다. 서지 정보는 **국립중앙도서관 OPEN API**의 **ISBN 서지정보 API**를 이용했습니다.
 
-#### 카메라 검색(/search/camera)
+#### 3-1-1. 카메라 검색(/search/camera)
 
-<<<<<<< HEAD
-[camera search.webm](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/a4680079-246e-44c4-b28e-c5e631aefd7f)
-=======
 <details open="" class="details-reset border rounded-2">
   <summary class="px-3 py-2">
     <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-device-camera-video">
@@ -68,13 +73,12 @@ https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/aad7bb5b-241c
 
   </video>
 </details>
->>>>>>> dev-1
 
 `Media Stream API`와 `@Zxing-js/Library`를 사용해 구현했습니다. 책의 바코드를 스캔하여 ISBN을 검색합니다. 검색된 서지 정보를 표시하며, 저장 혹은 재검색을 결정할 수 있습니다. 서지 정보가 없는 경우 바코드를 스캔하더라도 페이지 이동이 발생하지 않습니다.
 
 초기에 여러 카메라를 선택할 수 있도록 구현했지만, 실질적으로 사용하고 바코드를 인식하는 카메라는 후면 뿐이어서 하나만 사용할 수 있게 수정했습니다.
 
-#### ISBN 검색(/search/isbn)
+#### 3-1-2. ISBN 검색(/search/isbn)
 
 <details open="" class="details-reset border rounded-2">
   <summary class="px-3 py-2">
@@ -92,13 +96,13 @@ https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/aad7bb5b-241c
 
 바코드 인식이 잘 되지 않거나 수동으로 검색하고 싶은 경우, 직접 ISBN을 입력하여 서지 정보를 검색할 수 있습니다. 마찬가지로, 서지 정보가 없으면 화면 이동이 발생하지 않습니다.
 
-### 2. 서버 구현과 REST API
+### 3-2. 서버 구현과 REST API
 
 검색한 서지 정보를 DB에 저장하기 위해 간단한 서버를 직접 구현하였고, 클라이언트와 서버 간의 통신은 `REST API` 방식으로 설계했습니다.
 
-#### 2-1. 서버 API 라우터
+#### 3-2-1. 서버 API 라우터
 
-##### 2-1-1. auth
+##### 3-2-1-1. auth
 
 로그인 및 로그아웃 라우터입니다.
 
@@ -119,7 +123,7 @@ exports.router = router;
 
 `google` 로그인만 사용하여 `get` 메서드만 활용했습니다.
 
-##### 2-1-2. bookcase
+##### 3-2-1-2. bookcase
 
 메인 서비스인 **Bookcase**와 관련한 API 라우터입니다.
 
@@ -141,9 +145,9 @@ exports.router = router;
 
 `pathname`로 요청을 구분할 수 있도록 작성했습니다. `/info`의 경우, 메서드에 따라 역할을 알 수 있습니다.
 
-#### 2-2. 클라이언트 API 라우터
+#### 3-2-2. 클라이언트 API 라우터
 
-##### 2-2-1. auth
+##### 3-2-2-1. auth
 
 ```ts
 export async function googleLogin() {
@@ -166,7 +170,7 @@ export async function checkedUser() {
 }
 ```
 
-##### 2-2-2. bookcase
+##### 3-2-2-2. bookcase
 
 ```ts
 // (...)
@@ -216,7 +220,7 @@ export async function deleteBookInfoByIsbn(isbn: string) {
 
 서버의 API에 맞춰 메서드를 설정했습니다.
 
-#### 2-3. CORS 해결
+#### 3-2-3. CORS 해결
 
 `Express`에 `cors` 라이브러리를 추가하고, `Allow` 헤더 옵션을 설정하여 해결했습니다.
 
@@ -232,7 +236,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 ```
 
-### PWA 적용
+### 3-3. PWA 적용
 
 모바일 웹을 대상으로 구현했지만, 매번 웹 브라우저를 켜야 하므로 접근성이 좋지 않았습니다. 이를 해결하고자 `네이티브`와 `PWA` 사이에서 고민했습니다.
 
@@ -240,7 +244,7 @@ app.use(cors(corsOptions));
 
 다만, 아이폰 환경은 테스트할 수 없어 고려하지 않았습니다.
 
-### (깨알주의) 아이콘과 로딩화면, 새로고침
+### 3-4. (깨알주의) 아이콘과 로딩화면, 새로고침
 
 ![favicon](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/a44ad4eb-7b1a-4c67-b268-e7a0ba1bea7f)
 
@@ -262,7 +266,7 @@ app.use(cors(corsOptions));
 
 스와이프를 통한 새로고침과 로딩화면입니다. `PWA`에서 새로고침하는데 사용하고자 스와이프 새로고침을 적용했고, 로딩화면은 아이콘을 `svg`로 만든 것을 사용했습니다.
 
-## 한계점 및 개선 방안
+## 4. 한계점 및 개선 방안
 
 - **어색한 UI** : 디자인 감각을 키우기 위해 관련 서적을 읽으며 연습 중입니다. 또한, 다양한 브라우저 환경에 맞게끔 스타일링을 수정하겠습다. 데이터 로드나 검색 등의 로딩 UI도 추가하겠습니다.
 - **헤더** : 정확하고 효율적으로 `http 통신`을 할 수 잇도록 다양한 헤더를 추가겠습니다. 인증도 쿼리가 아닌 `Authorization`을 사용하겠습니다.
