@@ -10,7 +10,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 export default function useScanner() {
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [localStream, setLocalStream] = useState<MediaStream>();
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [currentCamera, setCurrentCamera] = useState("");
   const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
@@ -19,32 +19,38 @@ export default function useScanner() {
   const hints = new Map();
   const formats = [BarcodeFormat.EAN_13, BarcodeFormat.CODE_93];
   hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
-
   const scan = new BrowserMultiFormatReader(hints);
 
   useEffect(() => {
-    Promise.all([getMedia(), BrowserCodeReader.listVideoInputDevices()])
-      .then(([stream, devices]) => {
-        const deviceId = devices.filter((d) => d.label.includes("back"))[0]
-          .label;
-        setLocalStream(stream);
-        setCameras(devices.filter((d) => d.label.includes("back")));
-        setCurrentCamera(deviceId);
-      })
-      .catch(async (e) => {
-        const nextConstrains: MediaStreamConstraints = {
-          video: true,
-          audio: false,
-        };
-        const stream = await getMedia(nextConstrains);
-        const devices = await BrowserCodeReader.listVideoInputDevices();
-        const deviceId = devices.filter((d) => d.label.includes("back"))[0]
-          .label;
-        setLocalStream(stream);
-        setCameras(devices);
-        setCurrentCamera(deviceId);
-      });
-    return () => stopStream();
+    let mounted = true;
+    try {
+      if (mounted) {
+        let deviceId: string = "";
+        BrowserCodeReader.listVideoInputDevices()
+          .then((devices) => {
+            const device = devices.slice(-1);
+            setCameras(devices.slice(-1));
+            setCurrentCamera(device[0].label);
+            deviceId = device[0].deviceId;
+          })
+          .then(async () => {
+            const stream = await getMedia({
+              video: {
+                facingMode: { exact: "environment" },
+                deviceId,
+              },
+              audio: false,
+            });
+            setLocalStream(stream);
+          });
+      }
+    } catch (e) {
+      console.error("initial error", e);
+    }
+    return () => {
+      mounted = false;
+      stopStream();
+    };
   }, []);
 
   useEffect(() => {
@@ -64,8 +70,10 @@ export default function useScanner() {
 
   function stopStream() {
     if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
-      setLocalStream(null);
+      localStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+      setLocalStream(undefined);
     }
   }
 
@@ -110,5 +118,6 @@ export default function useScanner() {
     camera,
     currentCamera,
     handleChange,
+    localStream,
   };
 }

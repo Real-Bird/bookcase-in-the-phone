@@ -1,8 +1,9 @@
-import { RefObject } from "react";
+import { RefObject, useEffect } from "react";
 import styled from "styled-components";
 
 interface SearchCamProps {
   camera: RefObject<HTMLVideoElement>;
+  mediaStream: MediaStream | undefined;
 }
 
 const CameraBlock = styled.div`
@@ -15,7 +16,11 @@ const CameraBlock = styled.div`
   }
 `;
 
-export function Camera({ camera }: SearchCamProps) {
+export function Camera({ camera, mediaStream }: SearchCamProps) {
+  useEffect(() => {
+    if (!camera.current) return;
+    camera.current.srcObject = mediaStream ? mediaStream : null;
+  }, [mediaStream]);
   return (
     <CameraBlock>
       <video ref={camera} autoPlay playsInline></video>

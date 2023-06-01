@@ -1,12 +1,12 @@
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { Camera, Select } from "@components/search";
 import useScanner from "@libs/useScanner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInfo, hasBookByIsbn } from "@api/bookcase";
 
 export default function CameraSearch() {
-  const { barcode, cameras, camera, currentCamera, handleChange } =
+  const { barcode, cameras, camera, currentCamera, handleChange, localStream } =
     useScanner();
   const isbnPatch = useIsbnDispatch();
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function CameraSearch() {
   }, [barcode]);
   return (
     <>
-      <Camera camera={camera} />
+      <Camera camera={camera} mediaStream={localStream} />
       <Select onChange={handleChange} defaultValue={currentCamera}>
         {cameras?.map((cam) => (
           <option key={cam.deviceId} value={cam.label}>
