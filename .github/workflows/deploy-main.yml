@@ -21,19 +21,6 @@ jobs:
           project: real_bird/bookcase-in-the-phone
           stage: main
           yaml: >
-            name: bookcase-in-the-phone
-
-            app: web
-
-            options:
-              docbase: /dist
-              nodeversion: "18"
-              spa: true
-              buildenv:
-                - name: VITE_BOOK_SEARCH_API_KEY
-                  value: b20f5af0930489d3e86d9cc7f8438ff35452645c89bd37b463cc85d7d4d5669c
-                - name: VITE_REACT_APP_API_URL
-                  value: https://port-0-bip-api-luj2cldumsahu.sel3.cloudtype.app
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
