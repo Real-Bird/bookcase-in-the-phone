@@ -9,6 +9,8 @@
 - **Back-End** : [ ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=Express&logoColor=white), ![Passport](https://img.shields.io/badge/Passport-34E27A?style=flat&logo=passport&logoColor=white), ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) ]
 
 ## 최종 구현 화면 이미지 및 동영상
+![최종구현1](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/f1ef676b-0d84-4cab-b3b8-7cbffda971c6)
+![최종구현2](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/d8bac437-2c19-4d52-86fd-c89b4af8b62d)
 
 ### 초기 화면 및 로그인(/login)
 
