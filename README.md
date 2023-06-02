@@ -69,7 +69,7 @@
     <span class="dropdown-caret"></span>
   </summary>
 
-  <video src="https://user-images.githubusercontent.com/83404864/242601205-a4680079-246e-44c4-b28e-c5e631aefd7f.mp4" data-canonical-src="https://user-images.githubusercontent.com/83404864/242601205-a4680079-246e-44c4-b28e-c5e631aefd7f.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+  <video src="./assets/search_barcode.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 
   </video>
 </details>
@@ -89,7 +89,7 @@
     <span class="dropdown-caret"></span>
   </summary>
 
-  <video src="https://user-images.githubusercontent.com/83404864/222421345-c2fbb33e-79cf-4437-a5dd-29f19118afd7.webm" data-canonical-src="https://user-images.githubusercontent.com/83404864/222421345-c2fbb33e-79cf-4437-a5dd-29f19118afd7.webm" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+  <video src="./assets/search_isbn.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 
   </video>
 </details>
@@ -259,7 +259,7 @@ app.use(cors(corsOptions));
     <span class="dropdown-caret"></span>
   </summary>
 
-  <video src="https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/aad7bb5b-241c-4849-883f-fa8ba5165b2b" data-canonical-src="https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/aad7bb5b-241c-4849-883f-fa8ba5165b2b" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+  <video src="./assets/reload_loading.mp4"  controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 
   </video>
 </details>
