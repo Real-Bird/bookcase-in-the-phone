@@ -69,7 +69,7 @@
     <span class="dropdown-caret"></span>
   </summary>
 
-  <video src="./assets/search_barcode.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+  <video src="https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/6637470d-d80b-4d90-9bdc-529b8eaf363d" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 
   </video>
 </details>
@@ -89,7 +89,7 @@
     <span class="dropdown-caret"></span>
   </summary>
 
-  <video src="./assets/search_isbn.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+  <video src="https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/7b822e4e-0c54-41b4-95b7-0f07c2e565d0" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 
   </video>
 </details>
@@ -259,7 +259,7 @@ app.use(cors(corsOptions));
     <span class="dropdown-caret"></span>
   </summary>
 
-  <video src="./assets/reload_loading.mp4"  controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+  <video src="https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/1bfb366f-b155-4de9-bf7c-9586b05b8155"  controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 
   </video>
 </details>
