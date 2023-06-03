@@ -1,5 +1,5 @@
 import { Button } from "@components/common";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import barcodeImage from "/barcode.png";
@@ -83,7 +83,7 @@ const DescriptionBlock = styled.div`
 
 export interface BarcodeSearchProps {
   barcode: string;
-  setBarcode: React.Dispatch<React.SetStateAction<string>>;
+  setBarcode: Dispatch<string>;
 }
 
 function SearchContainer() {

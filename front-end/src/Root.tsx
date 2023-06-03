@@ -6,7 +6,7 @@ import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
 import { useLayoutEffect, useState } from "react";
 import { checkedUser } from "@api/auth";
 import { useUserDispatch } from "@libs/userContextApi";
-import useSwipeReload from "@libs/useSwipeReload";
+import useSwipeReload from "@libs/hooks/useSwipeReload";
 import SwipeLoadingSpinner from "@components/common/SwipeLoadingSpinner";
 
 const RootBlock = styled.div`

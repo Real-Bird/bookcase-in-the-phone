@@ -1,6 +1,6 @@
 import { Input, ReadingDate } from "@components/common";
 import { BookInfoItem } from "@components/searchResult/BookInfoItem";
-import useWindowSize from "@libs/useWindowSize";
+import useWindowSize from "@libs/hooks/useWindowSize";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import noImage from "/no_image_available.png";

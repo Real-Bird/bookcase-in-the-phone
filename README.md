@@ -1,21 +1,9 @@
-# Bookcase in the Phone
+# [Bookcase in the Phone](https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app/)
 
 <details>
 <summary>목차</summary>
 
-- 0. [개요](#0-개요)
-- 1. [스택](#1-스택)
-  - 1-1. [Front-End](#1-1-front-end)
-  - 1-2. [Back-End](#1-2-back-end)
-- 2. [최종 구현 화면](#2-최종-구현-화면)
-  - 2-1. [초기 화면 / 로그인 / 로그아웃](#2-1-초기-화면--로그인--로그아웃)
-  - 2-2. [상세내용 / 수정 / 검색](#2-2-상세내용--수정--검색)
-- 3. [주안점](#3-주안점)
-  - 3-1. [바코드/ISBN 검색 기능](#3-1-바코드isbn-검색-기능)
-  - 3-2. [서버 구현과 REST API](#3-2-1-서버-api-라우터)
-  - 3-3. [PWA 적용](#3-3-pwa-적용)
-  - 3-4. [(깨알주의) 아이콘과 로딩화면, 새로고침](#3-4-깨알주의-아이콘과-로딩화면-새로고침)
-- 4. [한계점 및 개선 방안](#4-한계점-및-개선-방안)
+**Bookcase in the Phone**은 **바코드** 및 **ISBN**으로 검색한 책의 서지 정보를 저장하는 웹 책장 서비스입니다. 소유한 도서를 쉽고 간편하게 웹에 저장하려는 목적으로 만들었습니다.
 
 </details>
 
@@ -70,6 +58,7 @@
   </summary>
 
 https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/6637470d-d80b-4d90-9bdc-529b8eaf363d
+
 </details>
 
 `Media Stream API`와 `@Zxing-js/Library`를 사용해 구현했습니다. 책의 바코드를 스캔하여 ISBN을 검색합니다. 검색된 서지 정보를 표시하며, 저장 혹은 재검색을 결정할 수 있습니다. 서지 정보가 없는 경우 바코드를 스캔하더라도 페이지 이동이 발생하지 않습니다.
@@ -88,6 +77,7 @@ https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/6637470d-d80b
   </summary>
 
 https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/7b822e4e-0c54-41b4-95b7-0f07c2e565d0
+
 </details>
 
 바코드 인식이 잘 되지 않거나 수동으로 검색하고 싶은 경우, 직접 ISBN을 입력하여 서지 정보를 검색할 수 있습니다. 마찬가지로, 서지 정보가 없으면 화면 이동이 발생하지 않습니다.
@@ -256,6 +246,7 @@ app.use(cors(corsOptions));
   </summary>
 
 https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/1bfb366f-b155-4de9-bf7c-9586b05b8155
+
 </details>
 
 스와이프를 통한 새로고침과 로딩화면입니다. `PWA`에서 새로고침하는데 사용하고자 스와이프 새로고침을 적용했고, 로딩화면은 아이콘을 `svg`로 만든 것을 사용했습니다.
