@@ -35,7 +35,6 @@ const SwipeLoading = styled.div`
 function Root() {
   const [loading, setLoading] = useState(true);
   const userDispatch = useUserDispatch();
-  const { loading: swipeLoading } = useSwipeReload();
 
   useLayoutEffect(() => {
     (async () => {
@@ -57,11 +56,6 @@ function Root() {
             <InitLoading />
           ) : (
             <>
-              {swipeLoading && (
-                <SwipeLoading>
-                  <SwipeLoadingSpinner />
-                </SwipeLoading>
-              )}
               <Navigation />
               <Outlet />
             </>
