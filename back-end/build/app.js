@@ -26,6 +26,8 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+console.log(process.env.ALLOW_ORIGIN);
+
 app.use(cors(corsOptions));
 
 const sessionOption = {

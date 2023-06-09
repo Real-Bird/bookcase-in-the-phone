@@ -1,8 +1,9 @@
 import { Button } from "@components/common";
-import { Dispatch, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Dispatch, useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import barcodeImage from "/barcode.png";
+import { useScanner } from "@libs/hooks";
 
 const SearchBlock = styled.div`
   width: 100%;
@@ -33,6 +34,11 @@ const OutletBlock = styled.div`
 
   .barcode {
     height: 2rem;
+  }
+
+  .error {
+    height: 2rem;
+    color: #fa3636;
   }
 `;
 
@@ -82,31 +88,76 @@ const DescriptionBlock = styled.div`
 `;
 
 export interface BarcodeSearchProps {
-  barcode: string;
-  setBarcode: Dispatch<string>;
+  outletBarcode: string;
+  setOutletBarcode: Dispatch<string>;
+  setStateError: Dispatch<string>;
+  stopStream: () => void;
 }
 
 function SearchContainer() {
-  const [barcode, setBarcode] = useState("");
+  const [outletBarcode, setOutletBarcode] = useState("");
+  const [stateError, setStateError] = useState("");
   const [toggleQuestion, setToggleQuestion] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const {
+    barcode,
+    cameras,
+    cameraRef,
+    currentCamera,
+    localStream,
+    stopStream,
+    startStream,
+    scanBarcode,
+  } = useScanner();
+
+  useEffect(() => {
+    if (location.pathname.includes("camera")) {
+      startStream();
+    } else {
+      stopStream();
+    }
+    return () => setOutletBarcode("");
+  }, [location]);
   return (
     <SearchBlock>
       <SearchNav>
-        <Link to={"camera"}>
-          <Button label="카메라 검색" />
-        </Link>
-        <Link to={"isbn"}>
-          <Button label="ISBN 검색" />
-        </Link>
+        <a>
+          <Button
+            onClick={() => {
+              navigate("camera");
+            }}
+            label="카메라 검색"
+          />
+        </a>
+        <a>
+          <Button
+            onClick={() => {
+              navigate("isbn");
+            }}
+            label="ISBN 검색"
+          />
+        </a>
       </SearchNav>
       <OutletBlock>
         <Outlet
           context={{
             barcode,
-            setBarcode,
+            cameras,
+            cameraRef,
+            currentCamera,
+            localStream,
+            scanBarcode,
+            outletBarcode,
+            setOutletBarcode,
+            setStateError,
           }}
         />
-        <div className="barcode">{barcode}</div>
+        {stateError ? (
+          <div className="error">{stateError}</div>
+        ) : (
+          <div className="barcode">{outletBarcode}</div>
+        )}
       </OutletBlock>
       <HrLine />
       <DescriptionBlock>

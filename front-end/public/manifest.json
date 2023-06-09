@@ -1,11 +1,11 @@
 {
-  "background_color": "#f0009c",
   "display": "standalone",
   "name": "Bookcase in the Phone",
   "orientation": "portrait",
   "scope": "/",
   "short_name": "BiP",
-  "start_url": "https://web-bookcase-in-the-phone-luj2cldumsahu.sel3.cloudtype.app/",
+  "start_url": ".",
+  "background_color": "#f0009c",
   "theme_color": "#6ab04c",
   "categories": ["books"],
   "screenshots": [],

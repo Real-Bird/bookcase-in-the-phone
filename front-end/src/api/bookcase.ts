@@ -5,7 +5,7 @@ import axios from "axios";
 
 const SERVER_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
-interface OpenSeojiData {
+export interface OpenSeojiData {
   docs: {
     PUBLISHER: string;
     AUTHOR: string;
@@ -17,14 +17,30 @@ interface OpenSeojiData {
   }[];
 }
 
-export async function getInfo(barcode: string) {
-  if (barcode.length < 10) return;
+export type GetInfoReturn =
+  | { ok: boolean; error: string; bookInfo: null }
+  | { ok: boolean; bookInfo: FetchIsbnDataState; error: null };
+
+export async function getInfo(barcode: string): Promise<GetInfoReturn> {
+  if (Number.isNaN(+barcode))
+    return {
+      ok: false,
+      error: "바코드 숫자를 입력해주세요.",
+      bookInfo: null,
+    };
+  if (barcode.length < 10)
+    return {
+      ok: false,
+      error: "바코드 길이가 너무 짧습니다: 10자 이상",
+      bookInfo: null,
+    };
   const URL = `https://www.nl.go.kr/seoji/SearchApi.do?cert_key=${
     import.meta.env.VITE_BOOK_SEARCH_API_KEY
   }&result_style=json&page_no=1&page_size=1&isbn=${barcode}`;
   const { data } = await axios.get<OpenSeojiData>(URL);
-  if (!data || data.docs.length === 0) return;
-  const bookData = {
+  if (!data || data.docs.length === 0)
+    return { ok: false, error: "해당 책 정보가 없습니다.", bookInfo: null };
+  const bookInfo: FetchIsbnDataState = {
     author: data.docs[0].AUTHOR,
     ea_isbn: data.docs[0].EA_ISBN,
     publisher: data.docs[0].PUBLISHER,
@@ -33,7 +49,7 @@ export async function getInfo(barcode: string) {
     title: data.docs[0].TITLE,
     title_url: data.docs[0].TITLE_URL,
   };
-  return { bookInfo: bookData };
+  return { ok: true, bookInfo, error: null };
 }
 
 export async function savedBookInfo(bookInfo: FetchIsbnDataState) {

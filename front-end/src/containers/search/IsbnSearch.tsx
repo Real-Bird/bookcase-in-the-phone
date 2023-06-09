@@ -1,8 +1,9 @@
-import { getBookInfoByIsbn, getInfo, hasBookByIsbn } from "@api/bookcase";
+import { GetInfoReturn, getInfo, hasBookByIsbn } from "@api/bookcase";
 import { Button, FloatingInput } from "@components/common";
 import { BarcodeSearchProps } from "@containers/search";
-import { useIsbnDispatch } from "@libs/searchContextApi";
-import { FormEvent } from "react";
+import { useFetch } from "@libs/hooks";
+import { FetchIsbnDataState, useIsbnDispatch } from "@libs/searchContextApi";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 
@@ -17,28 +18,54 @@ const FormBlock = styled.form`
 `;
 
 export default function IsbnSearch() {
-  const { barcode, setBarcode } = useOutletContext<BarcodeSearchProps>();
+  const { setOutletBarcode, setStateError } =
+    useOutletContext<BarcodeSearchProps>();
+  const [barcode, setBarcode] = useState("");
   const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
+  const {
+    state: newInfoState,
+    loading: newInfoLoading,
+    error: newInfoError,
+    onFetching: newInfoFetching,
+  } = useFetch<GetInfoReturn>(() => getInfo(barcode), true);
+  const {
+    state: hasBookState,
+    loading: hasBookLoading,
+    error: hasBookError,
+    onFetching: hasBookFetching,
+  } = useFetch<boolean>(() => hasBookByIsbn(barcode), true);
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const bookData = await getInfo(barcode);
-    if (!bookData) return;
-    const { bookInfo } = bookData;
-    (await isbnDispatch)({
-      type: "LOAD_DATA",
-      bookInfo,
-    });
-    const hasBook = await hasBookByIsbn(bookInfo.ea_isbn);
-    if (hasBook) return navigate(`/books/${barcode}`);
-    return navigate(`/result/${barcode}`);
+    hasBookFetching();
   };
 
+  useEffect(() => {
+    if (hasBookState) {
+      return navigate(`/books/${barcode}`);
+    } else if (hasBookState === false) {
+      newInfoFetching();
+    }
+    if (!newInfoState?.ok && newInfoState?.error) {
+      setStateError(newInfoState.error);
+      return;
+    }
+    if (newInfoState?.ok) {
+      isbnDispatch({
+        type: "LOAD_DATA",
+        bookInfo: newInfoState?.bookInfo as FetchIsbnDataState,
+      });
+      return navigate(`/result/${barcode}`);
+    }
+  }, [hasBookState, newInfoState?.ok]);
   return (
     <FormBlock onSubmit={onSubmit}>
       <FloatingInput
         label="ISBN을 입력해주세요"
-        onChange={(e) => setBarcode(e.target.value)}
+        onChange={(e) => {
+          setBarcode(e.target.value);
+          setOutletBarcode(e.target.value);
+        }}
         value={barcode}
       />
       <Button type="submit" label="검색" />

@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from "react";
 
-export default function useWindowSize(ref: RefObject<Element>) {
+export const useWindowSize = (ref: RefObject<Element>) => {
   const [changeSize, setChangeSize] = useState(false);
   const [width, setWidth] = useState(0);
   const handleResize = () => setWidth(window.innerWidth);
@@ -12,4 +12,4 @@ export default function useWindowSize(ref: RefObject<Element>) {
     return () => window.removeEventListener("resize", handleResize);
   }, [width, ref.current]);
   return changeSize;
-}
+};

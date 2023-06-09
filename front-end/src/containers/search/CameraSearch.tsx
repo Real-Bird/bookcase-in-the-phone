@@ -1,41 +1,83 @@
-import { useIsbnDispatch } from "@libs/searchContextApi";
+import { FetchIsbnDataState, useIsbnDispatch } from "@libs/searchContextApi";
 import { Camera, Select } from "@components/search";
-import useScanner from "@libs/hooks/useScanner";
-import { useEffect } from "react";
+import { useFetch } from "@libs/hooks";
+import { RefObject, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { getInfo, hasBookByIsbn } from "@api/bookcase";
+import { GetInfoReturn, getInfo, hasBookByIsbn } from "@api/bookcase";
 import { BarcodeSearchProps } from "@containers/search";
 
+interface CameraSearchProps extends BarcodeSearchProps {
+  barcode: string;
+  cameraRef: RefObject<HTMLVideoElement>;
+  cameras: MediaDeviceInfo[];
+  currentCamera: string;
+  scanBarcode: (
+    localStream: MediaStream,
+    cameraRef: RefObject<HTMLVideoElement>
+  ) => void;
+  localStream: MediaStream | undefined;
+}
+
 export default function CameraSearch() {
-  const { barcode, cameras, camera, currentCamera, handleChange, localStream } =
-    useScanner();
-  const isbnPatch = useIsbnDispatch();
+  const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
-  const { setBarcode } = useOutletContext<BarcodeSearchProps>();
+  const {
+    setOutletBarcode,
+    setStateError,
+    barcode,
+    cameraRef,
+    cameras,
+    currentCamera,
+    localStream,
+    scanBarcode,
+  } = useOutletContext<CameraSearchProps>();
+  const {
+    state: newInfoState,
+    loading: newInfoLoading,
+    error: newInfoError,
+    onFetching: newInfoFetching,
+  } = useFetch<GetInfoReturn>(() => getInfo(barcode), true);
+  const {
+    state: hasBookState,
+    loading: hasBookLoading,
+    error: hasBookError,
+    onFetching: hasBookFetching,
+  } = useFetch<boolean>(() => hasBookByIsbn(barcode), true);
+
+  useEffect(() => {
+    if (!cameraRef.current || !localStream) return;
+    scanBarcode(localStream, cameraRef);
+  }, [localStream]);
+
   useEffect(() => {
     if (!!barcode) {
-      Promise.all([getInfo(barcode), hasBookByIsbn(barcode)]).then(
-        async ([bookData, hasBook]) => {
-          if (!bookData) return;
-          const { bookInfo } = bookData;
-          (await isbnPatch)({
-            type: "LOAD_DATA",
-            bookInfo,
-          });
-          if (hasBook) {
-            return navigate(`/books/${barcode}`);
-          } else {
-            return navigate(`/result/${barcode}`);
-          }
-        }
-      );
+      setOutletBarcode(barcode);
+      hasBookFetching();
+
+      if (hasBookState) {
+        return navigate(`/books/${barcode}`);
+      } else if (hasBookState === false) {
+        newInfoFetching();
+      }
+      if (!newInfoState?.ok && newInfoState?.error) {
+        setStateError(newInfoState.error);
+        return;
+      }
+      if (newInfoState?.ok) {
+        isbnDispatch({
+          type: "LOAD_DATA",
+          bookInfo: newInfoState?.bookInfo as FetchIsbnDataState,
+        });
+        return navigate(`/result/${barcode}`);
+      }
     }
-    return () => setBarcode("");
-  }, [barcode]);
+    return () => setOutletBarcode("");
+  }, [barcode, hasBookState, newInfoState?.ok]);
+
   return (
     <>
-      <Camera camera={camera} mediaStream={localStream} />
-      <Select onChange={handleChange} defaultValue={currentCamera}>
+      <Camera camera={cameraRef} />
+      <Select defaultValue={currentCamera}>
         {cameras?.map((cam) => (
           <option key={cam.deviceId} value={cam.label}>
             {cam.label}

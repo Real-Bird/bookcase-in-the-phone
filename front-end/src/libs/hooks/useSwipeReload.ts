@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function useSwipeReload() {
+export const useSwipeReload = () => {
   const [loading, setLoading] = useState(false);
   const touchStartRef = useRef<number | null>(null);
 
@@ -36,4 +36,4 @@ export default function useSwipeReload() {
   }, []);
 
   return { loading };
-}
+};

@@ -59,7 +59,7 @@ function reducer(
     case "INITIALIZE_DATA":
       return INITIALIZE_ISBN_DATA;
     case "LOAD_DATA":
-      const authorReg = / ?(지은이|지음) ?[:]? ?/g;
+      const authorReg = / ?(지은이|지음|저자) ?[:]? ?/g;
       const translatorReg = /[ ]?(옮김)[: ]*|(옮긴이)[: ]+/g;
       const replaceWriter = action.bookInfo.author.replace(authorReg, "");
       const [author, rest] = replaceWriter.split(";");
@@ -117,7 +117,7 @@ export function useIsbnState() {
   return state;
 }
 
-export async function useIsbnDispatch() {
+export function useIsbnDispatch() {
   const dispatch = useContext(IsbnActionContext);
   if (!dispatch) throw new Error("Cannot find Isbn");
   return dispatch;

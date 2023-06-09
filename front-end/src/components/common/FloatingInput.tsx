@@ -59,6 +59,8 @@ export function FloatingInput({ label, value, onChange }: FloatingInputProps) {
         placeholder=" "
         value={value}
         onChange={onChange}
+        maxLength={13}
+        minLength={10}
       />
       <span className="input__label">{label}</span>
     </FloatingInputBlock>
