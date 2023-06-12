@@ -2,9 +2,10 @@ import { Button, PageLoading } from "@components/common";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { savedBookInfo } from "@api/bookcase";
+import { hasBookByIsbn, savedBookInfo } from "@api/bookcase";
+import { useFetch } from "@libs/hooks";
 
 const ResultBlock = styled.div`
   width: 100%;
@@ -30,6 +31,7 @@ const ButtonBlock = styled.div`
 function ResultContainer() {
   const navigate = useNavigate();
   const isbnState = useIsbnState();
+  const location = useLocation();
   const {
     title,
     author,
@@ -42,18 +44,31 @@ function ResultContainer() {
     loading,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
+  const {
+    state: hasBookState,
+    loading: hasBookLoading,
+    error: hasBookError,
+    onFetching: onHasBookFetching,
+  } = useFetch(() => hasBookByIsbn(ea_isbn));
+
+  if (loading) return <PageLoading />;
+
   const onBack = async () => {
     (await isbnDispatch)({ type: "INITIALIZE_DATA" });
     navigate("/search");
   };
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [newReview, setNewReview] = useState("");
   const onSaveData = useCallback(async () => {
-    const callbackData = await savedBookInfo(isbnState);
+    const callbackData = await savedBookInfo({
+      ...isbnState,
+      review: newReview,
+    });
     if (callbackData.error) return console.error(callbackData.message);
     (await isbnDispatch)({ type: "INITIALIZE_DATA" });
-    navigate(-1);
-  }, [isbnState]);
+    return navigate(`/books/${ea_isbn}`);
+  }, [isbnState, newReview]);
   const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
@@ -78,10 +93,7 @@ function ResultContainer() {
     return;
   };
   const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
-    (await isbnDispatch)({
-      type: "SET_DATA",
-      bookInfo: { ...isbnState, review: e.target.value },
-    });
+    setNewReview(e.target.value);
   };
 
   useEffect(() => {
@@ -92,7 +104,7 @@ function ResultContainer() {
       return;
     }
   }, [startDate, endDate]);
-  if (loading) return <PageLoading />;
+
   return (
     <ResultBlock>
       <ButtonBlock>
@@ -112,7 +124,7 @@ function ResultContainer() {
         startDateValue={startDate}
         endDateValue={endDate}
         onReviewChange={onReviewChange}
-        review={review ? review : ""}
+        review={newReview}
       />
     </ResultBlock>
   );
