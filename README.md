@@ -1,10 +1,12 @@
+# (개인 프로젝트) Bookcase in the Phone (2023.01 ~ 2023.03)
+
 ![logo](https://github.com/Real-Bird/bookcase-in-the-phone/assets/83404864/6ef9a3e3-bd5a-4124-847d-c85609bb5d46)
 
 **개요**
 
 - 바코드 인식과 ISBN 검색을 통한 서지 정보 저장 웹 책장 서비스
 
-**데모 링크**
+**배포**
 
 <https://huchu.link/LgVUcpM>
 
