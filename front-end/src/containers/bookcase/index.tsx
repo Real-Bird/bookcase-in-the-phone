@@ -85,7 +85,7 @@ function BookcaseContainer() {
         console.error(e);
       }
     })();
-  }, []);
+  }, [getBookList]);
   const handleKindChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSearchKind(e.target.value);
   };

@@ -3,7 +3,7 @@ import BookDetailContainer from "@containers/bookDetail";
 
 export default function BookDetail() {
   return (
-    <Layout title="BOOK INFO" back="-1">
+    <Layout title="BOOK INFO" back="..">
       <BookDetailContainer />
     </Layout>
   );

@@ -2,7 +2,7 @@ import { updateBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -31,12 +31,17 @@ function EditBookDetailContainer() {
   const navigate = useNavigate();
   const bookInfo = useIsbnState();
   const bookInfoDispatch = useIsbnDispatch();
+  const [newReview, setNewReview] = useState(bookInfo.review ?? "");
   const onUpdateData = useCallback(async () => {
-    const { start_date, end_date, ea_isbn, review } = bookInfo;
-    const body = { start_date, end_date, review };
+    const { start_date, end_date, ea_isbn } = bookInfo;
+    const body = { start_date, end_date, review: newReview };
+    (await bookInfoDispatch)({
+      type: "SET_DATA",
+      bookInfo: { ...bookInfo, review: newReview },
+    });
     await updateBookInfoByIsbn(ea_isbn, body);
     return navigate(-1);
-  }, [bookInfo]);
+  }, [bookInfo, newReview]);
   const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
@@ -60,11 +65,8 @@ function EditBookDetailContainer() {
       },
     });
   };
-  const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
-    (await bookInfoDispatch)({
-      type: "SET_DATA",
-      bookInfo: { ...bookInfo, review: e.target.value },
-    });
+  const onReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewReview(e.target.value);
   };
   return (
     <>
@@ -87,7 +89,7 @@ function EditBookDetailContainer() {
             translator={bookInfo.translator}
             startDateValue={bookInfo.start_date ? bookInfo.start_date : ""}
             endDateValue={bookInfo.end_date ? bookInfo.end_date : ""}
-            review={bookInfo.review ? bookInfo.review : ""}
+            review={newReview}
             onDateChange={onDateChange}
             onReviewChange={onReviewChange}
           />

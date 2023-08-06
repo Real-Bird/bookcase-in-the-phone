@@ -37,7 +37,7 @@ export default function IsbnSearch() {
   } = useFetch<boolean>(() => hasBookByIsbn(barcode), true);
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    hasBookFetching();
+    await hasBookFetching();
   };
 
   useEffect(() => {
