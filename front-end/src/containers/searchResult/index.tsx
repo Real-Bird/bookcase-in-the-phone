@@ -92,6 +92,12 @@ function ResultContainer() {
       return;
     }
   }, [startDate, endDate]);
+
+  useEffect(() => {
+    if (!ea_isbn) {
+      navigate("/search");
+    }
+  }, []);
   if (loading) return <PageLoading />;
   return (
     <ResultBlock>
