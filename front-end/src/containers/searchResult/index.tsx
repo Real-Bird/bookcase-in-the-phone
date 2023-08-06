@@ -4,7 +4,7 @@ import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { hasBookByIsbn, savedBookInfo } from "@api/bookcase";
+import { GetInfoReturn, getInfo, savedBookInfo } from "@api/bookcase";
 import { useFetch } from "@libs/hooks";
 
 const ResultBlock = styled.div`
@@ -30,8 +30,9 @@ const ButtonBlock = styled.div`
 
 function ResultContainer() {
   const navigate = useNavigate();
-  const isbnState = useIsbnState();
   const location = useLocation();
+  const barcode = location.pathname.split("/").slice(-1)[0];
+  const isbnState = useIsbnState();
   const {
     title,
     author,
@@ -40,36 +41,35 @@ function ResultContainer() {
     publisher,
     publisher_predate,
     ea_isbn,
-    review,
     loading,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
-  const {
-    state: hasBookState,
-    loading: hasBookLoading,
-    error: hasBookError,
-    onFetching: onHasBookFetching,
-  } = useFetch(() => hasBookByIsbn(ea_isbn));
 
-  if (loading) return <PageLoading />;
-
-  const onBack = async () => {
-    (await isbnDispatch)({ type: "INITIALIZE_DATA" });
+  const onBack = () => {
+    isbnDispatch({ type: "INITIALIZE_DATA" });
     navigate("/search");
   };
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [newReview, setNewReview] = useState("");
+  const {
+    state: newInfoState,
+    loading: newInfoLoading,
+    error: newInfoError,
+  } = useFetch<GetInfoReturn>(() => getInfo(barcode));
+
   const onSaveData = useCallback(async () => {
     const callbackData = await savedBookInfo({
       ...isbnState,
       review: newReview,
     });
-    if (callbackData.error) return console.error(callbackData.message);
-    (await isbnDispatch)({ type: "INITIALIZE_DATA" });
+    if (callbackData.error) {
+      return console.error(callbackData.message);
+    }
+    isbnDispatch({ type: "INITIALIZE_DATA" });
     return navigate(`/books/${ea_isbn}`);
   }, [isbnState, newReview]);
-  const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const onDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
     const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
@@ -79,22 +79,28 @@ function ResultContainer() {
     });
     if (id === "reading-start") {
       setStartDate(value);
-      (await isbnDispatch)({
+      isbnDispatch({
         type: "SET_DATA",
         bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
       });
       return;
     }
     setEndDate(value);
-    (await isbnDispatch)({
+    isbnDispatch({
       type: "SET_DATA",
       bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
     });
     return;
   };
-  const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const onReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setNewReview(e.target.value);
   };
+
+  useEffect(() => {
+    if (newInfoState?.ok && newInfoState?.bookInfo) {
+      isbnDispatch({ type: "SET_DATA", bookInfo: newInfoState.bookInfo });
+    }
+  }, [newInfoState?.ok]);
 
   useEffect(() => {
     if (new Date(startDate) > new Date(endDate)) {
@@ -105,12 +111,9 @@ function ResultContainer() {
     }
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    if (!ea_isbn) {
-      navigate("/search");
-    }
-  }, []);
-  if (loading) return <PageLoading />;
+  if (loading || newInfoLoading) {
+    return <PageLoading />;
+  }
   return (
     <ResultBlock>
       <ButtonBlock>

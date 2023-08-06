@@ -48,11 +48,11 @@ const Title = styled.h1`
 
 export function PageLoading() {
   return (
-    <Layout title="LOADING...">
+    <>
       <SvgLoadingBlock>
         <LogoSvg />
       </SvgLoadingBlock>
       <Title>&copy; Created By Real-Bird, 2023</Title>
-    </Layout>
+    </>
   );
 }

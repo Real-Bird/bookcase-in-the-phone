@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-import { ErrorBoundary, PageLoading } from "@components/common";
+import { ErrorBoundary, Layout, PageLoading } from "@components/common";
 import { lazy, Suspense } from "react";
 import NotFound from "./pages/NotFound";
 import Root from "./Root";
@@ -25,7 +25,13 @@ const router = createBrowserRouter(
           path: "",
           element: (
             <RequireAuth>
-              <Suspense fallback={<PageLoading />}>
+              <Suspense
+                fallback={
+                  <Layout title="Loading">
+                    <PageLoading />
+                  </Layout>
+                }
+              >
                 <Bookcase />
               </Suspense>
             </RequireAuth>
@@ -35,7 +41,13 @@ const router = createBrowserRouter(
         {
           path: "books/:isbn",
           element: (
-            <Suspense fallback={<PageLoading />}>
+            <Suspense
+              fallback={
+                <Layout title="Loading">
+                  <PageLoading />
+                </Layout>
+              }
+            >
               <BookDetail />
             </Suspense>
           ),
@@ -44,7 +56,13 @@ const router = createBrowserRouter(
         {
           path: "books/:isbn/edit",
           element: (
-            <Suspense fallback={<PageLoading />}>
+            <Suspense
+              fallback={
+                <Layout title="Loading">
+                  <PageLoading />
+                </Layout>
+              }
+            >
               <BookDetailEdit />
             </Suspense>
           ),
@@ -54,7 +72,13 @@ const router = createBrowserRouter(
           path: "about",
           element: (
             <RequireAuth>
-              <Suspense fallback={<PageLoading />}>
+              <Suspense
+                fallback={
+                  <Layout title="Loading">
+                    <PageLoading />
+                  </Layout>
+                }
+              >
                 <About />
               </Suspense>
             </RequireAuth>
@@ -65,7 +89,13 @@ const router = createBrowserRouter(
           path: "login",
           element: (
             <AlreadyAuth>
-              <Suspense fallback={<PageLoading />}>
+              <Suspense
+                fallback={
+                  <Layout title="Loading">
+                    <PageLoading />
+                  </Layout>
+                }
+              >
                 <Login />
               </Suspense>
             </AlreadyAuth>
@@ -76,7 +106,13 @@ const router = createBrowserRouter(
           path: "search",
           element: (
             <RequireAuth>
-              <Suspense fallback={<PageLoading />}>
+              <Suspense
+                fallback={
+                  <Layout title="Loading">
+                    <PageLoading />
+                  </Layout>
+                }
+              >
                 <Search />
               </Suspense>
             </RequireAuth>
@@ -86,7 +122,13 @@ const router = createBrowserRouter(
             {
               path: "camera",
               element: (
-                <Suspense fallback={<PageLoading />}>
+                <Suspense
+                  fallback={
+                    <Layout title="Loading">
+                      <PageLoading />
+                    </Layout>
+                  }
+                >
                   <CameraSearch />
                 </Suspense>
               ),
@@ -95,7 +137,13 @@ const router = createBrowserRouter(
             {
               path: "isbn",
               element: (
-                <Suspense fallback={<PageLoading />}>
+                <Suspense
+                  fallback={
+                    <Layout title="Loading">
+                      <PageLoading />
+                    </Layout>
+                  }
+                >
                   <IsbnSearch />
                 </Suspense>
               ),
@@ -106,7 +154,13 @@ const router = createBrowserRouter(
         {
           path: "result/:isbn",
           element: (
-            <Suspense fallback={<PageLoading />}>
+            <Suspense
+              fallback={
+                <Layout title="Loading">
+                  <PageLoading />
+                </Layout>
+              }
+            >
               <SearchResult />
             </Suspense>
           ),

@@ -32,12 +32,6 @@ export default function CameraSearch() {
     scanBarcode,
   } = useOutletContext<CameraSearchProps>();
   const {
-    state: newInfoState,
-    loading: newInfoLoading,
-    error: newInfoError,
-    onFetching: newInfoFetching,
-  } = useFetch<GetInfoReturn>(() => getInfo(barcode), true);
-  const {
     state: hasBookState,
     loading: hasBookLoading,
     error: hasBookError,
@@ -56,23 +50,12 @@ export default function CameraSearch() {
 
       if (hasBookState) {
         return navigate(`/books/${barcode}`);
-      } else if (hasBookState === false) {
-        newInfoFetching();
-      }
-      if (!newInfoState?.ok && newInfoState?.error) {
-        setStateError(newInfoState.error);
-        return;
-      }
-      if (newInfoState?.ok) {
-        isbnDispatch({
-          type: "LOAD_DATA",
-          bookInfo: newInfoState?.bookInfo as FetchIsbnDataState,
-        });
+      } else {
         return navigate(`/result/${barcode}`);
       }
     }
     return () => setOutletBarcode("");
-  }, [barcode, hasBookState, newInfoState?.ok]);
+  }, [barcode, hasBookState]);
 
   return (
     <>

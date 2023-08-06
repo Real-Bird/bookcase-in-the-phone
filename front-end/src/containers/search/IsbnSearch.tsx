@@ -1,5 +1,5 @@
 import { GetInfoReturn, getInfo, hasBookByIsbn } from "@api/bookcase";
-import { Button, FloatingInput } from "@components/common";
+import { Button, FloatingInput, PageLoading } from "@components/common";
 import { BarcodeSearchProps } from "@containers/search";
 import { useFetch } from "@libs/hooks";
 import { FetchIsbnDataState, useIsbnDispatch } from "@libs/searchContextApi";
@@ -18,17 +18,9 @@ const FormBlock = styled.form`
 `;
 
 export default function IsbnSearch() {
-  const { setOutletBarcode, setStateError } =
-    useOutletContext<BarcodeSearchProps>();
+  const { setOutletBarcode } = useOutletContext<BarcodeSearchProps>();
   const [barcode, setBarcode] = useState("");
-  const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
-  const {
-    state: newInfoState,
-    loading: newInfoLoading,
-    error: newInfoError,
-    onFetching: newInfoFetching,
-  } = useFetch<GetInfoReturn>(() => getInfo(barcode), true);
   const {
     state: hasBookState,
     loading: hasBookLoading,
@@ -41,23 +33,16 @@ export default function IsbnSearch() {
   };
 
   useEffect(() => {
-    if (hasBookState) {
-      return navigate(`/books/${barcode}`);
-    } else if (hasBookState === false) {
-      newInfoFetching();
-    }
-    if (!newInfoState?.ok && newInfoState?.error) {
-      setStateError(newInfoState.error);
+    if (!barcode) {
       return;
     }
-    if (newInfoState?.ok) {
-      isbnDispatch({
-        type: "LOAD_DATA",
-        bookInfo: newInfoState?.bookInfo as FetchIsbnDataState,
-      });
+    if (hasBookState) {
+      return navigate(`/books/${barcode}`);
+    } else {
       return navigate(`/result/${barcode}`);
     }
-  }, [hasBookState, newInfoState?.ok]);
+  }, [hasBookState]);
+
   return (
     <FormBlock onSubmit={onSubmit}>
       <FloatingInput

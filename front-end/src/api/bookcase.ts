@@ -54,7 +54,9 @@ export async function getInfo(barcode: string): Promise<GetInfoReturn> {
 
 export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
   const token = getUserToken("BiPToken");
-  if (!token) return console.log("not token");
+  if (!token) {
+    throw new Error("not token");
+  }
   const { data } = await axios.post(
     `${SERVER_URL}/bookcase/info?token=${token}`,
     bookInfo,
