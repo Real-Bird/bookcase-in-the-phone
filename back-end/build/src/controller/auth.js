@@ -11,7 +11,7 @@ const login = (req, res) => {
       user: req.user,
     });
   } else {
-    res.status(403).json({ error: true, message: "Not Authorized" });
+    res.status(401).json({ error: true, message: "Not Authorized" });
   }
 };
 exports.login = login;

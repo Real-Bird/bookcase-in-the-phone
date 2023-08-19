@@ -13,4 +13,17 @@ export default defineConfig({
     host: "localhost",
     port: 3000,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes("node_modules")) {
+            const module = id.split("node_modules/").pop().split("/")[0];
+            return `vendor/${module}`;
+          }
+        },
+        compact: true,
+      },
+    },
+  },
 });
