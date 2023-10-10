@@ -7,10 +7,7 @@ import {
 } from "react";
 
 export type UserInfoState = {
-  id: string;
   name: string;
-  email: string;
-  registeredAt: string;
 };
 
 type FetchUserDataState = {
@@ -28,7 +25,7 @@ type FetchUserDataAction =
 type FetchUserDataDispatch = Dispatch<FetchUserDataAction>;
 
 const INITIALIZE_USER_DATA: FetchUserDataState = {
-  userInfo: { email: "", id: "", name: "", registeredAt: "" },
+  userInfo: { name: "" },
   isLoading: true,
   isLoggedIn: false,
 };
@@ -53,14 +50,11 @@ function reducer(
         isLoading: false,
       };
     case "SET_USER":
-      const { id, email, name, registeredAt } = action.userInfo;
+      const { name } = action.userInfo;
       return {
         ...state,
         userInfo: {
-          email,
-          id,
           name,
-          registeredAt,
         },
         isLoading: false,
         isLoggedIn: true,

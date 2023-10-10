@@ -1,11 +1,16 @@
 import axios from "axios";
+import { SERVER_URL, TOKEN_KEY } from "constants/auth";
+import Cookies from "js-cookie";
 
-const SERVER_URL = import.meta.env.VITE_REACT_APP_API_URL;
+const token = Cookies.get();
 
-export async function googleLogin() {
-  const data = await axios.get(`${SERVER_URL}/auth/login/success`, {
+export async function login() {
+  console.log(token);
+  if (!token[TOKEN_KEY]) return;
+  const data = await axios.get(`${SERVER_URL}/auth/login`, {
     withCredentials: true,
   });
+  console.log(data);
   return data;
 }
 
@@ -17,12 +22,14 @@ export async function logout() {
 }
 
 export async function checkedUser() {
-  const token = getUserToken("BiPToken");
-  if (!token) return false;
-  const { data } = await axios.get(`${SERVER_URL}/auth/check?token=${token}`, {
+  const res = await axios.get(`${SERVER_URL}/auth/check`, {
     withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
-  return data;
+  console.log(res);
+  return { user: null };
 }
 
 export function hasUserToken(key: string) {
