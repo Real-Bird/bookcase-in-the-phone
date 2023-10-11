@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { SERVER_URL, TOKEN_KEY } from "constants/auth";
-import Cookies from "js-cookie";
-
-const token = Cookies.get();
 
 export async function login() {
-  console.log(token);
-  if (!token[TOKEN_KEY]) return;
-  const data = await axios.get(`${SERVER_URL}/auth/login`, {
-    withCredentials: true,
-  });
-  console.log(data);
-  return data;
+  const { status, data } = await axios.get<LoginResponse>(
+    `${SERVER_URL}/auth/login`,
+    {
+      withCredentials: true,
+    }
+  );
+  if (status === 200) {
+    window.localStorage.setItem(TOKEN_KEY, data.accessToken);
+  }
+  return { error: data.error, message: data.message };
 }
 
 export async function logout() {
@@ -22,14 +22,35 @@ export async function logout() {
 }
 
 export async function checkedUser() {
-  const res = await axios.get(`${SERVER_URL}/auth/check`, {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  console.log(res);
-  return { user: null };
+  const token = localStorage.getItem(TOKEN_KEY);
+  try {
+    const { data } = await axios.get<CheckedResponse>(
+      `${SERVER_URL}/auth/check`,
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (data.userInfo.newAccessToken) {
+      window.localStorage.setItem(TOKEN_KEY, data.userInfo.newAccessToken);
+    }
+    return {
+      error: data.error,
+      message: data.message,
+      user: data.userInfo.username,
+      isLogged: true,
+    };
+  } catch (e) {
+    const { response } = e as AxiosError<CommonResponse>;
+    window.localStorage.removeItem(TOKEN_KEY);
+    return {
+      error: response?.data.error,
+      message: response?.data.message,
+      isLogged: false,
+    };
+  }
 }
 
 export function hasUserToken(key: string) {
@@ -42,3 +63,19 @@ export function getUserToken(key: string) {
   if (!value) return;
   return value;
 }
+
+type CommonResponse = {
+  error: boolean;
+  message: string;
+};
+
+type LoginResponse = {
+  accessToken: string;
+} & CommonResponse;
+
+type CheckedResponse = {
+  userInfo: {
+    username: string;
+    newAccessToken?: string;
+  };
+} & CommonResponse;

@@ -6,6 +6,7 @@ import Root from "./Root";
 import IsbnSearch from "@containers/search/IsbnSearch";
 import CameraSearch from "@containers/search/CameraSearch";
 import { hasUserToken } from "@api/auth";
+import { TOKEN_KEY } from "constants/auth";
 
 const Bookcase = lazy(() => import("./pages/Bookcase"));
 const BookDetail = lazy(() => import("./pages/BookDetail"));
@@ -126,7 +127,7 @@ const router = createBrowserRouter(
 export default router;
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-  const auth = hasUserToken("BiPToken");
+  const auth = hasUserToken(TOKEN_KEY);
   const location = useLocation();
 
   if (!auth) {
@@ -137,7 +138,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 function AlreadyAuth({ children }: { children: JSX.Element }) {
-  const auth = hasUserToken("BiPToken");
+  const auth = hasUserToken(TOKEN_KEY);
   const location = useLocation();
   if (auth) {
     return <Navigate to="/" state={{ from: location }} replace />;

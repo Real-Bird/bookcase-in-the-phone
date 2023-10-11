@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths(), mkcert()],
   server: {
     host: "localhost",
-    https: false,
+    https: true,
     port: 3000,
   },
   preview: {
