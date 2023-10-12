@@ -1,16 +1,10 @@
 import axios, { AxiosError } from "axios";
-import { SERVER_URL, TOKEN_KEY } from "constants/auth";
+import { LEGACY_TOKEN_KEY, SERVER_URL, TOKEN_KEY } from "constants/auth";
 
 export async function login() {
-  const { status, data } = await axios.get<LoginResponse>(
-    `${SERVER_URL}/auth/login`,
-    {
-      withCredentials: true,
-    }
-  );
-  if (status === 200) {
-    window.localStorage.setItem(TOKEN_KEY, data.accessToken);
-  }
+  const { data } = await axios.get<LoginResponse>(`${SERVER_URL}/auth/login`, {
+    withCredentials: true,
+  });
   return { error: data.error, message: data.message };
 }
 
@@ -18,10 +12,20 @@ export async function logout() {
   await axios.get(`${SERVER_URL}/auth/logout`, {
     withCredentials: true,
   });
+  localStorage.removeItem(TOKEN_KEY);
+  return true;
+}
+
+export async function disconnect() {
+  await axios.get(`${SERVER_URL}/auth/disconnect`, {
+    withCredentials: true,
+  });
+  localStorage.removeItem(TOKEN_KEY);
   return true;
 }
 
 export async function checkedUser() {
+  localStorage.removeItem(LEGACY_TOKEN_KEY);
   const token = localStorage.getItem(TOKEN_KEY);
   try {
     const { data } = await axios.get<CheckedResponse>(
@@ -39,8 +43,8 @@ export async function checkedUser() {
     return {
       error: data.error,
       message: data.message,
-      user: data.userInfo.username,
       isLogged: true,
+      username: data.userInfo.username,
     };
   } catch (e) {
     const { response } = e as AxiosError<CommonResponse>;
@@ -49,19 +53,9 @@ export async function checkedUser() {
       error: response?.data.error,
       message: response?.data.message,
       isLogged: false,
+      username: "",
     };
   }
-}
-
-export function hasUserToken(key: string) {
-  if (!localStorage.getItem(key)) return false;
-  return true;
-}
-
-export function getUserToken(key: string) {
-  const value = localStorage.getItem(key);
-  if (!value) return;
-  return value;
 }
 
 type CommonResponse = {

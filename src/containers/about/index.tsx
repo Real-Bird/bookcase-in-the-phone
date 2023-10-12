@@ -1,8 +1,9 @@
-import { logout } from "@api/auth";
+import { checkedUser, disconnect, logout } from "@api/auth";
 import { useUserDispatch, useUserState } from "@libs/userContextApi";
 import { Logout } from "@components/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@components/common";
 
 const AboutBlock = styled.div`
   width: 100%;
@@ -29,6 +30,7 @@ const AboutBlock = styled.div`
   footer {
     position: absolute;
     bottom: 2rem;
+    display: flex;
   }
 `;
 
@@ -38,9 +40,23 @@ function AboutContainer() {
   const navigate = useNavigate();
   const googleAuthLogout = async () => {
     FetchUserDispatch({ type: "INITIALIZE_USER" });
-    localStorage.removeItem("BiPToken");
     await logout();
     navigate("/");
+  };
+
+  const disconnectGoogleAuth = async () => {
+    const res = await checkedUser();
+    if (!res || !res.isLogged) {
+      return navigate("/404", { replace: true });
+    }
+    if (
+      window.confirm(
+        "탈퇴 시 모든 데이터(사용자, 책장)가 삭제됩니다.\n정말 탈퇴하시겠습니까?"
+      )
+    ) {
+      await disconnect();
+      return navigate("/login", { replace: true });
+    }
   };
   return (
     <AboutBlock>
@@ -48,7 +64,18 @@ function AboutContainer() {
         안녕하세요,<strong>{userState.userInfo.name}</strong>님!
       </div>
       <Logout onClick={googleAuthLogout} />
-      <footer>&copy; Bookcase in the Phone 2023 by Real-Bird</footer>
+
+      <footer>
+        <h6 style={{ marginRight: 10 }}>
+          &copy; Bookcase in the Phone 2023 by Real-Bird
+        </h6>
+        <strong
+          style={{ cursor: "pointer", textDecoration: "underline" }}
+          onClick={disconnectGoogleAuth}
+        >
+          탈퇴하기
+        </strong>
+      </footer>
     </AboutBlock>
   );
 }

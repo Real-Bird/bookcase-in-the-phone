@@ -1,12 +1,9 @@
-import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
+import { createBrowserRouter, RouteObject } from "react-router-dom";
 import { ErrorBoundary, PageLoading } from "@components/common";
-import { lazy, Suspense } from "react";
+import { lazy, ReactNode, Suspense } from "react";
+import { AuthGuard } from "@components/common";
 import NotFound from "./pages/NotFound";
 import Root from "./Root";
-import IsbnSearch from "@containers/search/IsbnSearch";
-import CameraSearch from "@containers/search/CameraSearch";
-import { hasUserToken } from "@api/auth";
-import { TOKEN_KEY } from "constants/auth";
 
 const Bookcase = lazy(() => import("./pages/Bookcase"));
 const BookDetail = lazy(() => import("./pages/BookDetail"));
@@ -15,134 +12,94 @@ const Login = lazy(() => import("./pages/Login"));
 const Search = lazy(() => import("./pages/Search"));
 const SearchResult = lazy(() => import("./pages/SearchResult"));
 const About = lazy(() => import("./pages/About"));
+const IsbnSearch = lazy(() => import("@containers/search/IsbnSearch"));
+const CameraSearch = lazy(() => import("@containers/search/CameraSearch"));
+
+const makeRoutes = (routeDeps: Route[]): RouteObject[] => {
+  return routeDeps?.map((route) => {
+    const routeObj: RouteObject = {
+      path: route.pathname,
+      element: (
+        <AuthGuard>
+          <Suspense fallback={<PageLoading />}>{route.element}</Suspense>
+        </AuthGuard>
+      ),
+      errorElement: route.isErrorBoundary ? <ErrorBoundary /> : <NotFound />,
+    };
+    return route.children
+      ? { ...routeObj, children: makeRoutes(route.children) }
+      : routeObj;
+  });
+};
+
+const routeDeps: Route[] = [
+  {
+    pathname: "",
+    element: <Bookcase />,
+    isErrorBoundary: true,
+  },
+  {
+    pathname: "books/:isbn",
+    element: <BookDetail />,
+    isErrorBoundary: true,
+  },
+  {
+    pathname: "books/:isbn/edit",
+    element: <BookDetailEdit />,
+    isErrorBoundary: true,
+  },
+  {
+    pathname: "about",
+    element: <About />,
+    isErrorBoundary: true,
+  },
+  {
+    pathname: "login",
+    element: <Login />,
+    isErrorBoundary: true,
+  },
+  {
+    pathname: "search",
+    element: <Search />,
+    isErrorBoundary: true,
+    children: [
+      {
+        pathname: "camera",
+        element: <CameraSearch />,
+      },
+      {
+        pathname: "isbn",
+        element: <IsbnSearch />,
+      },
+    ],
+  },
+  {
+    pathname: "result/:isbn",
+    element: <SearchResult />,
+    isErrorBoundary: true,
+  },
+];
 
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: "",
       element: <Root />,
-      children: [
-        {
-          path: "",
-          element: (
-            <RequireAuth>
-              <Suspense fallback={<PageLoading />}>
-                <Bookcase />
-              </Suspense>
-            </RequireAuth>
-          ),
-          errorElement: <ErrorBoundary />,
-        },
-        {
-          path: "books/:isbn",
-          element: (
-            <Suspense fallback={<PageLoading />}>
-              <BookDetail />
-            </Suspense>
-          ),
-          errorElement: <ErrorBoundary />,
-        },
-        {
-          path: "books/:isbn/edit",
-          element: (
-            <Suspense fallback={<PageLoading />}>
-              <BookDetailEdit />
-            </Suspense>
-          ),
-          errorElement: <ErrorBoundary />,
-        },
-        {
-          path: "about",
-          element: (
-            <RequireAuth>
-              <Suspense fallback={<PageLoading />}>
-                <About />
-              </Suspense>
-            </RequireAuth>
-          ),
-          errorElement: <ErrorBoundary />,
-        },
-        {
-          path: "login",
-          element: (
-            <AlreadyAuth>
-              <Suspense fallback={<PageLoading />}>
-                <Login />
-              </Suspense>
-            </AlreadyAuth>
-          ),
-          errorElement: <ErrorBoundary />,
-        },
-        {
-          path: "search",
-          element: (
-            <RequireAuth>
-              <Suspense fallback={<PageLoading />}>
-                <Search />
-              </Suspense>
-            </RequireAuth>
-          ),
-          errorElement: <ErrorBoundary />,
-          children: [
-            {
-              path: "camera",
-              element: (
-                <Suspense fallback={<PageLoading />}>
-                  <CameraSearch />
-                </Suspense>
-              ),
-              errorElement: <NotFound />,
-            },
-            {
-              path: "isbn",
-              element: (
-                <Suspense fallback={<PageLoading />}>
-                  <IsbnSearch />
-                </Suspense>
-              ),
-              errorElement: <NotFound />,
-            },
-          ],
-        },
-        {
-          path: "result/:isbn",
-          element: (
-            <Suspense fallback={<PageLoading />}>
-              <SearchResult />
-            </Suspense>
-          ),
-          errorElement: <ErrorBoundary />,
-        },
-      ],
-      errorElement: <NotFound />,
+      children: makeRoutes(routeDeps),
     },
     {
-      path: "/404",
+      path: "404",
       element: <NotFound />,
     },
   ],
   { basename: "/" }
 );
 
+interface Route {
+  pathname: string;
+  element: ReactNode;
+  children?: Route[];
+  isErrorBoundary?: true;
+}
+
 export default router;
-
-function RequireAuth({ children }: { children: JSX.Element }) {
-  const auth = hasUserToken(TOKEN_KEY);
-  const location = useLocation();
-
-  if (!auth) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  return children;
-}
-
-function AlreadyAuth({ children }: { children: JSX.Element }) {
-  const auth = hasUserToken(TOKEN_KEY);
-  const location = useLocation();
-  if (auth) {
-    return <Navigate to="/" state={{ from: location }} replace />;
-  }
-
-  return children;
-}

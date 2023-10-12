@@ -8,3 +8,4 @@ export * from "./ReadingDate";
 export * from "./LogoSvg";
 export * from "./InitLoading";
 export * from "./PageLoading";
+export * from "./AuthGuard";

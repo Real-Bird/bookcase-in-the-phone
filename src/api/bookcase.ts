@@ -1,7 +1,7 @@
-import { getUserToken } from "@api/auth";
 import { FetchBookcaseState } from "@libs/bookcaseContextApi";
 import { FetchIsbnDataState } from "@libs/searchContextApi";
 import axios from "axios";
+import { TOKEN_KEY } from "constants/auth";
 
 const SERVER_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -53,18 +53,18 @@ export async function getInfo(barcode: string): Promise<GetInfoReturn> {
 }
 
 export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
-  const token = getUserToken("BiPToken");
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    return;
+  }
   if (!token) return console.log("not token");
-  const { data } = await axios.post(
-    `${SERVER_URL}/bookcase/info?token=${token}`,
-    bookInfo,
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const { data } = await axios.post(`${SERVER_URL}/bookcase/info`, bookInfo, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return data;
 }
 
@@ -75,15 +75,19 @@ export interface BookListResponse {
 }
 
 export async function getBookList() {
-  const token = getUserToken("BiPToken");
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    return;
+  }
   const {
     data: { error, bookList },
   } = await axios.get<BookListResponse>(
-    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/list?token=${token}`,
+    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/list`,
     {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -97,18 +101,20 @@ export interface BookInfoResponse {
 }
 
 export async function getBookInfoByIsbn(isbn: string) {
-  const token = getUserToken("BiPToken");
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    return;
+  }
   try {
     const {
       data: { error, bookInfo },
     } = await axios.get<BookInfoResponse>(
-      `${
-        import.meta.env.VITE_REACT_APP_API_URL
-      }/bookcase/info?token=${token}&isbn=${isbn}`,
+      `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/info?isbn=${isbn}`,
       {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -125,18 +131,20 @@ type UpdateInfoBody = {
 };
 
 export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
-  const token = getUserToken("BiPToken");
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    return;
+  }
   const {
     data: { error },
   } = await axios.patch<BookInfoResponse>(
-    `${
-      import.meta.env.VITE_REACT_APP_API_URL
-    }/bookcase/info?token=${token}&isbn=${isbn}`,
+    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/info?isbn=${isbn}`,
     { body },
     {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -147,17 +155,19 @@ export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
 }
 
 export async function deleteBookInfoByIsbn(isbn: string) {
-  const token = getUserToken("BiPToken");
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    return;
+  }
   const {
     data: { error, message },
   } = await axios.delete(
-    `${
-      import.meta.env.VITE_REACT_APP_API_URL
-    }/bookcase/info?token=${token}&isbn=${isbn}`,
+    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/info?isbn=${isbn}`,
     {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -168,17 +178,19 @@ export async function deleteBookInfoByIsbn(isbn: string) {
 }
 
 export async function hasBookByIsbn(isbn: string) {
-  const token = getUserToken("BiPToken");
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    return false;
+  }
   const {
     data: { hasBook },
   } = await axios.get<{ hasBook: boolean }>(
-    `${
-      import.meta.env.VITE_REACT_APP_API_URL
-    }/bookcase/check?token=${token}&isbn=${isbn}`,
+    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/check?isbn=${isbn}`,
     {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     }
   );
