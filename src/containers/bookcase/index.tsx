@@ -78,9 +78,10 @@ function BookcaseContainer() {
   useEffect(() => {
     (async () => {
       try {
-        const { error, bookList } = await getBookList();
-        bookcaseDispatch({ type: "LOAD_DATA", bookcase: bookList });
-        setBookList(bookList);
+        const res = await getBookList();
+        if (!res) return;
+        bookcaseDispatch({ type: "LOAD_DATA", bookcase: res.bookList });
+        setBookList(res.bookList);
       } catch (e) {
         console.error(e);
       }

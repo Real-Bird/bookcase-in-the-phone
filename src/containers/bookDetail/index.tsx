@@ -47,15 +47,14 @@ function BookDetailContainer() {
   useEffect(() => {
     if (isbn) {
       (async () => {
-        try {
-          const { error, bookInfo } = await getBookInfoByIsbn(isbn);
-          return (await isbnDispatch)({
-            type: "SET_DATA",
-            bookInfo,
-          });
-        } catch (e) {
+        const res = await getBookInfoByIsbn(isbn);
+        if (!res) {
           return navigate("/404");
         }
+        return isbnDispatch({
+          type: "SET_DATA",
+          bookInfo: res.bookInfo,
+        });
       })();
     }
   }, [isbn]);
