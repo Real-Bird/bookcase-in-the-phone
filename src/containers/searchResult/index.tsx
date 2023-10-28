@@ -2,7 +2,7 @@ import { Button, PageLoading } from "@components/common";
 import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { hasBookByIsbn, savedBookInfo } from "@api/bookcase";
 import { useFetch } from "@libs/hooks";
@@ -31,7 +31,6 @@ const ButtonBlock = styled.div`
 function ResultContainer() {
   const navigate = useNavigate();
   const isbnState = useIsbnState();
-  const location = useLocation();
   const {
     title,
     author,
@@ -40,21 +39,13 @@ function ResultContainer() {
     publisher,
     publisher_predate,
     ea_isbn,
-    review,
     loading,
   } = isbnState;
   const isbnDispatch = useIsbnDispatch();
-  const {
-    state: hasBookState,
-    loading: hasBookLoading,
-    error: hasBookError,
-    onFetching: onHasBookFetching,
-  } = useFetch(() => hasBookByIsbn(ea_isbn));
+  useFetch(() => hasBookByIsbn(ea_isbn));
 
-  if (loading) return <PageLoading />;
-
-  const onBack = async () => {
-    (await isbnDispatch)({ type: "INITIALIZE_DATA" });
+  const onBack = () => {
+    isbnDispatch({ type: "INITIALIZE_DATA" });
     navigate("/search");
   };
   const [startDate, setStartDate] = useState("");
@@ -65,8 +56,9 @@ function ResultContainer() {
       ...isbnState,
       review: newReview,
     });
-    if (callbackData.error) return console.error(callbackData.message);
-    (await isbnDispatch)({ type: "INITIALIZE_DATA" });
+    if (callbackData && callbackData.error)
+      return console.error(callbackData.message);
+    isbnDispatch({ type: "INITIALIZE_DATA" });
     return navigate(`/books/${ea_isbn}`);
   }, [isbnState, newReview]);
   const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -79,14 +71,14 @@ function ResultContainer() {
     });
     if (id === "reading-start") {
       setStartDate(value);
-      (await isbnDispatch)({
+      isbnDispatch({
         type: "SET_DATA",
         bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
       });
       return;
     }
     setEndDate(value);
-    (await isbnDispatch)({
+    isbnDispatch({
       type: "SET_DATA",
       bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
     });
@@ -104,6 +96,8 @@ function ResultContainer() {
       return;
     }
   }, [startDate, endDate]);
+
+  if (loading) return <PageLoading />;
 
   return (
     <ResultBlock>

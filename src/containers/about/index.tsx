@@ -3,7 +3,6 @@ import { useUserDispatch, useUserState } from "@libs/userContextApi";
 import { Logout } from "@components/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@components/common";
 
 const AboutBlock = styled.div`
   width: 100%;
@@ -71,8 +70,7 @@ function AboutContainer() {
         </h6>
         <strong
           style={{ cursor: "pointer", textDecoration: "underline" }}
-          onClick={disconnectGoogleAuth}
-        >
+          onClick={disconnectGoogleAuth}>
           탈퇴하기
         </strong>
       </footer>

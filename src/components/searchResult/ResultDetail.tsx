@@ -221,8 +221,7 @@ export function ResultDetail({
                 value={review}
                 rows={5}
                 minLength={REVIEW_MIN}
-                maxLength={REVIEW_MAX}
-              ></textarea>
+                maxLength={REVIEW_MAX}></textarea>
               <span>
                 {review.slice(0, 150).length ?? 0} / {REVIEW_MAX} 자
               </span>

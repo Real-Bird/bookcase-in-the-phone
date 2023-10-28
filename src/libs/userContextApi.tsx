@@ -40,16 +40,18 @@ function reducer(
   action: FetchUserDataAction
 ): FetchUserDataState {
   switch (action.type) {
-    case "INITIALIZE_USER":
+    case "INITIALIZE_USER": {
       return INITIALIZE_USER_DATA;
-    case "TEMP_SET_USER":
+    }
+    case "TEMP_SET_USER": {
       return {
         ...state,
         userInfo: action.userInfo,
         isLoggedIn: action.isLoggedIn,
         isLoading: false,
       };
-    case "SET_USER":
+    }
+    case "SET_USER": {
       const { name } = action.userInfo;
       return {
         ...state,
@@ -59,13 +61,16 @@ function reducer(
         isLoading: false,
         isLoggedIn: true,
       };
-    case "CHECK_USER":
+    }
+    case "CHECK_USER": {
       return {
         ...state,
         isLoggedIn: action.isLoggedIn,
       };
-    default:
+    }
+    default: {
       throw new Error("Unhandled action");
+    }
   }
 }
 

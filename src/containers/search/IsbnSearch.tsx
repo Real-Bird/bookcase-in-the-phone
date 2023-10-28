@@ -23,16 +23,11 @@ export default function IsbnSearch() {
   const [barcode, setBarcode] = useState("");
   const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
-  const {
-    state: newInfoState,
-    loading: newInfoLoading,
-    error: newInfoError,
-    onFetching: newInfoFetching,
-  } = useFetch<GetInfoReturn>(() => getInfo(barcode), true);
+  const { state: newInfoState, onFetching: newInfoFetching } =
+    useFetch<GetInfoReturn>(() => getInfo(barcode), true);
   const {
     state: hasBookState,
-    loading: hasBookLoading,
-    error: hasBookError,
+
     onFetching: hasBookFetching,
   } = useFetch<boolean>(() => hasBookByIsbn(barcode), true);
   const onSubmit = async (e: FormEvent) => {

@@ -39,7 +39,7 @@ const NavIcon = styled.svg`
 export function Navigation() {
   const { pathname } = useLocation();
   const isbnDispatch = useIsbnDispatch();
-  const onClick = async () => (await isbnDispatch)({ type: "INITIALIZE_DATA" });
+  const onClick = async () => isbnDispatch({ type: "INITIALIZE_DATA" });
   return (
     <NavBlock>
       <NavList>
@@ -51,8 +51,7 @@ export function Navigation() {
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -72,8 +71,7 @@ export function Navigation() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6"
-              >
+                className="w-6 h-6">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -98,8 +96,7 @@ export function Navigation() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6"
-              >
+                className="w-6 h-6">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

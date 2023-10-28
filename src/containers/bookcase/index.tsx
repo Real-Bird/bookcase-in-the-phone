@@ -77,13 +77,12 @@ function BookcaseContainer() {
   };
   useEffect(() => {
     (async () => {
-      try {
-        const { error, bookList } = await getBookList();
-        bookcaseDispatch({ type: "LOAD_DATA", bookcase: bookList });
-        setBookList(bookList);
-      } catch (e) {
-        console.error(e);
+      const res = await getBookList();
+      if (!res || res.error) {
+        return;
       }
+      bookcaseDispatch({ type: "LOAD_DATA", bookcase: res.bookList });
+      setBookList(res.bookList);
     })();
   }, [getBookList]);
   const handleKindChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -97,8 +96,7 @@ function BookcaseContainer() {
           defaultValue={searchKind}
           selectRef={selectRef}
           onChange={handleKindChange}
-          className="select"
-        >
+          className="select">
           {keys.map((key) => (
             <option key={key} value={key}>
               {key}

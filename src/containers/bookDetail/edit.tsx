@@ -35,7 +35,7 @@ function EditBookDetailContainer() {
   const onUpdateData = useCallback(async () => {
     const { start_date, end_date, ea_isbn } = bookInfo;
     const body = { start_date, end_date, review: newReview };
-    (await bookInfoDispatch)({
+    bookInfoDispatch({
       type: "SET_DATA",
       bookInfo: { ...bookInfo, review: newReview },
     });
@@ -50,14 +50,14 @@ function EditBookDetailContainer() {
       day: "2-digit",
     });
     if (id === "reading-start")
-      return (await bookInfoDispatch)({
+      return bookInfoDispatch({
         type: "SET_DATA",
         bookInfo: {
           ...bookInfo,
           start_date: value ? localeFormatter.format(new Date(value)) : "",
         },
       });
-    (await bookInfoDispatch)({
+    bookInfoDispatch({
       type: "SET_DATA",
       bookInfo: {
         ...bookInfo,

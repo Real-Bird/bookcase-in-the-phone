@@ -56,9 +56,10 @@ function reducer(
   action: FetchIsbnDataAction
 ): FetchIsbnDataState {
   switch (action.type) {
-    case "INITIALIZE_DATA":
+    case "INITIALIZE_DATA": {
       return INITIALIZE_ISBN_DATA;
-    case "LOAD_DATA":
+    }
+    case "LOAD_DATA": {
       const authorReg = / ?(지은이|지음|저자) ?[:]? ?/g;
       const translatorReg = /[ ]?(옮김)[: ]*|(옮긴이)[: ]+/g;
       const replaceWriter = action.bookInfo.author.replace(authorReg, "");
@@ -84,15 +85,18 @@ function reducer(
         hasData: true,
         loading: false,
       };
-    case "SET_DATA":
+    }
+    case "SET_DATA": {
       return {
         ...state,
         ...action.bookInfo,
         hasData: true,
         loading: false,
       };
-    default:
+    }
+    default: {
       throw new Error("Unhandled action");
+    }
   }
 }
 

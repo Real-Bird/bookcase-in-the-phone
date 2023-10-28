@@ -3,9 +3,7 @@ import { Navigation, InitLoading } from "@components/common";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
-import { useCallback, useLayoutEffect, useState } from "react";
-import { checkedUser } from "@api/auth";
-import { useUserDispatch } from "@libs/userContextApi";
+import { useLayoutEffect, useState } from "react";
 
 const RootBlock = styled.div`
   width: 100%;

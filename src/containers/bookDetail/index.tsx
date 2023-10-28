@@ -37,7 +37,7 @@ function BookDetailContainer() {
       try {
         await deleteBookInfoByIsbn(bookInfoState.ea_isbn);
         alert("성공적으로 삭제되었습니다!");
-        (await isbnDispatch)({ type: "INITIALIZE_DATA" });
+        isbnDispatch({ type: "INITIALIZE_DATA" });
         return navigate("/");
       } catch (e) {
         console.error(e);
@@ -47,15 +47,14 @@ function BookDetailContainer() {
   useEffect(() => {
     if (isbn) {
       (async () => {
-        try {
-          const { error, bookInfo } = await getBookInfoByIsbn(isbn);
-          return (await isbnDispatch)({
-            type: "SET_DATA",
-            bookInfo,
-          });
-        } catch (e) {
+        const res = await getBookInfoByIsbn(isbn);
+        if (!res || res.error) {
           return navigate("/404");
         }
+        return isbnDispatch({
+          type: "SET_DATA",
+          bookInfo: res.bookInfo,
+        });
       })();
     }
   }, [isbn]);

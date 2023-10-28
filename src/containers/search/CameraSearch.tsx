@@ -31,18 +31,10 @@ export default function CameraSearch() {
     localStream,
     scanBarcode,
   } = useOutletContext<CameraSearchProps>();
-  const {
-    state: newInfoState,
-    loading: newInfoLoading,
-    error: newInfoError,
-    onFetching: newInfoFetching,
-  } = useFetch<GetInfoReturn>(() => getInfo(barcode), true);
-  const {
-    state: hasBookState,
-    loading: hasBookLoading,
-    error: hasBookError,
-    onFetching: hasBookFetching,
-  } = useFetch<boolean>(() => hasBookByIsbn(barcode), true);
+  const { state: newInfoState, onFetching: newInfoFetching } =
+    useFetch<GetInfoReturn>(() => getInfo(barcode), true);
+  const { state: hasBookState, onFetching: hasBookFetching } =
+    useFetch<boolean>(() => hasBookByIsbn(barcode), true);
 
   useEffect(() => {
     if (!cameraRef.current || !localStream) return;
@@ -50,7 +42,7 @@ export default function CameraSearch() {
   }, [localStream]);
 
   useEffect(() => {
-    if (!!barcode) {
+    if (barcode) {
       setOutletBarcode(barcode);
       hasBookFetching();
 
