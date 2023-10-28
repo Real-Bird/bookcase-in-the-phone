@@ -1,8 +1,9 @@
 import { checkedUser, disconnect, logout } from "@api/auth";
-import { useUserDispatch, useUserState } from "@libs/userContextApi";
+import { UserActionTypes, useUserDispatch, useUserState } from "@store/user";
 import { Logout } from "@components/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { inMemoryCache } from "main";
 
 const AboutBlock = styled.div`
   width: 100%;
@@ -34,18 +35,26 @@ const AboutBlock = styled.div`
 `;
 
 function AboutContainer() {
-  const FetchUserDispatch = useUserDispatch();
-  const userState = useUserState();
   const navigate = useNavigate();
+  const userState = useUserState();
+  const userDispatch = useUserDispatch();
   const googleAuthLogout = async () => {
-    FetchUserDispatch({ type: "INITIALIZE_USER" });
+    inMemoryCache.isNonLogged = true;
+    inMemoryCache.pathCache = {};
+    userDispatch({ type: UserActionTypes.SET_USER, payload: { username: "" } });
     await logout();
     navigate("/");
   };
 
   const disconnectGoogleAuth = async () => {
     const res = await checkedUser();
+    inMemoryCache.isNonLogged = true;
+    inMemoryCache.pathCache = {};
     if (!res || !res.isLogged) {
+      userDispatch({
+        type: UserActionTypes.SET_USER,
+        payload: { username: "" },
+      });
       return navigate("/404", { replace: true });
     }
     if (
@@ -53,6 +62,10 @@ function AboutContainer() {
         "탈퇴 시 모든 데이터(사용자, 책장)가 삭제됩니다.\n정말 탈퇴하시겠습니까?"
       )
     ) {
+      userDispatch({
+        type: UserActionTypes.SET_USER,
+        payload: { username: "" },
+      });
       await disconnect();
       return navigate("/login", { replace: true });
     }
@@ -60,7 +73,7 @@ function AboutContainer() {
   return (
     <AboutBlock>
       <div>
-        안녕하세요,<strong>{userState.userInfo.name}</strong>님!
+        안녕하세요,<strong>{userState}</strong>님!
       </div>
       <Logout onClick={googleAuthLogout} />
 

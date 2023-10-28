@@ -3,12 +3,17 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 import "./styles/global.css";
-import FetchUserDataProvider from "@libs/userContextApi";
+
+export const inMemoryCache: InMemoryCache = {};
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <FetchUserDataProvider>
-      <RouterProvider router={router} />
-    </FetchUserDataProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+type PathCache = Record<string, { expired: number }>;
+interface InMemoryCache {
+  isNonLogged?: boolean;
+  pathCache?: PathCache;
+}
