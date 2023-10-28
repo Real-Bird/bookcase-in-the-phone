@@ -1,9 +1,8 @@
 import { FetchBookcaseState } from "@libs/bookcaseContextApi";
 import { FetchIsbnDataState } from "@libs/searchContextApi";
 import axios from "axios";
+import axiosInstance from "@api/httpClient";
 import { TOKEN_KEY } from "constants/auth";
-
-const SERVER_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 export interface OpenSeojiData {
   docs: {
@@ -35,7 +34,7 @@ export async function getInfo(barcode: string): Promise<GetInfoReturn> {
       bookInfo: null,
     };
   const URL = `https://www.nl.go.kr/seoji/SearchApi.do?cert_key=${
-    import.meta.env.VITE_BOOK_SEARCH_API_KEY
+    import.meta.env.VITE_BOOK_SEARCH_API_KEY as string
   }&result_style=json&page_no=1&page_size=1&isbn=${barcode}`;
   const { data } = await axios.get<OpenSeojiData>(URL);
   if (!data || data.docs.length === 0)
@@ -52,26 +51,27 @@ export async function getInfo(barcode: string): Promise<GetInfoReturn> {
   return { ok: true, bookInfo, error: null };
 }
 
+export interface SavedBookResponse {
+  error: boolean;
+  message: string;
+}
+
 export async function savedBookInfo(bookInfo: FetchIsbnDataState) {
   const token = localStorage.getItem(TOKEN_KEY);
   if (!token) {
     return;
   }
-  if (!token) return console.log("not token");
-  const { data } = await axios.post(`${SERVER_URL}/bookcase/info`, bookInfo, {
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const { data } = await axiosInstance.post<SavedBookResponse>(
+    "/bookcase/info",
+    bookInfo
+  );
   return data;
 }
 
 export interface BookListResponse {
   error: boolean;
   bookList: FetchBookcaseState;
-  message: "string;";
+  message: string;
 }
 
 export async function getBookList() {
@@ -81,23 +81,14 @@ export async function getBookList() {
   }
   const {
     data: { error, bookList },
-  } = await axios.get<BookListResponse>(
-    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/list`,
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  } = await axiosInstance.get<BookListResponse>("/bookcase/list");
   return { error, bookList };
 }
 
 export interface BookInfoResponse {
   error: boolean;
   bookInfo: FetchIsbnDataState;
-  message: "string;";
+  message: string;
 }
 
 export async function getBookInfoByIsbn(isbn: string) {
@@ -105,23 +96,10 @@ export async function getBookInfoByIsbn(isbn: string) {
   if (!token) {
     return;
   }
-  try {
-    const {
-      data: { error, bookInfo },
-    } = await axios.get<BookInfoResponse>(
-      `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/info?isbn=${isbn}`,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return { error, bookInfo };
-  } catch (e) {
-    throw e;
-  }
+  const {
+    data: { error, bookInfo },
+  } = await axiosInstance.get<BookInfoResponse>(`/bookcase/info?isbn=${isbn}`);
+  return { error, bookInfo };
 }
 
 type UpdateInfoBody = {
@@ -137,21 +115,20 @@ export async function updateBookInfoByIsbn(isbn: string, body: UpdateInfoBody) {
   }
   const {
     data: { error },
-  } = await axios.patch<BookInfoResponse>(
-    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/info?isbn=${isbn}`,
-    { body },
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
+  } = await axiosInstance.patch<BookInfoResponse>(
+    `/bookcase/info?isbn=${isbn}`,
+    { body }
   );
   if (error) {
     return { error, bookInfo: null };
   }
   return { error };
+}
+
+export interface DeleteBookResponse {
+  error: boolean;
+  bookInfo: FetchIsbnDataState;
+  message: string;
 }
 
 export async function deleteBookInfoByIsbn(isbn: string) {
@@ -161,15 +138,8 @@ export async function deleteBookInfoByIsbn(isbn: string) {
   }
   const {
     data: { error, message },
-  } = await axios.delete(
-    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/info?isbn=${isbn}`,
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
+  } = await axiosInstance.delete<DeleteBookResponse>(
+    `/bookcase/info?isbn=${isbn}`
   );
   if (error) {
     return { error, message };
@@ -184,15 +154,8 @@ export async function hasBookByIsbn(isbn: string) {
   }
   const {
     data: { hasBook },
-  } = await axios.get<{ hasBook: boolean }>(
-    `${import.meta.env.VITE_REACT_APP_API_URL}/bookcase/check?isbn=${isbn}`,
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
+  } = await axiosInstance.get<{ hasBook: boolean }>(
+    `/bookcase/check?isbn=${isbn}`
   );
   return hasBook;
 }

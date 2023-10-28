@@ -19,10 +19,12 @@ const makeRoutes = (routeDeps: Route[]): RouteObject[] => {
   return routeDeps?.map((route) => {
     const routeObj: RouteObject = {
       path: route.pathname,
-      element: (
+      element: !route.isNoneAuth ? (
         <AuthGuard>
           <Suspense fallback={<PageLoading />}>{route.element}</Suspense>
         </AuthGuard>
+      ) : (
+        route.element
       ),
       errorElement: route.isErrorBoundary ? <ErrorBoundary /> : <NotFound />,
     };
@@ -66,10 +68,12 @@ const routeDeps: Route[] = [
       {
         pathname: "camera",
         element: <CameraSearch />,
+        isNoneAuth: true,
       },
       {
         pathname: "isbn",
         element: <IsbnSearch />,
+        isNoneAuth: true,
       },
     ],
   },
@@ -99,6 +103,7 @@ interface Route {
   pathname: string;
   element: ReactNode;
   children?: Route[];
+  isNoneAuth?: boolean;
   isErrorBoundary?: true;
 }
 
