@@ -46,7 +46,6 @@ export const useAuthGuard = () => {
         [pathname]: { expired: Date.now() + 1000 * 60 * 60 },
       };
     }
-    console.log(inMemoryCache.current);
     return () => window.localStorage.removeItem("googleLoginComplete");
   }, [pathname]);
 };
