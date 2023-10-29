@@ -1,4 +1,5 @@
 import { BookSubInfo } from "@components/bookcase";
+import { BookcaseSubInfo } from "@libs/bookcaseContextApi";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import noImage from "/no_image_available.png";
@@ -50,7 +51,7 @@ const Title = styled.h3`
 `;
 
 interface BookListItemProps {
-  bookInfo: Bookcase.BookInfo;
+  bookInfo: BookcaseSubInfo;
   isGrid: boolean;
 }
 

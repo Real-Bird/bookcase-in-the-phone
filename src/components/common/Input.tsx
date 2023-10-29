@@ -1,4 +1,3 @@
-import { ChangeEvent } from "react";
 import styled from "styled-components";
 
 const InputContainer = styled.div`
@@ -18,7 +17,7 @@ const InputContainer = styled.div`
 interface InputProps {
   type: string;
   label: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: any) => void;
   value?: string;
   name?: string;
   placeholder?: string;

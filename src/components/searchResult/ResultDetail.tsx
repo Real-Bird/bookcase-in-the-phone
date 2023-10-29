@@ -129,7 +129,7 @@ interface ResultDetailProps {
   title: string;
   author: string;
   publisher: string;
-  publisher_predate?: string;
+  publisher_predate: string;
   ea_isbn: string;
   translator: string | undefined;
   review: string;
@@ -178,7 +178,7 @@ export function ResultDetail({
           <BookInfoItem kind="지은이" value={author} />
           <BookInfoItem kind="옮긴이" value={translator ? translator : "-"} />
           <BookInfoItem kind="출판사" value={publisher} />
-          <BookInfoItem kind="출판일" value={publisher_predate ?? ""} />
+          <BookInfoItem kind="출판일" value={publisher_predate} />
           <BookInfoItem kind="ISBN" value={ea_isbn} />
         </BookInfoBox>
       </DetailTop>
@@ -221,7 +221,8 @@ export function ResultDetail({
                 value={review}
                 rows={5}
                 minLength={REVIEW_MIN}
-                maxLength={REVIEW_MAX}></textarea>
+                maxLength={REVIEW_MAX}
+              ></textarea>
               <span>
                 {review.slice(0, 150).length ?? 0} / {REVIEW_MAX} 자
               </span>

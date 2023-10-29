@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useEffect } from "react";
 import styled from "styled-components";
 
 interface SearchCamProps {

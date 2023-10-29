@@ -1,4 +1,3 @@
-import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
 const ButtonContainer = styled.button`
@@ -34,10 +33,11 @@ const Label = styled.div<{ color?: string }>`
   font-size: 16px;
 `;
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps {
   label: string;
   onClick?: () => void;
   color?: string;
+  [key: string]: any;
 }
 
 export function Button({
