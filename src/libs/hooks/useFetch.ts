@@ -28,7 +28,7 @@ export function useFetch<T>(asyncFn: () => Promise<T>, hasTrigger?: boolean) {
       .then((data) =>
         setState({
           ...state,
-          state: data as T,
+          state: data,
           loading: false,
         })
       )

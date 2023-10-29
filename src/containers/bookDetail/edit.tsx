@@ -1,7 +1,11 @@
 import { updateBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
-import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
+import {
+  BookcaseActionTypes,
+  useBookcaseDispatch,
+  useBookcaseState,
+} from "@store/bookcase";
 import { ChangeEvent, useCallback, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -29,19 +33,19 @@ const ButtonBlock = styled.div`
 
 function EditBookDetailContainer() {
   const navigate = useNavigate();
-  const bookInfo = useIsbnState();
-  const bookInfoDispatch = useIsbnDispatch();
-  const [newReview, setNewReview] = useState(bookInfo.review ?? "");
+  const bookcaseDispatch = useBookcaseDispatch();
+  const { book: bookState } = useBookcaseState();
+  const [newReview, setNewReview] = useState(bookState.review ?? "");
   const onUpdateData = useCallback(async () => {
-    const { start_date, end_date, ea_isbn } = bookInfo;
+    const { start_date, end_date, ea_isbn } = bookState;
     const body = { start_date, end_date, review: newReview };
-    (await bookInfoDispatch)({
-      type: "SET_DATA",
-      bookInfo: { ...bookInfo, review: newReview },
+    bookcaseDispatch({
+      type: BookcaseActionTypes.SET_BOOK,
+      payload: { book: { ...bookState, review: newReview } },
     });
     await updateBookInfoByIsbn(ea_isbn, body);
     return navigate(-1);
-  }, [bookInfo, newReview]);
+  }, [bookState, newReview]);
   const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
@@ -50,18 +54,22 @@ function EditBookDetailContainer() {
       day: "2-digit",
     });
     if (id === "reading-start")
-      return (await bookInfoDispatch)({
-        type: "SET_DATA",
-        bookInfo: {
-          ...bookInfo,
-          start_date: value ? localeFormatter.format(new Date(value)) : "",
+      return bookcaseDispatch({
+        type: BookcaseActionTypes.SET_BOOK,
+        payload: {
+          book: {
+            ...bookState,
+            start_date: value ? localeFormatter.format(new Date(value)) : "",
+          },
         },
       });
-    (await bookInfoDispatch)({
-      type: "SET_DATA",
-      bookInfo: {
-        ...bookInfo,
-        end_date: value ? localeFormatter.format(new Date(value)) : "",
+    bookcaseDispatch({
+      type: BookcaseActionTypes.SET_BOOK,
+      payload: {
+        book: {
+          ...bookState,
+          end_date: value ? localeFormatter.format(new Date(value)) : "",
+        },
       },
     });
   };
@@ -70,7 +78,7 @@ function EditBookDetailContainer() {
   };
   return (
     <>
-      {!bookInfo.hasData ? (
+      {!bookState ? (
         <Navigate to={"/"} replace />
       ) : (
         <DetailBlock>
@@ -80,15 +88,15 @@ function EditBookDetailContainer() {
           </ButtonBlock>
           <ResultDetail
             isEdit
-            author={bookInfo.author}
-            ea_isbn={bookInfo.ea_isbn}
-            publisher={bookInfo.publisher}
-            publisher_predate={bookInfo.publisher_predate}
-            title={bookInfo.title}
-            titleUrl={bookInfo.title_url}
-            translator={bookInfo.translator}
-            startDateValue={bookInfo.start_date ? bookInfo.start_date : ""}
-            endDateValue={bookInfo.end_date ? bookInfo.end_date : ""}
+            author={bookState.author}
+            ea_isbn={bookState.ea_isbn}
+            publisher={bookState.publisher}
+            publisher_predate={bookState.publisher_predate}
+            title={bookState.title}
+            titleUrl={bookState.title_url}
+            translator={bookState.translator}
+            startDateValue={bookState.start_date ? bookState.start_date : ""}
+            endDateValue={bookState.end_date ? bookState.end_date : ""}
             review={newReview}
             onDateChange={onDateChange}
             onReviewChange={onReviewChange}

@@ -1,44 +1,30 @@
-import axios, { AxiosError } from "axios";
-import { LEGACY_TOKEN_KEY, SERVER_URL, TOKEN_KEY } from "constants/auth";
+import { AxiosError } from "axios";
+import axios from "@api/httpClient";
+import { LEGACY_TOKEN_KEY, TOKEN_KEY } from "constants/auth";
 
 export async function login() {
-  const { data } = await axios.get<LoginResponse>(`${SERVER_URL}/auth/login`, {
-    withCredentials: true,
-  });
+  const { data } = await axios.get<LoginResponse>("/auth/login");
   return { error: data.error, message: data.message };
 }
 
 export async function logout() {
-  await axios.get(`${SERVER_URL}/auth/logout`, {
-    withCredentials: true,
-  });
+  await axios.get("/auth/logout");
   localStorage.removeItem(TOKEN_KEY);
   return true;
 }
 
 export async function disconnect() {
-  await axios.get(`${SERVER_URL}/auth/disconnect`, {
-    withCredentials: true,
-  });
+  await axios.get("/auth/disconnect");
   localStorage.removeItem(TOKEN_KEY);
   return true;
 }
 
 export async function checkedUser() {
   localStorage.removeItem(LEGACY_TOKEN_KEY);
-  const token = localStorage.getItem(TOKEN_KEY);
   try {
-    const { data } = await axios.get<CheckedResponse>(
-      `${SERVER_URL}/auth/check`,
-      {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const { data } = await axios.get<CheckedResponse>("/auth/check");
     if (data.userInfo.newAccessToken) {
-      window.localStorage.setItem(TOKEN_KEY, data.userInfo.newAccessToken);
+      localStorage.setItem(TOKEN_KEY, data.userInfo.newAccessToken);
     }
     return {
       error: data.error,
@@ -48,7 +34,7 @@ export async function checkedUser() {
     };
   } catch (e) {
     const { response } = e as AxiosError<CommonResponse>;
-    window.localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(TOKEN_KEY);
     return {
       error: response?.data.error,
       message: response?.data.message,

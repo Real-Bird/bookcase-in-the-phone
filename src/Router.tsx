@@ -4,6 +4,8 @@ import { lazy, ReactNode, Suspense } from "react";
 import { AuthGuard } from "@components/common";
 import NotFound from "./pages/NotFound";
 import Root from "./Root";
+import CameraSearch from "@containers/search/CameraSearch";
+import IsbnSearch from "@containers/search/IsbnSearch";
 
 const Bookcase = lazy(() => import("./pages/Bookcase"));
 const BookDetail = lazy(() => import("./pages/BookDetail"));
@@ -12,17 +14,17 @@ const Login = lazy(() => import("./pages/Login"));
 const Search = lazy(() => import("./pages/Search"));
 const SearchResult = lazy(() => import("./pages/SearchResult"));
 const About = lazy(() => import("./pages/About"));
-const IsbnSearch = lazy(() => import("@containers/search/IsbnSearch"));
-const CameraSearch = lazy(() => import("@containers/search/CameraSearch"));
 
 const makeRoutes = (routeDeps: Route[]): RouteObject[] => {
   return routeDeps?.map((route) => {
     const routeObj: RouteObject = {
       path: route.pathname,
-      element: (
+      element: !route.isNoneAuth ? (
         <AuthGuard>
           <Suspense fallback={<PageLoading />}>{route.element}</Suspense>
         </AuthGuard>
+      ) : (
+        route.element
       ),
       errorElement: route.isErrorBoundary ? <ErrorBoundary /> : <NotFound />,
     };
@@ -66,10 +68,12 @@ const routeDeps: Route[] = [
       {
         pathname: "camera",
         element: <CameraSearch />,
+        isNoneAuth: true,
       },
       {
         pathname: "isbn",
         element: <IsbnSearch />,
+        isNoneAuth: true,
       },
     ],
   },
@@ -99,6 +103,7 @@ interface Route {
   pathname: string;
   element: ReactNode;
   children?: Route[];
+  isNoneAuth?: boolean;
   isErrorBoundary?: true;
 }
 

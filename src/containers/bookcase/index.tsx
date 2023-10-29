@@ -5,12 +5,13 @@ import {
   ToggleGridButton,
 } from "@components/bookcase";
 import { Select } from "@components/search";
+import { useFetch } from "@libs/hooks";
+import { createFuzzyMatcher } from "@libs/utils";
 import {
-  FetchBookcaseState,
+  BookcaseActionTypes,
   useBookcaseDispatch,
   useBookcaseState,
-} from "@libs/bookcaseContextApi";
-import { createFuzzyMatcher } from "@libs/utils";
+} from "@store/bookcase";
 import { ChangeEvent, UIEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -62,9 +63,9 @@ const BookListBlock = styled.div<{ $isgrid: boolean }>`
 `;
 
 function BookcaseContainer() {
-  const [bookList, setBookList] = useState<FetchBookcaseState>([]);
-  const bookcaseDispatch = useBookcaseDispatch();
   const bookcaseState = useBookcaseState();
+  const { bookcase } = bookcaseState;
+  const bookcaseDispatch = useBookcaseDispatch();
   const keys = ["제목", "지은이", "출판사", "분류"];
   const selectRef = useRef<HTMLSelectElement>(null);
   const [search, setSearch] = useState("");
@@ -75,18 +76,17 @@ function BookcaseContainer() {
     if (scrollTop === 0) return setIsSearchBarSticky(false);
     return setIsSearchBarSticky(true);
   };
+  const { state: bookList, loading } = useFetch<
+    { error: boolean; bookList: Bookcase.BookcaseItemInfo[] } | undefined
+  >(getBookList);
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await getBookList();
-        if (!res) return;
-        bookcaseDispatch({ type: "LOAD_DATA", bookcase: res.bookList });
-        setBookList(res.bookList);
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  }, [getBookList]);
+    if (bookList && bookList.bookList) {
+      bookcaseDispatch({
+        type: BookcaseActionTypes.SET_BOOKCASE,
+        payload: { ...bookcaseState, bookcase: bookList.bookList },
+      });
+    }
+  }, [loading]);
   const handleKindChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSearchKind(e.target.value);
   };
@@ -98,8 +98,7 @@ function BookcaseContainer() {
           defaultValue={searchKind}
           selectRef={selectRef}
           onChange={handleKindChange}
-          className="select"
-        >
+          className="select">
           {keys.map((key) => (
             <option key={key} value={key}>
               {key}
@@ -115,11 +114,11 @@ function BookcaseContainer() {
             isGrid={isGrid}
             onClick={() => setIsGrid((prev) => !prev)}
           />
-          <span>총 {bookcaseState.length}권</span>
+          <span>총 {bookcase?.length}권</span>
         </div>
       </SearchBarBlock>
       <BookListBlock $isgrid={isGrid}>
-        {bookList
+        {bookcase
           ?.filter((e) => {
             const regex = createFuzzyMatcher(search);
             switch (searchKind) {

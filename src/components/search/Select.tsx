@@ -52,8 +52,7 @@ export function Select({
       onChange={onChange}
       key={defaultValue}
       defaultValue={defaultValue}
-      className={className}
-    >
+      className={className}>
       {children}
     </SelectBlock>
   );
