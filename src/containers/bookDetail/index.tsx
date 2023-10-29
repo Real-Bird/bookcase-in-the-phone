@@ -1,11 +1,8 @@
 import { deleteBookInfoByIsbn, getBookInfoByIsbn } from "@api/bookcase";
-import { Button } from "@components/common";
+import { Button, PageLoading } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
-import {
-  BookcaseActionTypes,
-  useBookcaseDispatch,
-  useBookcaseState,
-} from "@store/bookcase";
+import { useFetch } from "@libs/hooks";
+import { useBookInfoDispatch, useBookInfoState } from "@store/bookcase";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -33,15 +30,18 @@ const ButtonBlock = styled.div`
 
 function BookDetailContainer() {
   const { isbn } = useParams();
-  const bookcaseDispatch = useBookcaseDispatch();
-  const { book: bookState } = useBookcaseState();
+  const bookState = useBookInfoState();
+  const { setBookInfo, initBookInfo } = useBookInfoDispatch();
   const navigate = useNavigate();
+  const { state: bookInfo, loading } = useFetch(() =>
+    getBookInfoByIsbn(isbn ?? "")
+  );
   const onDeleteBook = async () => {
     if (confirm("정말 삭제할까요?")) {
       try {
         await deleteBookInfoByIsbn(bookState.ea_isbn);
         alert("성공적으로 삭제되었습니다!");
-        bookcaseDispatch({ type: BookcaseActionTypes.INITIALIZE_BOOK });
+        initBookInfo();
         return navigate("/");
       } catch (e) {
         console.error(e);
@@ -49,19 +49,18 @@ function BookDetailContainer() {
     }
   };
   useEffect(() => {
-    if (isbn) {
-      (async () => {
-        const res = await getBookInfoByIsbn(isbn);
-        if (!res || res.error) {
-          return navigate("/404");
-        }
-        return bookcaseDispatch({
-          type: BookcaseActionTypes.SET_BOOK,
-          payload: { book: res.bookInfo },
-        });
-      })();
+    if (loading) {
+      return;
     }
-  }, [isbn]);
+    if (!isbn || !bookInfo) {
+      return navigate("/404", { replace: true });
+    }
+    setBookInfo(bookInfo.bookInfo);
+  }, [isbn, loading]);
+
+  if (loading) {
+    return <PageLoading />;
+  }
   return (
     <DetailBlock>
       <ButtonBlock>

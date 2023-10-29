@@ -178,7 +178,7 @@ export function ResultDetail({
           <BookInfoItem kind="지은이" value={author} />
           <BookInfoItem kind="옮긴이" value={translator ? translator : "-"} />
           <BookInfoItem kind="출판사" value={publisher} />
-          <BookInfoItem kind="출판일" value={publisher_predate ?? ""} />
+          <BookInfoItem kind="출판일" value={publisher_predate ?? "-"} />
           <BookInfoItem kind="ISBN" value={ea_isbn} />
         </BookInfoBox>
       </DetailTop>

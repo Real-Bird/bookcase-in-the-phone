@@ -2,7 +2,7 @@ import { CheckedExistedBookResponse, hasBookByIsbn } from "@api/bookcase";
 import { Button, FloatingInput } from "@components/common";
 import { BarcodeSearchProps } from "@containers/search";
 import { useFetch } from "@libs/hooks";
-import { BookcaseActionTypes, useBookcaseDispatch } from "@store/bookcase";
+import { useBookInfoDispatch } from "@store/bookcase";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
@@ -21,7 +21,7 @@ export default function IsbnSearch() {
   const { setOutletBarcode, setStateError } =
     useOutletContext<BarcodeSearchProps>();
   const [barcode, setBarcode] = useState("");
-  const bookcaseDispatch = useBookcaseDispatch();
+  const { getBookInfo } = useBookInfoDispatch();
   const navigate = useNavigate();
   const { state: hasBookState, onFetching: hasBookFetching } = useFetch<
     CheckedExistedBookResponse | undefined
@@ -38,10 +38,7 @@ export default function IsbnSearch() {
       setStateError(hasBookState.message ?? "Something was wrong!");
       return;
     } else if (hasBookState?.bookInfo) {
-      bookcaseDispatch({
-        type: BookcaseActionTypes.LOAD_BOOK,
-        payload: { book: hasBookState.bookInfo },
-      });
+      getBookInfo(hasBookState.bookInfo);
       return navigate(`/result/${barcode}`);
     }
   }, [hasBookState]);

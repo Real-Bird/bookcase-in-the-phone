@@ -1,5 +1,5 @@
 import { checkedUser, disconnect, logout } from "@api/auth";
-import { UserActionTypes, useUserDispatch, useUserState } from "@store/user";
+import { useUserDispatch, useUserState } from "@store/user";
 import { Logout } from "@components/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +41,7 @@ function AboutContainer() {
   const googleAuthLogout = async () => {
     inMemoryCache.isNonLogged = true;
     inMemoryCache.pathCache = {};
-    userDispatch({ type: UserActionTypes.SET_USER, payload: { username: "" } });
+    userDispatch("");
     await logout();
     navigate("/");
   };
@@ -51,10 +51,7 @@ function AboutContainer() {
     inMemoryCache.isNonLogged = true;
     inMemoryCache.pathCache = {};
     if (!res || !res.isLogged) {
-      userDispatch({
-        type: UserActionTypes.SET_USER,
-        payload: { username: "" },
-      });
+      userDispatch("");
       return navigate("/404", { replace: true });
     }
     if (
@@ -62,10 +59,7 @@ function AboutContainer() {
         "탈퇴 시 모든 데이터(사용자, 책장)가 삭제됩니다.\n정말 탈퇴하시겠습니까?"
       )
     ) {
-      userDispatch({
-        type: UserActionTypes.SET_USER,
-        payload: { username: "" },
-      });
+      userDispatch("");
       await disconnect();
       return navigate("/login", { replace: true });
     }

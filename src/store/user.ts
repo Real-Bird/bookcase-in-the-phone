@@ -1,46 +1,29 @@
-import { create } from "zustand";
+import { SlicePattern, create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 export enum UserActionTypes {
   SET_USER = "SET_USER",
 }
 
-const dispatchReducer = (state: UserState, action: UserAction): UserState => {
-  switch (action.type) {
-    case UserActionTypes.SET_USER: {
-      return { ...state, username: action.payload.username };
-    }
-    default: {
-      throw new Error("Can not find action's type");
-    }
-  }
-};
-
-const userStore = create<UserState & UserDispatch>()(
-  devtools(
-    (set) => ({
-      username: "",
-      dispatch: (action) => set((state) => dispatchReducer(state, action)),
+const createUesrSlice: SlicePattern<UserSlice> = (set) => ({
+  username: "",
+  setUsername: (payload) =>
+    set((state) => {
+      state.username = payload;
     }),
-    { name: "user" }
-  )
+});
+
+const UserBoundStore = create<UserSlice>()(
+  devtools(immer((...a) => ({ ...createUesrSlice(...a) })))
 );
 
-export const useUserState = () => userStore((state) => state.username);
+export const useUserState = () => UserBoundStore((state) => state.username);
 
-export const useUserDispatch = () => userStore((state) => state.dispatch);
+export const useUserDispatch = () =>
+  UserBoundStore((state) => state.setUsername);
 
-type UserState = {
+type UserSlice = {
   username: string;
-};
-
-type UserDispatch = {
-  dispatch: (action: UserAction) => void;
-};
-
-type UserAction = {
-  type: UserActionTypes;
-  payload: {
-    [Key in keyof UserState]: UserState[Key];
-  };
+  setUsername: (payload: string) => void;
 };

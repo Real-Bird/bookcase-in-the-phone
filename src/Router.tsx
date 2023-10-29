@@ -90,6 +90,7 @@ const router = createBrowserRouter(
       path: "",
       element: <Root />,
       children: makeRoutes(routeDeps),
+      errorElement: <NotFound />,
     },
     {
       path: "404",

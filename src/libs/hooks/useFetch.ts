@@ -10,29 +10,34 @@ export function useFetch<T>(asyncFn: () => Promise<T>, hasTrigger?: boolean) {
   });
 
   const onFetching = async () => {
+    setState((prev) => ({ ...prev, loading: true }));
     try {
       const data = await asyncFn();
       setState({
         ...state,
-        state: data as T,
-        loading: false,
+        state: data,
       });
     } catch (e) {
-      setState({ ...state, loading: false, error: e as Error });
+      setState({ ...state, error: e as Error });
+    } finally {
+      setState((prev) => ({ ...prev, loading: false }));
     }
   };
 
   useEffect(() => {
-    if (hasTrigger) return;
+    if (hasTrigger) {
+      setState((prev) => ({ ...prev, loading: false }));
+      return;
+    }
     asyncFn()
       .then((data) =>
         setState({
           ...state,
           state: data,
-          loading: false,
         })
       )
-      .catch((e) => setState({ ...state, loading: false, error: e }));
+      .catch((e) => setState({ ...state, error: e as Error }))
+      .finally(() => setState((prev) => ({ ...prev, loading: false })));
   }, []);
 
   return { ...state, onFetching };
