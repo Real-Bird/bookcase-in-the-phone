@@ -7,11 +7,7 @@ import {
 import { Select } from "@components/search";
 import { useFetch } from "@libs/hooks";
 import { createFuzzyMatcher } from "@libs/utils";
-import {
-  BookcaseActionTypes,
-  useBookcaseDispatch,
-  useBookcaseState,
-} from "@store/bookcase";
+import { useBookcaseDispatch, useBookcaseState } from "@store/bookcase";
 import { ChangeEvent, UIEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -64,8 +60,7 @@ const BookListBlock = styled.div<{ $isgrid: boolean }>`
 
 function BookcaseContainer() {
   const bookcaseState = useBookcaseState();
-  const { bookcase } = bookcaseState;
-  const bookcaseDispatch = useBookcaseDispatch();
+  const { setBookcase } = useBookcaseDispatch();
   const keys = ["제목", "지은이", "출판사", "분류"];
   const selectRef = useRef<HTMLSelectElement>(null);
   const [search, setSearch] = useState("");
@@ -81,10 +76,7 @@ function BookcaseContainer() {
   >(getBookList);
   useEffect(() => {
     if (bookList && bookList.bookList) {
-      bookcaseDispatch({
-        type: BookcaseActionTypes.SET_BOOKCASE,
-        payload: { ...bookcaseState, bookcase: bookList.bookList },
-      });
+      setBookcase(bookList.bookList);
     }
   }, [loading]);
   const handleKindChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -114,11 +106,11 @@ function BookcaseContainer() {
             isGrid={isGrid}
             onClick={() => setIsGrid((prev) => !prev)}
           />
-          <span>총 {bookcase?.length}권</span>
+          <span>총 {bookcaseState?.length}권</span>
         </div>
       </SearchBarBlock>
       <BookListBlock $isgrid={isGrid}>
-        {bookcase
+        {bookcaseState
           ?.filter((e) => {
             const regex = createFuzzyMatcher(search);
             switch (searchKind) {

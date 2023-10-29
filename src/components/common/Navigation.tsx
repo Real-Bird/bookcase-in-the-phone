@@ -1,4 +1,3 @@
-import { BookcaseActionTypes, useBookcaseDispatch } from "@store/bookcase";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -38,14 +37,11 @@ const NavIcon = styled.svg`
 
 export function Navigation() {
   const { pathname } = useLocation();
-  const bookcaseDispatch = useBookcaseDispatch();
-  const onClick = async () =>
-    bookcaseDispatch({ type: BookcaseActionTypes.INITIALIZE_BOOK });
   return (
     <NavBlock>
       <NavList>
         <NavItem isCurrentPath={pathname === "/"}>
-          <Link to={"/"} onClick={onClick}>
+          <Link to={"/"}>
             <NavIconBox>
               <NavIcon
                 xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +60,7 @@ export function Navigation() {
           </Link>
         </NavItem>
         <NavItem isCurrentPath={pathname.includes("/search")}>
-          <Link to={"/search"} onClick={onClick}>
+          <Link to={"/search"}>
             <NavIconBox>
               <NavIcon
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +85,7 @@ export function Navigation() {
           </Link>
         </NavItem>
         <NavItem isCurrentPath={pathname === "/about"}>
-          <Link to={"/about"} onClick={onClick}>
+          <Link to={"/about"}>
             <NavIconBox>
               <NavIcon
                 xmlns="http://www.w3.org/2000/svg"

@@ -4,7 +4,7 @@ import { RefObject, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { CheckedExistedBookResponse, hasBookByIsbn } from "@api/bookcase";
 import { BarcodeSearchProps } from "@containers/search";
-import { BookcaseActionTypes, useBookcaseDispatch } from "@store/bookcase";
+import { useBookInfoDispatch } from "@store/bookcase";
 
 interface CameraSearchProps extends BarcodeSearchProps {
   barcode: string;
@@ -19,7 +19,7 @@ interface CameraSearchProps extends BarcodeSearchProps {
 }
 
 export default function CameraSearch() {
-  const bookcaseDispatch = useBookcaseDispatch();
+  const { getBookInfo } = useBookInfoDispatch();
   const navigate = useNavigate();
   const {
     setOutletBarcode,
@@ -51,10 +51,7 @@ export default function CameraSearch() {
         setStateError(hasBookState.message ?? "Something was wrong!");
         return;
       } else if (hasBookState?.bookInfo) {
-        bookcaseDispatch({
-          type: BookcaseActionTypes.LOAD_BOOK,
-          payload: { book: hasBookState.bookInfo },
-        });
+        getBookInfo(hasBookState.bookInfo);
         return navigate(`/result/${barcode}`);
       }
     }

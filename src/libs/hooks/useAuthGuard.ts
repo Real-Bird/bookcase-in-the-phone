@@ -1,5 +1,5 @@
 import { checkedUser } from "@api/auth";
-import { UserActionTypes, useUserDispatch } from "@store/user";
+import { useUserDispatch } from "@store/user";
 import { inMemoryCache } from "main";
 import { useCallback, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -33,10 +33,7 @@ export const useAuthGuard = () => {
       navigate("/", { replace: true });
       return;
     }
-    userDispatch({
-      type: UserActionTypes.SET_USER,
-      payload: { username: res.username },
-    });
+    userDispatch(res.username);
   }, [pathname]);
 
   useLayoutEffect(() => {
