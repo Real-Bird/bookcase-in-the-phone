@@ -1,11 +1,15 @@
 import { Button, PageLoading } from "@components/common";
-import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { hasBookByIsbn, savedBookInfo } from "@api/bookcase";
 import { useFetch } from "@libs/hooks";
+import {
+  BookcaseActionTypes,
+  useBookcaseDispatch,
+  useBookcaseState,
+} from "@store/bookcase";
 
 const ResultBlock = styled.div`
   width: 100%;
@@ -30,7 +34,8 @@ const ButtonBlock = styled.div`
 
 function ResultContainer() {
   const navigate = useNavigate();
-  const isbnState = useIsbnState();
+  const { book: bookState } = useBookcaseState();
+  const { pathname } = useLocation();
   const {
     title,
     author,
@@ -39,13 +44,17 @@ function ResultContainer() {
     publisher,
     publisher_predate,
     ea_isbn,
-    loading,
-  } = isbnState;
-  const isbnDispatch = useIsbnDispatch();
-  useFetch(() => hasBookByIsbn(ea_isbn));
+  } = bookState;
+  const bookDispatch = useBookcaseDispatch();
+
+  const { state: hasBookState, loading } = useFetch(() =>
+    hasBookByIsbn(ea_isbn || pathname.split("/").slice(-1)[0])
+  );
 
   const onBack = () => {
-    isbnDispatch({ type: "INITIALIZE_DATA" });
+    bookDispatch({
+      type: BookcaseActionTypes.INITIALIZE_BOOK,
+    });
     navigate("/search");
   };
   const [startDate, setStartDate] = useState("");
@@ -53,14 +62,16 @@ function ResultContainer() {
   const [newReview, setNewReview] = useState("");
   const onSaveData = useCallback(async () => {
     const callbackData = await savedBookInfo({
-      ...isbnState,
+      ...bookState,
       review: newReview,
     });
     if (callbackData && callbackData.error)
       return console.error(callbackData.message);
-    isbnDispatch({ type: "INITIALIZE_DATA" });
+    bookDispatch({
+      type: BookcaseActionTypes.INITIALIZE_BOOK,
+    });
     return navigate(`/books/${ea_isbn}`);
-  }, [isbnState, newReview]);
+  }, [bookState, newReview]);
   const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
@@ -71,16 +82,26 @@ function ResultContainer() {
     });
     if (id === "reading-start") {
       setStartDate(value);
-      isbnDispatch({
-        type: "SET_DATA",
-        bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
+      bookDispatch({
+        type: BookcaseActionTypes.SET_BOOK,
+        payload: {
+          book: {
+            ...bookState,
+            start_date: localeFormatter.format(date),
+          },
+        },
       });
       return;
     }
     setEndDate(value);
-    isbnDispatch({
-      type: "SET_DATA",
-      bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
+    bookDispatch({
+      type: BookcaseActionTypes.SET_BOOK,
+      payload: {
+        book: {
+          ...bookState,
+          end_date: localeFormatter.format(date),
+        },
+      },
     });
     return;
   };
@@ -97,6 +118,15 @@ function ResultContainer() {
     }
   }, [startDate, endDate]);
 
+  useEffect(() => {
+    if (!bookState.ea_isbn && hasBookState && hasBookState?.bookInfo) {
+      bookDispatch({
+        type: BookcaseActionTypes.SET_BOOK,
+        payload: { book: { ...hasBookState.bookInfo } },
+      });
+    }
+  }, [bookState, hasBookState]);
+
   if (loading) return <PageLoading />;
 
   return (
@@ -110,7 +140,7 @@ function ResultContainer() {
         author={author}
         ea_isbn={ea_isbn}
         publisher={publisher}
-        publisher_predate={publisher_predate}
+        publisher_predate={publisher_predate ?? ""}
         title={title}
         titleUrl={title_url}
         translator={translator}

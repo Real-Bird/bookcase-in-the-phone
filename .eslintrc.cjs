@@ -38,7 +38,7 @@ module.exports = {
     "*.config.ts",
     "*.cjs",
     "coverage",
-    "build",
     "public",
+    "dist",
   ],
 };

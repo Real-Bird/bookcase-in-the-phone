@@ -1,4 +1,4 @@
-import { useIsbnDispatch } from "@libs/searchContextApi";
+import { BookcaseActionTypes, useBookcaseDispatch } from "@store/bookcase";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -38,8 +38,9 @@ const NavIcon = styled.svg`
 
 export function Navigation() {
   const { pathname } = useLocation();
-  const isbnDispatch = useIsbnDispatch();
-  const onClick = async () => isbnDispatch({ type: "INITIALIZE_DATA" });
+  const bookcaseDispatch = useBookcaseDispatch();
+  const onClick = async () =>
+    bookcaseDispatch({ type: BookcaseActionTypes.INITIALIZE_BOOK });
   return (
     <NavBlock>
       <NavList>
