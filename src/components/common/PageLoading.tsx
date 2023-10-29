@@ -1,4 +1,4 @@
-import { Layout, LogoSvg } from "@components/common";
+import { LogoSvg } from "@components/common";
 import styled, { keyframes } from "styled-components";
 
 const SvgBlank = keyframes`

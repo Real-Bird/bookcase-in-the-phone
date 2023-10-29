@@ -3,7 +3,7 @@ import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { GetInfoReturn, getInfo, savedBookInfo } from "@api/bookcase";
+import { hasBookByIsbn, savedBookInfo } from "@api/bookcase";
 import { useFetch } from "@libs/hooks";
 import {
   BookcaseActionTypes,
@@ -60,12 +60,6 @@ function ResultContainer() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [newReview, setNewReview] = useState("");
-  const {
-    state: newInfoState,
-    loading: newInfoLoading,
-    error: newInfoError,
-  } = useFetch<GetInfoReturn>(() => getInfo(barcode));
-
   const onSaveData = useCallback(async () => {
     const callbackData = await savedBookInfo({
       ...bookState,
@@ -111,15 +105,9 @@ function ResultContainer() {
     });
     return;
   };
-  const onReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const onReviewChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
     setNewReview(e.target.value);
   };
-
-  useEffect(() => {
-    if (newInfoState?.ok && newInfoState?.bookInfo) {
-      isbnDispatch({ type: "SET_DATA", bookInfo: newInfoState.bookInfo });
-    }
-  }, [newInfoState?.ok]);
 
   useEffect(() => {
     if (new Date(startDate) > new Date(endDate)) {
