@@ -1,10 +1,10 @@
+import { FetchIsbnDataState, useIsbnDispatch } from "@libs/searchContextApi";
 import { Camera, Select } from "@components/search";
 import { useFetch } from "@libs/hooks";
 import { RefObject, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { CheckedExistedBookResponse, hasBookByIsbn } from "@api/bookcase";
+import { GetInfoReturn, getInfo, hasBookByIsbn } from "@api/bookcase";
 import { BarcodeSearchProps } from "@containers/search";
-import { BookcaseActionTypes, useBookcaseDispatch } from "@store/bookcase";
 
 interface CameraSearchProps extends BarcodeSearchProps {
   barcode: string;
@@ -19,7 +19,7 @@ interface CameraSearchProps extends BarcodeSearchProps {
 }
 
 export default function CameraSearch() {
-  const bookcaseDispatch = useBookcaseDispatch();
+  const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
   const {
     setOutletBarcode,
@@ -31,9 +31,12 @@ export default function CameraSearch() {
     localStream,
     scanBarcode,
   } = useOutletContext<CameraSearchProps>();
-  const { state: hasBookState, onFetching: hasBookFetching } = useFetch<
-    CheckedExistedBookResponse | undefined
-  >(() => hasBookByIsbn(barcode), true);
+  const {
+    state: hasBookState,
+    loading: hasBookLoading,
+    error: hasBookError,
+    onFetching: hasBookFetching,
+  } = useFetch<boolean>(() => hasBookByIsbn(barcode), true);
 
   useEffect(() => {
     if (!cameraRef.current || !localStream) return;
@@ -41,20 +44,13 @@ export default function CameraSearch() {
   }, [localStream]);
 
   useEffect(() => {
-    if (barcode) {
+    if (!!barcode) {
       setOutletBarcode(barcode);
       hasBookFetching();
 
-      if (hasBookState && hasBookState.hasBook) {
+      if (hasBookState) {
         return navigate(`/books/${barcode}`);
-      } else if (hasBookState?.error) {
-        setStateError(hasBookState.message ?? "Something was wrong!");
-        return;
-      } else if (hasBookState?.bookInfo) {
-        bookcaseDispatch({
-          type: BookcaseActionTypes.LOAD_BOOK,
-          payload: { book: hasBookState.bookInfo },
-        });
+      } else {
         return navigate(`/result/${barcode}`);
       }
     }

@@ -169,7 +169,8 @@ function SearchContainer() {
           stroke="currentColor"
           className="w-6 h-6"
           onMouseEnter={() => setToggleQuestion((prev) => !prev)}
-          onMouseLeave={() => setToggleQuestion((prev) => !prev)}>
+          onMouseLeave={() => setToggleQuestion((prev) => !prev)}
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -53,7 +53,7 @@ export const useScanner = () => {
   ) => {
     if (localStream && cameraRef.current) {
       try {
-        scan.decodeFromStream(localStream, cameraRef.current, (data) => {
+        scan.decodeFromStream(localStream, cameraRef.current, (data, err) => {
           if (data) {
             setBarcode(data.getText());
           }

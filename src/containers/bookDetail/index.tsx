@@ -1,11 +1,7 @@
 import { deleteBookInfoByIsbn, getBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
-import {
-  BookcaseActionTypes,
-  useBookcaseDispatch,
-  useBookcaseState,
-} from "@store/bookcase";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -33,15 +29,15 @@ const ButtonBlock = styled.div`
 
 function BookDetailContainer() {
   const { isbn } = useParams();
-  const bookcaseDispatch = useBookcaseDispatch();
-  const { book: bookState } = useBookcaseState();
+  const isbnDispatch = useIsbnDispatch();
   const navigate = useNavigate();
+  const bookInfoState = useIsbnState();
   const onDeleteBook = async () => {
     if (confirm("정말 삭제할까요?")) {
       try {
-        await deleteBookInfoByIsbn(bookState.ea_isbn);
+        await deleteBookInfoByIsbn(bookInfoState.ea_isbn);
         alert("성공적으로 삭제되었습니다!");
-        bookcaseDispatch({ type: BookcaseActionTypes.INITIALIZE_BOOK });
+        (await isbnDispatch)({ type: "INITIALIZE_DATA" });
         return navigate("/");
       } catch (e) {
         console.error(e);
@@ -52,12 +48,12 @@ function BookDetailContainer() {
     if (isbn) {
       (async () => {
         const res = await getBookInfoByIsbn(isbn);
-        if (!res || res.error) {
+        if (!res) {
           return navigate("/404");
         }
-        return bookcaseDispatch({
-          type: BookcaseActionTypes.SET_BOOK,
-          payload: { book: res.bookInfo },
+        return isbnDispatch({
+          type: "SET_DATA",
+          bookInfo: res.bookInfo,
         });
       })();
     }
@@ -69,16 +65,18 @@ function BookDetailContainer() {
         <Button label="수정" onClick={() => navigate("edit")} />
       </ButtonBlock>
       <ResultDetail
-        author={bookState.author}
-        ea_isbn={bookState.ea_isbn}
-        publisher={bookState.publisher}
-        publisher_predate={bookState.publisher_predate}
-        title={bookState.title}
-        titleUrl={bookState.title_url}
-        translator={bookState.translator}
-        startDateValue={bookState.start_date ? bookState.start_date : ""}
-        endDateValue={bookState.end_date ? bookState.end_date : ""}
-        review={bookState.review ? bookState.review : ""}
+        author={bookInfoState.author}
+        ea_isbn={bookInfoState.ea_isbn}
+        publisher={bookInfoState.publisher}
+        publisher_predate={bookInfoState.publisher_predate}
+        title={bookInfoState.title}
+        titleUrl={bookInfoState.title_url}
+        translator={bookInfoState.translator}
+        startDateValue={
+          bookInfoState.start_date ? bookInfoState.start_date : ""
+        }
+        endDateValue={bookInfoState.end_date ? bookInfoState.end_date : ""}
+        review={bookInfoState.review ? bookInfoState.review : ""}
       />
     </DetailBlock>
   );

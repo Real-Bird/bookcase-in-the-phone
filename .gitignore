@@ -29,6 +29,3 @@ dist-ssr
 # ect.
 *.pptx
 *temp*
-
-# eslint cache
-.eslintcache

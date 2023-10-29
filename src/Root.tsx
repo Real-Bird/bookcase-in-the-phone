@@ -1,7 +1,11 @@
+import { FetchIsbnDataProvider } from "@libs/searchContextApi";
 import { Navigation, InitLoading } from "@components/common";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { useLayoutEffect, useState } from "react";
+import { FetchBookcaseDataProvider } from "@libs/bookcaseContextApi";
+import { useCallback, useLayoutEffect, useState } from "react";
+import { checkedUser } from "@api/auth";
+import { useUserDispatch } from "@libs/userContextApi";
 
 const RootBlock = styled.div`
   width: 100%;
@@ -24,16 +28,20 @@ function Root() {
   }, []);
 
   return (
-    <RootBlock>
-      {loading ? (
-        <InitLoading />
-      ) : (
-        <>
-          <Navigation />
-          <Outlet />
-        </>
-      )}
-    </RootBlock>
+    <FetchBookcaseDataProvider>
+      <FetchIsbnDataProvider>
+        <RootBlock>
+          {loading ? (
+            <InitLoading />
+          ) : (
+            <>
+              <Navigation />
+              <Outlet />
+            </>
+          )}
+        </RootBlock>
+      </FetchIsbnDataProvider>
+    </FetchBookcaseDataProvider>
   );
 }
 

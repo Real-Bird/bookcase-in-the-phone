@@ -1,15 +1,11 @@
 import { Button, PageLoading } from "@components/common";
+import { useIsbnDispatch, useIsbnState } from "@libs/searchContextApi";
 import { ResultDetail } from "@components/searchResult";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GetInfoReturn, getInfo, savedBookInfo } from "@api/bookcase";
 import { useFetch } from "@libs/hooks";
-import {
-  BookcaseActionTypes,
-  useBookcaseDispatch,
-  useBookcaseState,
-} from "@store/bookcase";
 
 const ResultBlock = styled.div`
   width: 100%;
@@ -34,8 +30,9 @@ const ButtonBlock = styled.div`
 
 function ResultContainer() {
   const navigate = useNavigate();
-  const { book: bookState } = useBookcaseState();
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const barcode = location.pathname.split("/").slice(-1)[0];
+  const isbnState = useIsbnState();
   const {
     title,
     author,
@@ -44,17 +41,12 @@ function ResultContainer() {
     publisher,
     publisher_predate,
     ea_isbn,
-  } = bookState;
-  const bookDispatch = useBookcaseDispatch();
-
-  const { state: hasBookState, loading } = useFetch(() =>
-    hasBookByIsbn(ea_isbn || pathname.split("/").slice(-1)[0])
-  );
+    loading,
+  } = isbnState;
+  const isbnDispatch = useIsbnDispatch();
 
   const onBack = () => {
-    bookDispatch({
-      type: BookcaseActionTypes.INITIALIZE_BOOK,
-    });
+    isbnDispatch({ type: "INITIALIZE_DATA" });
     navigate("/search");
   };
   const [startDate, setStartDate] = useState("");
@@ -68,17 +60,16 @@ function ResultContainer() {
 
   const onSaveData = useCallback(async () => {
     const callbackData = await savedBookInfo({
-      ...bookState,
+      ...isbnState,
       review: newReview,
     });
-    if (callbackData && callbackData.error)
+    if (callbackData.error) {
       return console.error(callbackData.message);
-    bookDispatch({
-      type: BookcaseActionTypes.INITIALIZE_BOOK,
-    });
+    }
+    isbnDispatch({ type: "INITIALIZE_DATA" });
     return navigate(`/books/${ea_isbn}`);
-  }, [bookState, newReview]);
-  const onDateChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  }, [isbnState, newReview]);
+  const onDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
     const date = new Date(value);
     const localeFormatter = new Intl.DateTimeFormat("fr-CA", {
@@ -88,26 +79,16 @@ function ResultContainer() {
     });
     if (id === "reading-start") {
       setStartDate(value);
-      bookDispatch({
-        type: BookcaseActionTypes.SET_BOOK,
-        payload: {
-          book: {
-            ...bookState,
-            start_date: localeFormatter.format(date),
-          },
-        },
+      isbnDispatch({
+        type: "SET_DATA",
+        bookInfo: { ...isbnState, start_date: localeFormatter.format(date) },
       });
       return;
     }
     setEndDate(value);
-    bookDispatch({
-      type: BookcaseActionTypes.SET_BOOK,
-      payload: {
-        book: {
-          ...bookState,
-          end_date: localeFormatter.format(date),
-        },
-      },
+    isbnDispatch({
+      type: "SET_DATA",
+      bookInfo: { ...isbnState, end_date: localeFormatter.format(date) },
     });
     return;
   };
@@ -130,17 +111,9 @@ function ResultContainer() {
     }
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    if (!bookState.ea_isbn && hasBookState && hasBookState?.bookInfo) {
-      bookDispatch({
-        type: BookcaseActionTypes.SET_BOOK,
-        payload: { book: { ...hasBookState.bookInfo } },
-      });
-    }
-  }, [bookState, hasBookState]);
-
-  if (loading) return <PageLoading />;
-
+  if (loading || newInfoLoading) {
+    return <PageLoading />;
+  }
   return (
     <ResultBlock>
       <ButtonBlock>
@@ -152,7 +125,7 @@ function ResultContainer() {
         author={author}
         ea_isbn={ea_isbn}
         publisher={publisher}
-        publisher_predate={publisher_predate ?? ""}
+        publisher_predate={publisher_predate}
         title={title}
         titleUrl={title_url}
         translator={translator}

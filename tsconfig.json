@@ -21,8 +21,7 @@
       "@libs/*": ["libs/*"],
       "@api/*": ["api/*"],
       "@components/*": ["components/*"],
-      "@containers/*": ["containers/*"],
-      "@store/*": ["store/*"]
+      "@containers/*": ["containers/*"]
     }
   },
   "include": ["src"],
