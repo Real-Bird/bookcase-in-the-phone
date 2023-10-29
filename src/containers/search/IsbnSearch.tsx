@@ -18,8 +18,7 @@ const FormBlock = styled.form`
 `;
 
 export default function IsbnSearch() {
-  const { setOutletBarcode, setStateError } =
-    useOutletContext<BarcodeSearchProps>();
+  const { setOutletBarcode } = useOutletContext<BarcodeSearchProps>();
   const [barcode, setBarcode] = useState("");
   const bookcaseDispatch = useBookcaseDispatch();
   const navigate = useNavigate();
