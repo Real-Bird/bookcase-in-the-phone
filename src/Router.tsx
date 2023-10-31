@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom";
-import { ErrorBoundary, PageLoading } from "@components/common";
+import { ErrorBoundary, Layout, PageLoading } from "@components/common";
 import { lazy, ReactNode, Suspense } from "react";
 import { AuthGuard } from "@components/common";
 import NotFound from "./pages/NotFound";
@@ -21,7 +21,14 @@ const makeRoutes = (routeDeps: Route[]): RouteObject[] => {
       path: route.pathname,
       element: !route.isNoneAuth ? (
         <AuthGuard>
-          <Suspense fallback={<PageLoading />}>{route.element}</Suspense>
+          <Suspense
+            fallback={
+              <Layout title="Loading">
+                <PageLoading />
+              </Layout>
+            }>
+            {route.element}
+          </Suspense>
         </AuthGuard>
       ) : (
         route.element
