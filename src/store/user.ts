@@ -1,29 +1,24 @@
-import { SlicePattern, create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import { SlicePattern } from "zustand";
 
-export enum UserActionTypes {
-  SET_USER = "SET_USER",
+enum UserActions {
+  SET_USERNAME = "user/SetUsername",
 }
 
-const createUesrSlice: SlicePattern<UserSlice> = (set) => ({
+const createUserSlice: SlicePattern<UserSlice> = (set) => ({
   username: "",
   setUsername: (payload) =>
-    set((state) => {
-      state.username = payload;
-    }),
+    set(
+      (state) => {
+        state.username = payload;
+      },
+      false,
+      UserActions.SET_USERNAME
+    ),
 });
 
-const UserBoundStore = create<UserSlice>()(
-  devtools(immer((...a) => ({ ...createUesrSlice(...a) })))
-);
-
-export const useUserState = () => UserBoundStore((state) => state.username);
-
-export const useUserDispatch = () =>
-  UserBoundStore((state) => state.setUsername);
-
-type UserSlice = {
+export type UserSlice = {
   username: string;
   setUsername: (payload: string) => void;
 };
+
+export default createUserSlice;

@@ -1,85 +1,26 @@
-import { refactorBookInfo } from "@libs/refactorBookInfo";
-import { SlicePattern, create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import { SlicePattern } from "zustand";
 
-const initialBookInfo: BookInfo = {
-  author: "",
-  ea_isbn: "",
-  end_date: "",
-  publisher: "",
-  publisher_predate: "",
-  review: "",
-  start_date: "",
-  subject: "",
-  title: "",
-  title_url: "",
-  translator: "",
-};
+enum BookcaseActions {
+  SET_BOOKCASE = "bookcase/SetBookcase",
+}
 
-const createBookcaseSlice: SlicePattern<BookcaseSlice, BookInfoSlice> = (
-  set
-) => ({
+const createBookcaseSlice: SlicePattern<BookcaseSlice> = (set) => ({
   bookcase: [],
   setBookcase: (payload) =>
-    set((state) => {
-      state.bookcase = payload;
-    }),
+    set(
+      (state) => {
+        state.bookcase = payload;
+      },
+      false,
+      BookcaseActions.SET_BOOKCASE
+    ),
 });
 
-const createBookInfoSlice: SlicePattern<BookInfoSlice, BookcaseSlice> = (
-  set
-) => ({
-  bookInfo: initialBookInfo,
-  setBookInfo: (payload) =>
-    set((state) => {
-      state.bookInfo = payload;
-    }),
-  getBookInfo: (payload) =>
-    set((state) => {
-      state.bookInfo = refactorBookInfo(payload);
-    }),
-  initialize: () =>
-    set((state) => {
-      state.bookInfo = initialBookInfo;
-    }),
-});
-
-const BookcaseBoundStore = create<BookcaseSlice & BookInfoSlice>()(
-  devtools(
-    immer((...a) => ({
-      ...createBookcaseSlice(...a),
-      ...createBookInfoSlice(...a),
-    })),
-    { name: "bookcase-bound-store" }
-  )
-);
-
-export const useBookcaseState = () =>
-  BookcaseBoundStore((state) => state.bookcase);
-export const useBookcaseDispatch = () =>
-  BookcaseBoundStore((state) => ({ setBookcase: state.setBookcase }));
-
-export const useBookInfoState = () =>
-  BookcaseBoundStore((state) => state.bookInfo);
-export const useBookInfoDispatch = () =>
-  BookcaseBoundStore((state) => ({
-    setBookInfo: state.setBookInfo,
-    getBookInfo: state.getBookInfo,
-    initBookInfo: state.initialize,
-  }));
-
-export type BookInfo = Bookcase.BookInfo;
 export type BookcaseItemInfo = Bookcase.BookcaseItemInfo;
 
-type BookcaseSlice = {
+export type BookcaseSlice = {
   bookcase: BookcaseItemInfo[];
   setBookcase: (payload: BookcaseItemInfo[]) => void;
 };
 
-type BookInfoSlice = {
-  bookInfo: BookInfo;
-  setBookInfo: (payload: BookInfo) => void;
-  getBookInfo: (payload: BookInfo) => void;
-  initialize: () => void;
-};
+export default createBookcaseSlice;

@@ -2,7 +2,7 @@ import { CheckedExistedBookResponse, hasBookByIsbn } from "@api/bookcase";
 import { Button, FloatingInput } from "@components/common";
 import { BarcodeSearchProps } from "@containers/search";
 import { useFetch } from "@libs/hooks";
-import { useBookInfoDispatch } from "@store/bookcase";
+import { useBookInfoDispatch } from "@store/selectors";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";

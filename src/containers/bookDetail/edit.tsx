@@ -1,7 +1,7 @@
 import { updateBookInfoByIsbn } from "@api/bookcase";
 import { Button } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
-import { useBookInfoDispatch, useBookInfoState } from "@store/bookcase";
+import { useBookInfoDispatch, useBookInfoState } from "@store/selectors";
 import { ChangeEvent, useCallback, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";

@@ -4,7 +4,7 @@ import { RefObject, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { CheckedExistedBookResponse, hasBookByIsbn } from "@api/bookcase";
 import { BarcodeSearchProps } from "@containers/search";
-import { useBookInfoDispatch } from "@store/bookcase";
+import { useBookInfoDispatch } from "@store/selectors";
 
 interface CameraSearchProps extends BarcodeSearchProps {
   barcode: string;

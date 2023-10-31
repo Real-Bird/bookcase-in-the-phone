@@ -1,5 +1,5 @@
 import { checkedUser } from "@api/auth";
-import { useUserDispatch } from "@store/user";
+import { useUserDispatch } from "@store/selectors";
 import { inMemoryCache } from "main";
 import { useCallback, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

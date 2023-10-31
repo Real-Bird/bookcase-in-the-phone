@@ -7,7 +7,7 @@ import {
 import { Select } from "@components/search";
 import { useFetch } from "@libs/hooks";
 import { createFuzzyMatcher } from "@libs/utils";
-import { useBookcaseDispatch, useBookcaseState } from "@store/bookcase";
+import { useBookcaseDispatch, useBookcaseState } from "@store/selectors";
 import { ChangeEvent, UIEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
