@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { hasBookByIsbn, savedBookInfo } from "@api/bookcase";
 import { useFetch } from "@libs/hooks";
-import { useBookInfoDispatch, useBookInfoState } from "@store/bookcase";
+import { useBookInfoDispatch, useBookInfoState } from "@store/selectors";
 
 const ResultBlock = styled.div`
   width: 100%;

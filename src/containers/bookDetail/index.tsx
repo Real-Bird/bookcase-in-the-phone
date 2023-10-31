@@ -2,7 +2,7 @@ import { deleteBookInfoByIsbn, getBookInfoByIsbn } from "@api/bookcase";
 import { Button, PageLoading } from "@components/common";
 import { ResultDetail } from "@components/searchResult";
 import { useFetch } from "@libs/hooks";
-import { useBookInfoDispatch, useBookInfoState } from "@store/bookcase";
+import { useBookInfoDispatch, useBookInfoState } from "@store/selectors";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";

@@ -1,9 +1,9 @@
 import { checkedUser, disconnect, logout } from "@api/auth";
-import { useUserDispatch, useUserState } from "@store/user";
 import { Logout } from "@components/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { inMemoryCache } from "main";
+import { useUserDispatch, useUserState } from "@store/selectors";
 
 const AboutBlock = styled.div`
   width: 100%;
