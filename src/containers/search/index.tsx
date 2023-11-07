@@ -3,7 +3,6 @@ import { Dispatch, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import barcodeImage from "/barcode.png";
-import { useScanner } from "@libs/hooks";
 
 const SearchBlock = styled.div`
   width: 100%;
@@ -100,23 +99,8 @@ function SearchContainer() {
   const [toggleQuestion, setToggleQuestion] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    barcode,
-    cameras,
-    cameraRef,
-    currentCamera,
-    localStream,
-    stopStream,
-    startStream,
-    scanBarcode,
-  } = useScanner();
 
   useEffect(() => {
-    if (location.pathname.includes("camera")) {
-      startStream();
-    } else {
-      stopStream();
-    }
     return () => setOutletBarcode("");
   }, [location]);
   return (
@@ -142,12 +126,6 @@ function SearchContainer() {
       <OutletBlock>
         <Outlet
           context={{
-            barcode,
-            cameras,
-            cameraRef,
-            currentCamera,
-            localStream,
-            scanBarcode,
             outletBarcode,
             setOutletBarcode,
             setStateError,
