@@ -1,22 +1,10 @@
 import { Camera, Select } from "@components/search";
-import { useFetch } from "@libs/hooks";
-import { RefObject, useEffect } from "react";
+import { useFetch, useScanner } from "@libs/hooks";
+import { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { CheckedExistedBookResponse, hasBookByIsbn } from "@api/bookcase";
 import { BarcodeSearchProps } from "@containers/search";
 import { useBookInfoDispatch } from "@store/selectors";
-
-interface CameraSearchProps extends BarcodeSearchProps {
-  barcode: string;
-  cameraRef: RefObject<HTMLVideoElement>;
-  cameras: MediaDeviceInfo[];
-  currentCamera: string;
-  scanBarcode: (
-    localStream: MediaStream,
-    cameraRef: RefObject<HTMLVideoElement>
-  ) => void;
-  localStream: MediaStream | undefined;
-}
 
 export default function CameraSearch() {
   const { getBookInfo } = useBookInfoDispatch();
@@ -24,25 +12,28 @@ export default function CameraSearch() {
   const {
     setOutletBarcode,
     setStateError,
-    barcode,
-    cameraRef,
-    cameras,
-    currentCamera,
-    localStream,
-    scanBarcode,
-  } = useOutletContext<CameraSearchProps>();
+    outletBarcode: barcode,
+  } = useOutletContext<BarcodeSearchProps>();
   const { state: hasBookState, onFetching: hasBookFetching } = useFetch<
     CheckedExistedBookResponse | undefined
   >(() => hasBookByIsbn(barcode), true);
+  const {
+    cameras,
+    cameraRef,
+    currentCamera,
+    localStream,
+    stopStream,
+    startStream,
+    scanBarcode,
+  } = useScanner();
 
   useEffect(() => {
-    if (!cameraRef.current || !localStream) return;
-    scanBarcode(localStream, cameraRef);
+    if (!cameraRef.current || !localStream.current) return;
+    scanBarcode(setOutletBarcode);
   }, [localStream]);
 
   useEffect(() => {
     if (barcode) {
-      setOutletBarcode(barcode);
       hasBookFetching();
 
       if (hasBookState && hasBookState.hasBook) {
@@ -55,15 +46,22 @@ export default function CameraSearch() {
         return navigate(`/result/${barcode}`);
       }
     }
-    return () => setOutletBarcode("");
   }, [barcode, hasBookState]);
+
+  useEffect(() => {
+    startStream();
+    return () => {
+      stopStream();
+      setOutletBarcode("");
+    };
+  }, []);
 
   return (
     <>
       <Camera camera={cameraRef} />
       <Select defaultValue={currentCamera}>
-        {cameras?.map((cam) => (
-          <option key={cam.deviceId} value={cam.label}>
+        {cameras?.map((cam, idx) => (
+          <option key={`${cam.deviceId} ${idx}`} value={cam.label}>
             {cam.label}
           </option>
         ))}
